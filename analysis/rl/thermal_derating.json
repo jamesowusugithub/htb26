@@ -1,0 +1,68 @@
+[
+ {
+  "config":"A no derating",
+  "policy":"priority_fifo",
+  "q_ratio":1.0,
+  "hp_p95_h":26.74,
+  "violation_node_h":95074.12,
+  "hot_nodes":4034.33,
+  "peak_c":85.02,
+  "cloud_usd":0.0,
+  "waste_usd":8698.59
+ },
+ {
+  "config":"A no derating",
+  "policy":"sjf_hint",
+  "q_ratio":0.47,
+  "hp_p95_h":18.65,
+  "violation_node_h":95069.58,
+  "hot_nodes":4034.5,
+  "peak_c":85.02,
+  "cloud_usd":0.0,
+  "waste_usd":8801.0
+ },
+ {
+  "config":"B derating",
+  "policy":"priority_fifo",
+  "q_ratio":1.73,
+  "hp_p95_h":32.77,
+  "violation_node_h":92728.09,
+  "hot_nodes":3979.67,
+  "peak_c":85.02,
+  "cloud_usd":0.0,
+  "waste_usd":7188.22
+ },
+ {
+  "config":"B derating",
+  "policy":"sjf_hint",
+  "q_ratio":0.8,
+  "hp_p95_h":36.15,
+  "violation_node_h":92793.37,
+  "hot_nodes":3987.67,
+  "peak_c":85.02,
+  "cloud_usd":0.0,
+  "waste_usd":9603.65
+ },
+ {
+  "config":"C derating + cloud",
+  "policy":"priority_fifo",
+  "q_ratio":0.55,
+  "hp_p95_h":14.03,
+  "violation_node_h":92729.1,
+  "hot_nodes":3980.33,
+  "peak_c":85.02,
+  "cloud_usd":220980.45,
+  "waste_usd":5614.05
+ },
+ {
+  "config":"C derating + cloud",
+  "policy":"sjf_hint",
+  "q_ratio":0.28,
+  "hp_p95_h":17.94,
+  "violation_node_h":92790.33,
+  "hot_nodes":3986.83,
+  "peak_c":85.02,
+  "cloud_usd":200110.46,
+  "waste_usd":8424.96
+ }
+]

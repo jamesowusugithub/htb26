@@ -37,6 +37,7 @@ class Scenario:
     cooling_fault: dict | None = None                     # {"at_h": 6.0, "delta_c": 35.0, "duration_h": 6.0 | None}
     injected_jobs: list = field(default_factory=list)     # [{"at_h": 3.0, "pool": "a10", "gpus": 1, "priority": "hp", "duration_s": 900}]
     display_pools: list = field(default_factory=lambda: list(DEFAULT_PODS))   # pods 1..4 in the room
+    thermal_derating: dict | None = None         # {"margin_c": 0.0}: cap node utilisation while the cooling fault would push it past the alert threshold (rule-based policies only)
     cloud: dict | None = None                    # SIMULATED takeaway: {"nodes_per_pool": 2 | {pool: n}, "gpus_per_node": 8, "overflow_wait_s": 7200, "price_multiplier": 1.0}
     arrival_profile: list | None = None          # per-hour arrival multipliers (mean 1), e.g. a BurstGPT shape
     arrival_profile_source: str | None = None    # provenance of the profile, e.g. "burstgpt_3 hours 120-192"
@@ -239,10 +240,17 @@ def build_cluster(base_cluster: data.Cluster, sc: Scenario) -> data.Cluster:
 def sim_kwargs(sc: Scenario, cluster: data.Cluster) -> dict:
     """Everything a scenario adds to a simulator run: node failures and the simulated cloud overflow."""
     kw = {"failures": failure_events(sc, cluster)}
+    if sc.thermal_derating is not None and sc.cooling_fault:      # {} means enabled with defaults; None means off
+        from .thermal import ThermalProxy
+        cf = sc.cooling_fault
+        cap = ThermalProxy.load().util_cap_for_fault(float(cf.get("delta_c", 35.0)), float(sc.thermal_derating.get("margin_c", 0.0)))
+        a = float(cf["at_h"]) * 3600.0
+        kw.update(util_cap=cap, derate_from_s=a, derate_to_s=a + float(cf["duration_h"]) * 3600.0 if cf.get("duration_h") is not None else float("inf"))
     if sc.cloud:
         kw["cloud_price"] = pool_prices([p["id"] for p in cluster.pools], float(sc.cloud.get("price_multiplier", 1.0)))
         kw["overflow_wait_s"] = float(sc.cloud.get("overflow_wait_s", 0.0))
         kw["max_job_cost_usd"] = float(sc.cloud.get("max_job_cost_usd", 0.0))
+        kw["offload_min_wait_s"] = float(sc.cloud.get("offload_min_wait_s", 0.0))
     return kw
 
 

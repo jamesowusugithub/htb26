@@ -51,6 +51,17 @@ class ThermalProxy:
         tgt = self.target(util_pct)[0] + delta_c
         return temp + (tgt - temp) * (1.0 - np.exp(-max(dt, 0.0) / self.tau_s))
 
+    def util_cap_for_fault(self, delta_c: float, margin_c: float = 0.0) -> float:
+        """Highest node utilisation (fraction) at which the proxy temperature stays below the alert threshold while a cooling fault of `delta_c` lasts.
+        1.0 when no utilisation reaches the threshold (no derating needed); 0.0 if even an idle node would."""
+        u = np.linspace(0.0, 100.0, 1001)
+        ok = self.target(u)[0] + delta_c + margin_c < self.threshold_c
+        if ok.all():
+            return 1.0
+        if not ok.any():
+            return 0.0
+        return float(u[np.flatnonzero(ok).max()] / 100.0)
+
     def meta(self) -> dict:
         return {"evidence": "proxy", "source_gpu": SOURCE_MODEL,
                 "source": "measured H100 thermal profiles (Phase 1), pooled across workloads, reading-weighted, forced monotone",
