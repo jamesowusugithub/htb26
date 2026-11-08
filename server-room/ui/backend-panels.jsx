@@ -24,7 +24,7 @@ export function RackPoolDetails({pool,onBack}){
   if(!pool)return null;
   return <section className="rack-pool-details" aria-label={`${pool.label} aggregate rack group`}>
     <div className="device-name"><h3>{pool.label}</h3><span className={`state-badge ${pool.status}`}><i/>{pool.status}</span></div>
-    <p className="device-subtitle">Pool aggregate · 20 highlighted visual racks · {pool.nodeCount} simulated nodes</p>
+    <p className="device-subtitle">Pool aggregate · 4 visual clusters · {pool.nodeCount} simulated nodes</p>
     <dl className="device-metrics">
       <div><dt>GPU capacity</dt><dd>{fmt(pool.busyGpus)}<span> / {fmt(pool.capacityGpus)}</span></dd></div>
       <div><dt>Pool utilisation</dt><dd>{pct(pool.utilisation)}</dd></div>
@@ -34,7 +34,7 @@ export function RackPoolDetails({pool,onBack}){
       {pool.nodesMapped>0&&<div><dt>Nodes down</dt><dd className={pool.nodesDown?'warm':''}>{pool.nodesDown}<span> / {pool.nodesMapped}</span></dd></div>}
       <div><dt>Thermal</dt><dd>{pool.thermalAvailable?<>{fmt(pool.maxTemperature,1)}<span> °C max (proxy)</span></>:'Not mapped'}</dd></div>
     </dl>
-    <p className="proxy-note">This rack column mirrors one backend pool. It does not claim that each visible rack is one physical GPU or one simulated node.</p>
+    <p className="proxy-note">These clusters represent one backend pool. Each visual cluster is not one physical GPU or simulated node.</p>
     <button className="score-btn rack-back" onClick={onBack}>Inspect GPU boards</button>
   </section>;
 }
