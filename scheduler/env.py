@@ -68,7 +68,7 @@ class SchedulingEnv(gym.Env):
         est = self.hint.predict_seconds(self.w.job_id)
         est = np.where(np.isfinite(est), est, np.nanmedian(est)).astype(np.float64)
         self.est = est
-        self.sim_kw = sim_kwargs(self.sc, self.cluster)
+        self.sim_kw = (options or {}).get("sim_kw") or sim_kwargs(self.sc, self.cluster)
         base = run_policy(self.cluster, self.w, POLICIES["priority_fifo"], est=est, snapshot_dt=None, **self.sim_kw)
         self.base_qint = max(float(base.fc[FC_QINT]), 1e-6)
         self.S = build_state(self.cluster, self.w, PRIO_FIFO, preempt=True, est=est, early_stop=False,
