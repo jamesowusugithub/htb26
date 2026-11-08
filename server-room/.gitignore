@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# These are upstream runtime SDK files, not generated application build output.
+!packages/*/dist/
+!packages/*/dist/**
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
