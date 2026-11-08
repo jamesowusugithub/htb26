@@ -63,6 +63,24 @@ export async function mountGPULab({viewer,room}) {
   ui.dataset.extraClusters=String(poolPodStart-34);
   ui.dataset.extraClusterPositions=JSON.stringify(pods.slice(34,poolPodStart));
   pods.push(...poolPositions);
+  const poolPodEnd=pods.length;
+  // Extend the rightmost populated column in the eastern GPU room by one row-spaced column.
+  const eastern=pods.slice(34,poolPodStart).filter(([x,z])=>x>2&&z<0);
+  const rightmost=Math.max(...eastern.map(([x])=>x));
+  const column=eastern.filter(([x])=>Math.abs(x-rightmost)<.01).sort((a,b)=>a[1]-b[1]);
+  const addedTargets=[];
+  if(column.length===4){
+    const gap=Math.abs(column[1][1]-column[0][1]);
+    const x=rightmost+4.6;
+    for(const [,z] of column){
+      const box=footprint(x,z);
+      if(obstacles.some(o=>o.intersectsBox(box))||occupied.some(o=>o.intersectsBox(box)))continue;
+      if(outer){const b=new THREE.Box3().setFromObject(outer);if(box.min.x<b.min.x||box.max.x>b.max.x||box.min.z<b.min.z||box.max.z>b.max.z)continue;}
+      if(gap<2.38)continue;
+      pods.push([x,z]);occupied.push(box);addedTargets.push([x,z]);
+    }
+  }
+  ui.dataset.targetedClusters=String(addedTargets.length);
   const slots=[],rings=[],assetGroups=[],particlePool=[],podLabels=[],rackVisuals=[],poolPodTargets=[],routingGuides=[],rackTargets=new Map();
   const boxGeom=new THREE.BoxGeometry(1,1,1);
   const mat=(color,metalness=.25,roughness=.5)=>new THREE.MeshStandardMaterial({color,metalness,roughness});
@@ -76,13 +94,13 @@ export async function mountGPULab({viewer,room}) {
     const chassis=box(p,'Chassis',[2.85,1.0,1.85],[0,.55,0],dark);box(p,'Open compute tray',[3.0,.10,2.0],[0,1.10,0],edge);
     box(p,'Pod plinth',[3.16,.12,2.17],[0,.05,0],plinth);
     for(let j=0;j<6;j++){box(p,'Vent',[.32,.025,.018],[-1.03+j*.41,.72, .94],edge);box(p,'Vent',[.32,.025,.018],[-1.03+j*.41,.58,.94],edge);}
-    if(pod>=poolPodStart){chassis.userData.poolIndex=Math.floor((pod-poolPodStart)/4);poolPodTargets.push(chassis);}
-    podLabels[pod]=label(pod<4?`POD ${String(pod+1).padStart(2,'0')}`:pod>=poolPodStart?`POOL ${Math.floor((pod-poolPodStart)/4)+1} · AGGREGATE`:`MIRROR ${pod%4+1}`,[x,.3,z+1.1],1.3);
+    if(pod>=poolPodStart&&pod<poolPodEnd){chassis.userData.poolIndex=Math.floor((pod-poolPodStart)/4);poolPodTargets.push(chassis);}
+    podLabels[pod]=label(pod<4?`POD ${String(pod+1).padStart(2,'0')}`:pod>=poolPodStart&&pod<poolPodEnd?`POOL ${Math.floor((pod-poolPodStart)/4)+1} · AGGREGATE`:`MIRROR ${pod%4+1}`,[x,.3,z+1.1],1.3);
     for(let j=0;j<6;j++){
       const index=(pod%4)*6+j,position=new THREE.Vector3(x+(j%3-1)*.93,1.23,z+(j<3?-.45:.45));
-      slots.push({index,position,pod,poolIndex:pod>=poolPodStart?Math.floor((pod-poolPodStart)/4):undefined});
+      slots.push({index,position,pod,poolIndex:pod>=poolPodStart&&pod<poolPodEnd?Math.floor((pod-poolPodStart)/4):undefined});
       const ring=new THREE.Mesh(new THREE.BoxGeometry(.83,.035,.39),new THREE.MeshStandardMaterial({color:COLORS.idle,emissive:COLORS.idle,emissiveIntensity:.4,metalness:.3,roughness:.35}));
-      ring.position.copy(position);ring.position.y-=.035;ring.userData.gpuIndex=index;if(pod>=poolPodStart)ring.userData.poolIndex=Math.floor((pod-poolPodStart)/4);lab.add(ring);rings.push(ring);
+      ring.position.copy(position);ring.position.y-=.035;ring.userData.gpuIndex=index;if(pod>=poolPodStart&&pod<poolPodEnd)ring.userData.poolIndex=Math.floor((pod-poolPodStart)/4);lab.add(ring);rings.push(ring);
     }
   });
   const portal=new THREE.Vector3(-18.1,1.5,7.1);
