@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+ui-dist
 *.local
 
 # These are upstream runtime SDK files, not generated application build output.
