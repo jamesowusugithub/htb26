@@ -1,0 +1,23 @@
+/* Backend-mode additions (status chips, proxy labels, pool table, scenario controls). Additive: no existing rule is overridden. */
+.status-banner{pointer-events:auto;position:absolute;left:50%;transform:translateX(-50%);top:calc(var(--header-height) + 46px);display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:min(760px,calc(100% - var(--panel-width) - 40px));z-index:4}
+.status-banner .chip{display:inline-flex;align-items:center;gap:6px;background:#ffffffee;border:1px solid #d4dde6;border-radius:999px;padding:5px 10px;font-size:11px;font-weight:600;color:#354e5a;box-shadow:0 2px 6px #20334214}
+.status-banner .chip.busy{color:#19638b;border-color:#b9dcef}.status-banner .chip.warn{color:#875512;border-color:#ecd49c;background:#fff8e6}
+.status-banner .chip.hot{color:#a33a14;border-color:#f0bfa6;background:#fff0e8}.status-banner .chip.error{color:#af2d42;border-color:#e8b6c0;background:#fdebef}
+.status-banner .chip button{margin-left:4px;border:1px solid currentColor;background:none;color:inherit;border-radius:5px;padding:1px 6px;font-size:10px;cursor:pointer}
+.spin{animation:gpu-spin 1s linear infinite}@keyframes gpu-spin{to{transform:rotate(360deg)}}
+.proxy-tag{font-style:normal;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#7a5b16;background:#fff3d9;border-radius:4px;padding:1px 4px;margin-left:4px}
+.backend-metrics{margin-top:-4px}.backend-metrics .forecast-row dd{font-size:13px}
+.backend-metrics .alert-row{display:flex;gap:7px;align-items:flex-start;color:#a33a14;background:#fff0e8;border-radius:6px;padding:7px 8px;font-size:11px;line-height:1.4;margin-top:8px}
+.pool-section{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.pool-table{width:100%;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums;margin-top:8px}
+.pool-table th{font-weight:600;color:var(--muted);text-align:left;padding:3px 4px;font-size:10px}.pool-table td{padding:5px 4px;border-top:1px solid #eef2f6}
+.pool-table td small{color:var(--muted)}.pool-table tr.selected td{background:#f1f7fb;font-weight:650}
+.proxy-note{font-size:10px;color:var(--muted);margin:8px 0 0}
+.scenario-bar{display:flex;align-items:flex-end;gap:8px}.scenario-bar>label{font-size:10px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.scenario-bar select{min-height:32px;max-width:150px;border:1px solid #d4dde6;border-radius:6px;background:white;color:var(--ink);padding:4px 8px;font-size:11px;font-weight:500;cursor:pointer}
+.scenario-bar .cool-btn{display:inline-flex;align-items:center;gap:6px;min-height:32px;border:1px solid #d4dde6;border-radius:6px;background:white;font-size:11px;font-weight:600;padding:4px 9px;cursor:pointer;color:#8b4a14}
+.scenario-bar .cool-btn.on{background:#fff0e8;border-color:#f0bfa6;color:#a33a14}.scenario-bar .cool-btn:disabled{opacity:.5;cursor:wait}
+.playback{flex-wrap:wrap;justify-content:flex-end}
+/* the scenario bar becomes the first child of .playback, so re-point the existing nth-child width rule from Policy to Speed */
+.playback:has(.scenario-bar)>label:nth-child(2) select{width:auto;min-width:132px}
+.playback:has(.scenario-bar)>label:nth-child(3) select{width:67px}

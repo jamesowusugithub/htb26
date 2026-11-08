@@ -51,3 +51,9 @@ status materials and rotates the fan geometry during processing.
 Browser screenshots and validation notes are in `../analysis/visualization/`.
 The supplied repository is the visual reference; no separate user reference
 images were attached to this request.
+
+## Backend mode (integration branch)
+
+The room can now replay results from the scheduling backend instead of the synthetic demo. See `INTEGRATION.md`.
+The evidence boundary above applies to `?mode=synthetic` only; in backend mode the UI states that waits and placements are simulated
+and that temperature/power are a proxy from measured H100 profiles.

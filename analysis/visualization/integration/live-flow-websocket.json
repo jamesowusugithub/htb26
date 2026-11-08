@@ -1,0 +1,112 @@
+[
+ {
+  "name": "backend mode is active and the Blender GLB loaded",
+  "ok": true,
+  "detail": "mode=backend meshes=15"
+ },
+ {
+  "name": "connected via websocket",
+  "ok": true,
+  "detail": "websocket:connected"
+ },
+ {
+  "name": "simulation clock advances from backend batches",
+  "ok": true,
+  "detail": "180 -> 5940"
+ },
+ {
+  "name": "3D scene shows running boards, queue and completed jobs from the backend",
+  "ok": true,
+  "detail": "{\"running\":24,\"queued\":85,\"completed\":181}"
+ },
+ {
+  "name": "queue chips at the gateway match the backend queue head of the selected pool",
+  "ok": true,
+  "detail": "pool=series1 chips=5 head=5"
+ },
+ {
+  "name": "engine snapshot equals backend /state at the same time (no frontend-invented values)",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "every temperature shown over 3 s is a value the backend sent for that board",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Fail GPU posts a real scenario failure to the backend",
+  "ok": true,
+  "detail": "[{\"board\":7,\"at_h\":8.055,\"repair_after_h\":null}]"
+ },
+ {
+  "name": "failed board is reported by the backend with all its nodes down",
+  "ok": true,
+  "detail": "nodesDown=648"
+ },
+ {
+  "name": "3D board ring turns the failure colour",
+  "ok": true,
+  "detail": "0xe94f64"
+ },
+ {
+  "name": "running jobs on the failed node were evicted by the scheduler",
+  "ok": true,
+  "detail": "evictions=681"
+ },
+ {
+  "name": "Repair sends a repair and the board recovers",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "arrival spike scenario is active and announced from backend scenario data",
+  "ok": true,
+  "detail": "Arrival spike ×4 in progress4.0 arrivals / sim-min"
+ },
+ {
+  "name": "queue reflects the backend spike",
+  "ok": true,
+  "detail": "queued 102 -> 105"
+ },
+ {
+  "name": "overheating alerts come from the backend and exceed its stated threshold",
+  "ok": true,
+  "detail": "18 boards >= 80 C, hottest 81.1 C"
+ },
+ {
+  "name": "hottest board ring pulses the red alert colour in the 3D scene",
+  "ok": true,
+  "detail": "0xff7667,0xff7667,0xff3432"
+ },
+ {
+  "name": "footer states the thermal values are a proxy",
+  "ok": true,
+  "detail": "Backend simulationSimulated replay of the Alibaba GPU trace · policy priority_fifo · temperature & power are a proxy fro"
+ },
+ {
+  "name": "switching policy re-runs the scenario in the backend without rewinding",
+  "ok": true,
+  "detail": "47400 -> 47880"
+ },
+ {
+  "name": "pool panel lists all six simulated pools",
+  "ok": true,
+  "detail": "6"
+ },
+ {
+  "name": "selecting a preset loads that backend scenario from t=0",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "pause freezes the backend clock",
+  "ok": true,
+  "detail": "240"
+ },
+ {
+  "name": "no page or console errors",
+  "ok": true,
+  "detail": ""
+ }
+]

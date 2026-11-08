@@ -45,3 +45,9 @@ NaN metrics (e.g. spot wait with no spot jobs) are sent as `null`. Windows are c
 `duration_model.py` runtime hint · `env.py` Gymnasium env (masked actions) · `rl_core.py` numba decision interface ·
 `train_rl.py` behaviour cloning + masked PPO · `run_eval.py` held-out comparison. `rl_ppo` is selectable in `POST /whatif`.
 It beats priority-FIFO and backfill on held-out windows but **not** the `sjf_hint` rule (see results).
+
+## Feed for the 3D room (schema 0.2.0)
+`export.py` rebuilds per-board utilisation/status, a labelled thermal proxy (`thermal.py`, measured H100 profiles), thermal alerts, queue heads and a 30-minute
+forecast (`forecast.py`; persistence is displayed because it beat the survival projection) from the simulator's event log. Scenarios add `failures` (node-slice
+failure/repair), `cooling_fault` and `injected_jobs`. `GET /runs/{id}/state?t=` gives instant catch-up; the WebSocket accepts `pause|resume|speed|seek`.
+Details and the frontend wiring: `server-room/INTEGRATION.md`.
