@@ -140,3 +140,12 @@ h1, h2, h3, p { margin: 0; }
 /* real-trace mode */
 .trace-banner{background:#e9f4ee;color:#1d4d3a;border-color:#b7d9c6;font-weight:500}
 a.segbtn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
+
+.kitchen { display: grid; gap: 4px; width: 100%; margin-bottom: 4px; }
+.chef-row { display: grid; grid-template-columns: 54px 1fr 84px; gap: 4px; align-items: center; }
+.cmp { display: grid; gap: 10px; margin-top: 8px; }
+.cmp-chart h4 { font-size: 12px; margin-bottom: 4px; } .cmp-chart h4 small { font-weight: 400; color: var(--ink-soft); }
+.bar-row { display: grid; grid-template-columns: 96px 1fr 52px; gap: 6px; align-items: center; font-size: 11px; margin: 2px 0; }
+.bar-track { background: #efe3c8; border-radius: 3px; height: 12px; display: block; } .bar { display: block; height: 12px; border-radius: 3px; background: #b9a67a; }
+.bar.rl { background: #1f6f5c; } .bar.best { outline: 2px solid #e0b43a; } .bar-val { text-align: right; }
+.scatter { width: 100%; max-width: 260px; background: #fbf4e2; border: 1px solid #cdbb9a; border-radius: 4px; }

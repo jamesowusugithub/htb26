@@ -386,6 +386,12 @@ class OrderIn(BaseModel):
     gpus: float = Field(1.0, gt=0, le=8)
     priority: str = Field("high", pattern="^(high|spot)$")
     duration_min: float = Field(15.0, ge=1, le=720)
+    pool: str | None = Field(None, description="GPU type id of the kitchen the order targets (default: the first chef's type)")
+
+
+class KitchenIn(BaseModel):
+    pool: str = Field(..., description="GPU type id: a10, a100, a800, h800, series1, series2")
+    gpus: int = Field(8, ge=1, le=8, description="GPUs on this chef (node)")
 
 
 class CloudIn(BaseModel):
@@ -401,6 +407,7 @@ class RestaurantReq(BaseModel):
     start_day: float = Field(145.0, ge=0, le=183)
     minutes: float = Field(150.0, ge=30, le=480)
     nodes: int = Field(5, ge=2, le=5)
+    kitchen: list[KitchenIn] | None = Field(None, description="custom kitchen: 2-5 chefs, each its own GPU type and GPU count (the RL policy handles any mix of the 6 types)")
     orders: list[OrderIn] = Field(default_factory=list, max_length=200)
     cloud: CloudIn | None = None
 
@@ -419,7 +426,8 @@ def _restaurant(req: RestaurantReq) -> dict:
     try:
         with _lock:
             rec = rx.make_recording(e["jobs"], e["pools"], load_or_fit(e["jobs"], 40), "rl_ppo" if model else req.policy, model, _rl.get("K", 16),
-                                    req.start_day, req.minutes, 60.0, req.nodes, [o.model_dump() for o in req.orders], cloud, _rl.get("shuffle", False))
+                                    req.start_day, req.minutes, 60.0, req.nodes, [o.model_dump() for o in req.orders], cloud, _rl.get("shuffle", False),
+                                    [c.model_dump() for c in req.kitchen] if req.kitchen else None)
     except ValueError as ex:
         raise HTTPException(422, str(ex))
     _rest_cache[key] = rec
@@ -438,3 +446,25 @@ def restaurant_trace_post(req: RestaurantReq):
 @app.get("/restaurant/trace")
 def restaurant_trace_get(policy: str = "rl_ppo", takeaway: bool = True):
     return _restaurant(RestaurantReq(policy=policy, cloud=CloudIn() if takeaway else None))
+
+
+COMPARE_POLICIES = ("fifo", "priority_fifo", "sjf_hint", "rl_ppo")
+
+
+@app.post("/restaurant/compare")
+def restaurant_compare(req: RestaurantReq):
+    """Run EVERY policy on the same kitchen, jobs and new orders; return the end-of-run numbers per policy plus predicted-vs-actual runtimes.
+    Waits are in simulated minutes. Cloud spend is SIMULATED."""
+    out, preds, meta = {}, None, None
+    for pol in COMPARE_POLICIES:
+        rec = _restaurant(req.model_copy(update={"policy": pol}))
+        ev = rec["events"]
+        m = [x for x in ev if x["type"] == "METRICS"][-1]
+        out[pol] = {"label": rec["trace_meta"]["scheduler_label"], "completed": m["completed"], "waiting": m["waiting"], "received": m["received"],
+                    "avg_wait_min": m["avg_wait_s"], "p95_wait_min": m["p95_wait_s"], "avg_util_pct": m["avg_util"], "cloud_cost_usd": m["cost"],
+                    "cloud_jobs": sum(1 for x in ev if x["type"] == "DECISION" and x.get("action") == "cloud"),
+                    "evictions": sum(1 for x in ev if x["type"] == "JOB_FAILED")}
+        if preds is None:
+            meta = rec["trace_meta"]
+            preds = [{"id": x["job"]["id"], "predicted_min": x["job"]["hint_min"], "actual_min": x["job"]["duration_s"]} for x in ev if x["type"] == "JOB_ARRIVED"]
+    return {"policies": out, "predictions": preds, "kitchen": meta, "units": {"wait": "simulated minutes", "cost": "USD, simulated rental"}}

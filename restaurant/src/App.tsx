@@ -3,6 +3,7 @@ import { Controller } from './data/controller'
 import { createGame } from './game'
 import { DecisionPanel } from './panel/DecisionPanel'
 import { Controls } from './panel/Controls'
+import { ComparePanel } from './panel/ComparePanel'
 import { GpuCards } from './panel/GpuCards'
 import { Header } from './panel/Header'
 import { Legend } from './panel/Legend'
@@ -50,6 +51,7 @@ export default function App() {
           <DecisionPanel state={state} />
           <GpuCards state={state} />
           <Controls ctl={ctl} />
+          <ComparePanel ctl={ctl} />
         </aside>
       </main>
     </div>

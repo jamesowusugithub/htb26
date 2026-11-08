@@ -11,7 +11,13 @@ interface Recording {
   events: SimEvent[]
 }
 
-export interface OrderSpec { gpus: number; priority: 'high' | 'spot'; duration_min: number }
+export interface OrderSpec { gpus: number; priority: 'high' | 'spot'; duration_min: number; pool?: string }
+export interface Chef { pool: string; gpus: number }
+export interface CompareResult {
+  policies: Record<string, { label: string; completed: number; waiting: number; received: number; avg_wait_min: number; p95_wait_min: number; avg_util_pct: number; cloud_cost_usd: number; cloud_jobs: number; evictions: number }>
+  predictions: { id: string; predicted_min: number; actual_min: number }[]
+  kitchen: { scale_note?: string; jobs?: number }
+}
 interface Order extends OrderSpec { at_min: number }
 const DEFAULT_CLOUD = { nodes: 1, gpus_per_node: 8, overflow_wait_min: 30, price_multiplier: 1.0 }
 
@@ -27,11 +33,13 @@ export class ReplaySource implements EventSource {
   private speed = 1
   private endedAt = 0
   private orders: Order[] = []
+  private kitchen: Chef[] | null = null
   private trace = ''
   private api = ''
   duration = 0
   get canOrder() { return !!this.api && !!this.trace }
   get orderCount() { return this.orders.length }
+  get chefs() { return this.kitchen }
   get tick() { return Math.floor(this.clock) }
 
   async start(h: SourceHandlers) {
@@ -59,7 +67,7 @@ export class ReplaySource implements EventSource {
   /** Ask OUR backend for the recording: the trained scheduler makes every decision, including for new orders and the simulated takeaway. */
   private async fetchRec(): Promise<Recording> {
     const res = await fetch(`${this.api}/restaurant/trace`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ policy: this.trace, orders: this.orders, cloud: DEFAULT_CLOUD }) })
+      body: JSON.stringify({ policy: this.trace, orders: this.orders, cloud: DEFAULT_CLOUD, kitchen: this.kitchen }) })
     if (!res.ok) throw new Error(`backend said ${res.status}: ${(await res.text()).slice(0, 160)}`)
     return (await res.json()) as Recording
   }
@@ -80,6 +88,31 @@ export class ReplaySource implements EventSource {
     this.duration = this.rec.events.reduce((m, e) => Math.max(m, e.t), 0)
     this.h.onConfig(this.rec.config)
     this.rebuild(keep)
+  }
+
+  /** A custom kitchen: every chef (node) has its own GPU type and GPU count. The trained policy handles any mix of the 6 real types. */
+  async setKitchen(k: Chef[]) {
+    if (!this.canOrder) throw new Error('a custom kitchen needs ?api=<backend URL>')
+    const prevK = this.kitchen, prevO = this.orders
+    this.kitchen = k; this.orders = []
+    try {
+      this.rec = await this.fetchRec()
+    } catch (e) {
+      this.kitchen = prevK; this.orders = prevO
+      throw e
+    }
+    setTraceMeta(this.rec.trace_meta ?? null)
+    this.duration = this.rec.events.reduce((m, e) => Math.max(m, e.t), 0)
+    this.h.onConfig(this.rec.config)
+    this.rebuild(0)
+  }
+
+  /** Run every policy on THIS kitchen with the same jobs and the same new orders. */
+  async compare(): Promise<CompareResult> {
+    const res = await fetch(`${this.api}/restaurant/compare`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orders: this.orders, cloud: DEFAULT_CLOUD, kitchen: this.kitchen }) })
+    if (!res.ok) throw new Error(`backend said ${res.status}: ${(await res.text()).slice(0, 160)}`)
+    return (await res.json()) as CompareResult
   }
 
   stop() {

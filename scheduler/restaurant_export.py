@@ -45,46 +45,70 @@ def add_orders(w: Workload, orders: list[dict], pidx: int, node_gpus: int = 8) -
     rows = []
     for i, o in enumerate(orders):
         g, d, at = float(o.get("gpus", 1)), float(o.get("duration_min", 15)), float(o.get("at_min", 0))
-        if not (0 < g <= node_gpus) or not (1 <= d <= 720) or at < 0:
-            raise ValueError(f"order {i + 1}: gpus must be in (0,{node_gpus}], duration 1-720 min, at_min >= 0")
+        ng = int(o.get("max_gpus", node_gpus))
+        if not (0 < g <= ng) or not (1 <= d <= 720) or at < 0:
+            raise ValueError(f"order {i + 1}: gpus must be in (0,{ng}], duration 1-720 min, at_min >= 0")
         if o.get("priority", "high") not in ("high", "spot"):
             raise ValueError(f"order {i + 1}: priority must be high or spot")
-        rows.append((f"ORDER-{i + 1:03d}", at * 60.0, d * 60.0, int(round(g * UNIT)), 0 if o.get("priority", "high") == "high" else 1))
+        rows.append((f"ORDER-{i + 1:03d}", at * 60.0, d * 60.0, int(round(g * UNIT)), 0 if o.get("priority", "high") == "high" else 1, int(o.get("pool_idx", pidx))))
     if not rows:
         return w
     sub = np.concatenate([w.submit, [r[1] for r in rows]]); order = np.argsort(sub, kind="stable")
     cat = lambda a, b, dt: np.concatenate([a, np.array(b, dtype=dt)])[order]
     return Workload(job_id=np.concatenate([w.job_id.astype(object), np.array([r[0] for r in rows], dtype=object)])[order], submit=sub[order],
-                    dur=cat(w.dur, [r[2] for r in rows], float), pool=cat(w.pool, [pidx] * len(rows), np.int64), req=cat(w.req, [r[3] for r in rows], np.int64),
+                    dur=cat(w.dur, [r[2] for r in rows], float), pool=cat(w.pool, [r[5] for r in rows], np.int64), req=cat(w.req, [r[3] for r in rows], np.int64),
                     prio=cat(w.prio, [r[4] for r in rows], np.int64), org=cat(w.org.astype(object), ["order"] * len(rows), object),
                     eval_mask=cat(w.eval_mask, [True] * len(rows), bool), t0=w.t0, elapsed0=cat(w.elapsed0 if w.elapsed0 is not None else np.zeros(len(w)), [0.0] * len(rows), float))
 
 
 def build_kitchen(jobs: pd.DataFrame, pools: list[dict], start_day: float, minutes: float, pool_id: str = "a100",
-                  nodes: int = 5, gpus_per_node: int = 8, orders: list | None = None, cloud: dict | None = None) -> Kitchen:
-    pidx = [p["id"] for p in pools].index(pool_id)
-    sub = jobs[(jobs.pool == pidx)]
+                  nodes: int = 5, gpus_per_node: int = 8, orders: list | None = None, cloud: dict | None = None, kitchen: list | None = None) -> Kitchen:
+    ids = [p["id"] for p in pools]
     s, e = start_day * 86400, start_day * 86400 + minutes * 60
-    w = data.make_workload(sub, s, e, carryover=False)
-    if orders:
-        w = add_orders(w, orders, pidx, gpus_per_node)
-    node_pool = np.full(nodes, pidx, dtype=np.int64)
-    cl = Cluster(pools, node_pool, np.full(nodes, gpus_per_node, dtype=np.int64), np.ones(len(pools)))
+    if kitchen:                                                # custom kitchen: one entry per chef = {pool: GPU type id, gpus: GPUs on that node}
+        if not 2 <= len(kitchen) <= 5:
+            raise ValueError("a kitchen has 2-5 chefs (nodes)")
+        ent = []
+        for c in kitchen:
+            if c["pool"] not in ids or not 1 <= int(c["gpus"]) <= 8:
+                raise ValueError(f"bad kitchen entry {c}: pool must be one of {ids}, gpus 1-8")
+            ent.append((ids.index(c["pool"]), int(c["gpus"])))
+        ent.sort(key=lambda x: x[0])                           # nodes must be grouped by pool
+        pidxs = sorted({p for p, _ in ent}); maxg = {p: max(g for q, g in ent if q == p) for p in pidxs}
+        pool_id = ids[ent[0][0]]; pidx = ent[0][0]
+        sub = jobs[jobs.pool.isin(pidxs)]
+        sub = sub[sub.req.to_numpy() <= sub.pool.map(maxg).to_numpy() * UNIT]     # a job larger than any node of its type could never start: leave it out
+        w = data.make_workload(sub, s, e, carryover=False)
+        if orders:
+            orders = [{**o, "pool_idx": ids.index(o["pool"]) if o.get("pool") in ids and ids.index(o["pool"]) in pidxs else pidx,
+                       "max_gpus": maxg[ids.index(o["pool"]) if o.get("pool") in ids and ids.index(o["pool"]) in pidxs else pidx]} for o in orders]
+            w = add_orders(w, orders, pidx, 8)
+        node_pool = np.array([p for p, _ in ent], dtype=np.int64); node_g = np.array([g for _, g in ent], dtype=np.int64)
+        nodes, gpus_per_node = len(ent), int(node_g.max())
+        cl = Cluster(pools, node_pool, node_g, np.ones(len(pools))); owned_g = node_g
+    else:
+        pidx = ids.index(pool_id); pidxs = [pidx]
+        sub = jobs[(jobs.pool == pidx)]
+        w = data.make_workload(sub, s, e, carryover=False)
+        if orders:
+            w = add_orders(w, orders, pidx, gpus_per_node)
+        node_pool = np.full(nodes, pidx, dtype=np.int64)
+        cl = Cluster(pools, node_pool, np.full(nodes, gpus_per_node, dtype=np.int64), np.ones(len(pools))); owned_g = np.full(nodes, gpus_per_node)
     sim_kw, cloud_meta = {}, None
     if cloud and int(cloud.get("nodes", 0)) > 0:
         cn, cg = int(cloud["nodes"]), int(cloud.get("gpus_per_node", 8))
         wait_min, mult = float(cloud.get("overflow_wait_min", 30.0)), float(cloud.get("price_multiplier", 1.0))
-        cl = add_cloud(cl, {pool_id: cn}, cg)
+        cl = add_cloud(cl, {ids[p]: cn for p in pidxs}, cg)
         from .cloud import DEFAULT_MAX_JOB_COST_USD
         budget = float(cloud.get("max_job_cost_usd", DEFAULT_MAX_JOB_COST_USD))
         sim_kw = {"cloud_price": pool_prices([p["id"] for p in pools], mult), "overflow_wait_s": wait_min * 60.0, "max_job_cost_usd": budget}
         price = float(sim_kw["cloud_price"][pidx])
-        cloud_meta = {"enabled": True, "nodes": cn, "gpus_per_node": cg, "gpus": cn * cg, "overflow_wait_min": wait_min, "price_usd_per_gpu_hour": round(price, 2),
+        cloud_meta = {"enabled": True, "nodes": cn * len(pidxs), "gpus_per_node": cg, "gpus": cn * cg * len(pidxs), "overflow_wait_min": wait_min, "price_usd_per_gpu_hour": round(price, 2),
                       "price_multiplier": mult, "max_job_cost_usd": budget, "evidence": "SIMULATED fallback, not Alibaba data", "price_basis": provenance()["note"]}
     meta = {"source": "Alibaba GPU trace (harmonised jobs.parquet)", "pool": pool_id, "window_start_day": start_day, "window_minutes": minutes,
             "jobs": int(len(w)), "kitchen_nodes": nodes, "gpus_per_node": gpus_per_node,
             "real_pool_nodes_in_simulation": "about 290 A100 nodes", "time_unit": "min", "tick_s": TICK_S,
-            "scale_note": f"Real jobs, small demo kitchen ({nodes} A100 nodes instead of ~290) so queues are visible. Scale is illustrative; the full-scale numbers are in the scoreboard."}
+            "scale_note": f"Real jobs, small demo kitchen ({nodes} nodes: " + ", ".join(f"{pools[p]['label']} x{g}" for p, g in zip(node_pool.tolist(), owned_g.tolist())) + ") instead of thousands, so queues are visible. Scale is illustrative; the full-scale numbers are in the scoreboard."}
     meta["orders"] = len(orders or [])
     if cloud_meta:
         meta["cloud"] = cloud_meta
@@ -125,14 +149,21 @@ def _run_rl(k: Kitchen, jobs: pd.DataFrame, hint: DurationHint, model, K: int, s
 def to_recording(k: Kitchen, S, policy: str, hint: DurationHint, info_by_job: dict, max_ticks: int, thermal: ThermalProxy | None = None,
                  scheduler_note: str = "") -> dict:
     thermal = thermal or ThermalProxy.load()
-    w, n_chefs = k.workload, min(k.n_owned, len(CHEFS))
+    w = k.workload
+    owned = np.flatnonzero(~np.asarray(k.cluster.cloud_mask()))          # the kitchen's own nodes (chefs); cloud nodes are the takeaway
+    n_chefs = min(len(owned), len(CHEFS))
+    owned = owned[:n_chefs]; chef_of = np.full(len(k.cluster.node_ngpu), -1, dtype=np.int64); chef_of[owned] = np.arange(n_chefs)
+    owned_ngpu = np.asarray(k.cluster.node_ngpu)[owned].astype(float)
+    chef_pool = np.asarray(k.cluster.node_pool)[owned]
+    chef_ids = [f"{k.cluster.pools[int(p)]['id']}-{c + 1}" for c, p in enumerate(chef_pool)]          # the scene labels each chef with its GPU type
+    chef_label = [f"{k.cluster.pools[int(p)]['label']} x{int(g)}" for p, g in zip(chef_pool, owned_ngpu)]
     cloud_gpus = float(k.cloud["gpus"]) if k.cloud else 0.0
     price = float(k.cloud["price_usd_per_gpu_hour"]) if k.cloud else 0.0
     tick = lambda t: int(t // TICK_S)
     est = hint.predict_seconds(w.job_id)
     est = np.where(np.isfinite(est), est, np.nanmedian(est))
-    cfg = {"nodes": [{"id": "node-0", "gpus": [{"id": c[0], "tier": c[2], "vram_gb": int(k.cluster.node_ngpu[i]), "compute": 1, "name": c[1]} for i, c in enumerate(CHEFS[:2])]},
-                     {"id": "node-1", "gpus": [{"id": c[0], "tier": c[2], "vram_gb": int(k.cluster.node_ngpu[i + 2]), "compute": 1, "name": c[1]} for i, c in enumerate(CHEFS[2:])]}],
+    chefs = [{"id": chef_ids[c], "tier": CHEFS[c][2], "vram_gb": int(owned_ngpu[c]), "compute": 1, "name": f"{chef_label[c]} (node {c + 1})"} for c in range(n_chefs)]
+    cfg = {"nodes": [{"id": "node-0", "gpus": chefs[:2]}] + ([{"id": "node-1", "gpus": chefs[2:]}] if len(chefs) > 2 else []),
            "thresholds": {"warning": 75, "critical": 85}, "overflow_threshold": 10, "scheduler": SCHED_LABEL[policy], "trace": True}
     if k.cloud:
         cfg["nodes"].append({"id": "node-cloud", "gpus": [{"id": "cloud-0", "tier": "cloud", "vram_gb": int(cloud_gpus), "compute": 1, "name": "Cloud takeaway (SIMULATED)"}]})
@@ -151,7 +182,6 @@ def to_recording(k: Kitchen, S, policy: str, hint: DurationHint, info_by_job: di
         if t < 0 or tick(t) > max_ticks:
             continue
         by_tick.setdefault(tick(t), []).append(i)
-    pool_start = int(S.pool_start[w.pool[0]]) if len(w) else 0
     out = []
     job_dict = lambda j: {"id": str(w.job_id[j]), "priority": "high" if w.prio[j] == 0 else "low", "vram_gb": float(w.req[j] / UNIT), "compute_units": float(w.req[j] / UNIT),
                           "duration_s": max(1, math.ceil(w.dur[j] / TICK_S)), "deadline_t": 10 ** 6, "splittable": False, "tiers": ["premium", "standard"],
@@ -163,10 +193,10 @@ def to_recording(k: Kitchen, S, policy: str, hint: DurationHint, info_by_job: di
             if typ == EV_ARRIVE:
                 recv += 1; queued.add(j); out.append({"t": tk, "type": "JOB_ARRIVED", "job": job_dict(j)})
             elif typ == EV_START:
-                chef = int(ev_node[i]) - pool_start
-                if chef >= n_chefs:                                   # a SIMULATED cloud node: the takeaway counter
+                chef = int(chef_of[int(ev_node[i])])
+                if chef < 0:                                          # a SIMULATED cloud node: the takeaway counter
                     queued.discard(j); running[j] = -1; busy_cloud += w.req[j] / UNIT
-                    jc = float(w.dur[j]) / 3600.0 * float(w.req[j] / UNIT) * price; job_cost[j] = jc; cloud_cost += jc
+                    jc = float(w.dur[j]) / 3600.0 * float(w.req[j] / UNIT) * float(k.sim_kw["cloud_price"][int(w.pool[j])]); job_cost[j] = jc; cloud_cost += jc
                     qlen = len(queued)
                     out.append({"t": tk, "type": "DECISION", "job_id": str(w.job_id[j]), "action": "cloud", "target_gpu_ids": ["cloud-0"], "scheduler": SCHED_LABEL[policy],
                                 "factors": {"queue_len": qlen, "deadline_slack": 0, "pred_temp": 0, "cost": round(jc, 2), "hint_min": round(float(est[j]) / 60.0, 1), "waited_min": round((float(ev_t[i]) - float(w.submit[j])) / 60.0, 1)},
@@ -176,11 +206,11 @@ def to_recording(k: Kitchen, S, policy: str, hint: DurationHint, info_by_job: di
                 queued.discard(j); running[j] = chef; busy[chef] += w.req[j] / UNIT
                 inf = (info_by_job.get(j) or [{}])[-1] if info_by_job else {}
                 qlen = inf.get("queue_len", len(queued))
-                out.append({"t": tk, "type": "DECISION", "job_id": str(w.job_id[j]), "action": "assign", "target_gpu_ids": [CHEFS[chef][0]], "scheduler": SCHED_LABEL[policy],
+                out.append({"t": tk, "type": "DECISION", "job_id": str(w.job_id[j]), "action": "assign", "target_gpu_ids": [chef_ids[chef]], "scheduler": SCHED_LABEL[policy],
                             "factors": {"queue_len": qlen, "deadline_slack": 0, "pred_temp": round(float(temp[chef]), 1), "cost": 0, "hint_min": round(float(est[j]) / 60.0, 1)},
                             "mask_summary": {"valid": inf.get("valid", 0), "total": inf.get("total", 0)}})
                 svc = float(S.remaining[j]) if False else float(w.dur[j])
-                out.append({"t": tk, "type": "JOB_STARTED", "job_id": str(w.job_id[j]), "gpu_ids": [CHEFS[chef][0]], "eta_t": tk + max(1, math.ceil(svc / TICK_S))})
+                out.append({"t": tk, "type": "JOB_STARTED", "job_id": str(w.job_id[j]), "gpu_ids": [chef_ids[chef]], "eta_t": tk + max(1, math.ceil(svc / TICK_S))})
             elif typ == EV_FINISH:
                 chef = running.pop(j, None)
                 if chef == -1: busy_cloud -= w.req[j] / UNIT
@@ -193,14 +223,14 @@ def to_recording(k: Kitchen, S, policy: str, hint: DurationHint, info_by_job: di
                 queued.add(j)
                 out.append({"t": tk, "type": "JOB_FAILED", "job_id": str(w.job_id[j]), "reason": "asked to leave for a higher-priority party", "requeued": True})
         for c in range(n_chefs):
-            util = 100.0 * busy[c] / max(float(k.cluster.node_ngpu[c]), 1.0)
+            util = 100.0 * busy[c] / max(float(owned_ngpu[c]), 1.0)
             temp[c] = thermal.step(temp[c], util, TICK_S)
-            out.append({"t": tk, "type": "GPU_TELEMETRY", "gpu_id": CHEFS[c][0], "temp": round(float(temp[c]), 1), "util": round(util, 1), "vram_used_gb": float(busy[c]), "health": "normal"})
+            out.append({"t": tk, "type": "GPU_TELEMETRY", "gpu_id": chef_ids[c], "temp": round(float(temp[c]), 1), "util": round(util, 1), "vram_used_gb": float(busy[c]), "health": "normal"})
         if k.cloud:
             out.append({"t": tk, "type": "GPU_TELEMETRY", "gpu_id": "cloud-0", "temp": 0, "util": round(100.0 * busy_cloud / max(cloud_gpus, 1.0), 1), "vram_used_gb": float(busy_cloud), "health": "normal"})
         wv = np.array(waits) if waits else np.zeros(1)
         out.append({"t": tk, "type": "METRICS", "completed": done_n, "waiting": len(queued), "received": recv, "avg_wait_s": round(float(wv.mean()), 1),
-                    "p95_wait_s": round(float(np.quantile(wv, .95)), 1), "slo_rate": 1, "avg_util": round(float(busy.sum() / k.cluster.node_ngpu.sum() * 100), 1),
+                    "p95_wait_s": round(float(np.quantile(wv, .95)), 1), "slo_rate": 1, "avg_util": round(float(busy.sum() / owned_ngpu.sum() * 100), 1),
                     "cost": round(cloud_cost, 2), "thermal_incidents": 0, "starved": 0})
     for n, e in enumerate(out, 1):
         e["seq"] = n
@@ -224,11 +254,11 @@ def make_recordings(jobs: pd.DataFrame, pools: list[dict], hint: DurationHint, r
 
 
 def make_recording(jobs: pd.DataFrame, pools: list[dict], hint: DurationHint, policy: str, rl_model=None, rl_K: int = 16, start_day: float = 145.0,
-                   minutes: float = 150.0, extra_minutes: float = 60.0, nodes: int = 5, orders: list | None = None, cloud: dict | None = None, rl_shuffle: bool = False) -> dict:
+                   minutes: float = 150.0, extra_minutes: float = 60.0, nodes: int = 5, orders: list | None = None, cloud: dict | None = None, rl_shuffle: bool = False, kitchen: list | None = None) -> dict:
     """One recording for one scheduler, optionally with NEW ORDERS (jobs not in the trace) and the SIMULATED takeaway fallback."""
     if policy not in SCHED_LABEL:
         raise ValueError(f"unknown policy {policy!r}")
-    k = build_kitchen(jobs, pools, start_day, minutes, nodes=nodes, orders=orders, cloud=cloud)
+    k = build_kitchen(jobs, pools, start_day, minutes, nodes=nodes, orders=orders, cloud=cloud, kitchen=kitchen)
     max_ticks = int(minutes + extra_minutes)
     if policy == "rl_ppo":
         if rl_model is None:

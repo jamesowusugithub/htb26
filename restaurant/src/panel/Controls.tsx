@@ -1,11 +1,13 @@
 import { Crown, Flame, Pause, Play, Power, PowerOff, RotateCcw, Users, Zap } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
-import type { OrderSpec } from '../data/ReplaySource'
+import type { Chef, OrderSpec } from '../data/ReplaySource'
 import type { Controller } from '../data/controller'
 import { isTrace } from '../data/traceMeta'
 
 const SPEEDS = [0.5, 1, 2, 4, 8, 16]
 const SCHEDS = ['rl', 'fifo', 'priority'] as const
+const GPU_TYPES: [string, string][] = [['a10', 'NVIDIA A10'], ['a100', 'A100 80GB'], ['a800', 'A800'], ['h800', 'H800'], ['series1', 'Alibaba series 1'], ['series2', 'Alibaba series 2']]
+const DEFAULT_KITCHEN: Chef[] = [{ pool: 'a100', gpus: 8 }, { pool: 'a100', gpus: 8 }, { pool: 'a100', gpus: 8 }, { pool: 'a100', gpus: 8 }, { pool: 'a100', gpus: 8 }]
 const TIP = 'Replay mode: the recording has no backend to talk to'
 
 function Group({ title, children, tip }: { title: string; children: ReactNode; tip?: boolean }) {
@@ -26,6 +28,9 @@ export function Controls({ ctl }: { ctl: Controller }) {
   const run = (p: Promise<unknown>) => { p.catch(() => undefined) } // errors are surfaced via meta.error
   const [ord, setOrd] = useState<OrderSpec>({ gpus: 4, priority: 'high', duration_min: 60 })
   const [busy, setBusy] = useState(false)
+  const [kit, setKit] = useState<Chef[]>(ctl.chefs ?? DEFAULT_KITCHEN)
+  const setChef = (i: number, c: Partial<Chef>) => setKit(kit.map((x, j) => (j === i ? { ...x, ...c } : x)))
+  const applyKitchen = () => { setBusy(true); ctl.setKitchen(kit).catch(() => undefined).finally(() => setBusy(false)) }
   const place = (specs: OrderSpec[]) => { setBusy(true); ctl.placeOrders(specs).catch(() => undefined).finally(() => setBusy(false)) }
 
   const off = replay
@@ -47,7 +52,30 @@ export function Controls({ ctl }: { ctl: Controller }) {
         </Group>
       )}
       {trace && ctl.canOrder && (
+        <Group title={`Kitchen: ${kit.reduce((a, c) => a + c.gpus, 0)} GPUs on ${kit.length} chefs`}>
+          <div className="kitchen">
+            {kit.map((c, i) => (
+              <div className="chef-row" key={i}>
+                <span className="mono">Chef {i + 1}</span>
+                <select className="select" aria-label={`Chef ${i + 1} GPU type`} value={c.pool} onChange={(e) => setChef(i, { pool: e.target.value })}>
+                  {GPU_TYPES.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+                </select>
+                <select className="select" aria-label={`Chef ${i + 1} GPUs`} value={c.gpus} onChange={(e) => setChef(i, { gpus: Number(e.target.value) })}>
+                  {[1, 2, 4, 8].map((g) => <option key={g} value={g}>{g} GPU{g > 1 ? 's' : ''}</option>)}
+                </select>
+              </div>
+            ))}
+          </div>
+          <button className="btn" disabled={busy || kit.length >= 5} onClick={() => setKit([...kit, { pool: 'a100', gpus: 8 }])}>+ Chef</button>
+          <button className="btn" disabled={busy || kit.length <= 2} onClick={() => setKit(kit.slice(0, -1))}>- Chef</button>
+          <button className="btn primary" disabled={busy} onClick={applyKitchen}>{busy ? 'Rebuilding...' : 'Apply kitchen'}</button>
+        </Group>
+      )}
+      {trace && ctl.canOrder && (
         <Group title={`New order (not in the trace)${ctl.orderCount ? ` - ${ctl.orderCount} placed` : ''}`}>
+          <select className="select" aria-label="GPU type for the order" value={ord.pool ?? kit[0]?.pool} onChange={(e) => setOrd({ ...ord, pool: e.target.value })}>
+            {Array.from(new Set(kit.map((c) => c.pool))).map((k) => <option key={k} value={k}>{GPU_TYPES.find((t) => t[0] === k)?.[1] ?? k}</option>)}
+          </select>
           <select className="select" aria-label="GPUs requested" value={ord.gpus} onChange={(e) => setOrd({ ...ord, gpus: Number(e.target.value) })}>
             {[1, 2, 4, 8].map((g) => <option key={g} value={g}>{g} GPU{g > 1 ? 's' : ''}</option>)}
           </select>

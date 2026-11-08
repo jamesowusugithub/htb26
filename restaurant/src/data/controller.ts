@@ -1,5 +1,5 @@
 import { LiveSource } from './LiveSource'
-import { ReplaySource, type OrderSpec } from './ReplaySource'
+import { ReplaySource, type OrderSpec, type Chef, type CompareResult } from './ReplaySource'
 import type { ConnStatus, EventSource, SourceKind } from './source'
 import { applyEvent, emptyState, snapshotToState, stateFromConfig } from './store'
 import type { Config, SimEvent, SimState } from './types'
@@ -90,6 +90,22 @@ export class Controller {
   get canOrder() { return this.source instanceof ReplaySource && this.source.canOrder }
   get orderCount() { return this.source instanceof ReplaySource ? this.source.orderCount : 0 }
   /** New orders go to the backend, where the trained scheduler decides; the animation then reloads at the same tick. */
+  get chefs() { return this.source instanceof ReplaySource ? this.source.chefs : null }
+  async setKitchen(k: Chef[]) {
+    if (!(this.source instanceof ReplaySource)) throw new Error('no recording attached')
+    try {
+      await this.source.setKitchen(k)
+      this.setMeta({ error: null })
+    } catch (e) {
+      this.setMeta({ error: `kitchen: ${String(e)}` })
+      throw e
+    }
+  }
+  async compare(): Promise<CompareResult> {
+    if (!(this.source instanceof ReplaySource)) throw new Error('no recording attached')
+    return this.source.compare()
+  }
+
   async placeOrders(specs: OrderSpec[]) {
     if (!(this.source instanceof ReplaySource)) throw new Error('no recording attached')
     try {
