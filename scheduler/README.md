@@ -8,7 +8,9 @@ python -m scheduler.run_baselines --start-day 90 --days 5 --load 0.85   # compar
 python -m scheduler.make_samples --start-day 90 --hours 6                # NDJSON runs for the frontend
 python -m scheduler.whatif --preset growth_30 --start-day 90            # what-if scenario under every policy
 uvicorn scheduler.api:app --port 8000                                    # frontend API, docs at /docs
-python -m pytest tests -q                                                # 36 tests
+python -m scheduler.train_rl --bc-episodes 60 --wide --lr 1e-4 --steps 2000000 --out models/ppo_bc   # train
+python -m scheduler.run_eval --model models/ppo_bc/best --out analysis/rl/ppo_bc   # held-out evaluation
+python -m pytest tests -q                                                # 42 tests
 ```
 
 ## What-ifs (`whatif.py`)
@@ -38,3 +40,8 @@ NaN metrics (e.g. spot wait with no spot jobs) are sent as `null`. Windows are c
 ## Files
 `data.py` loaders, workloads, cluster scaling · `sim.py` numba core · `policies.py` baselines ·
 `metrics.py` · `export.py` + `schema/events.schema.json` frontend feed · `samples/` example runs.
+
+## Learned scheduler (phase 4; results and caveats in `analysis/rl/README.md`)
+`duration_model.py` runtime hint · `env.py` Gymnasium env (masked actions) · `rl_core.py` numba decision interface ·
+`train_rl.py` behaviour cloning + masked PPO · `run_eval.py` held-out comparison. `rl_ppo` is selectable in `POST /whatif`.
+It beats priority-FIFO and backfill on held-out windows but **not** the `sjf_hint` rule (see results).

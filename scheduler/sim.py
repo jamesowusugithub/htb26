@@ -25,9 +25,9 @@ EV_NAMES = ["arrive", "start", "finish", "preempt"]
 
 # scalar slots (int64 array `sc`)
 SC_NRUN, SC_HEAP, SC_NEXT, SC_NEV, SC_NSNAP, SC_ERR, SC_PREEMPT, SC_RESUME, SC_POLICY, SC_DONE, \
-    SC_LOG, SC_SNAP, SC_DEPTH, SC_NPREEMPT, SC_EARLY = range(15)
+    SC_LOG, SC_SNAP, SC_DEPTH, SC_NPREEMPT, SC_EARLY, SC_FOCUS = range(16)
 # float slots (`fc`)
-FC_NOW, FC_SNAPDT, FC_NEXTSNAP = range(3)
+FC_NOW, FC_SNAPDT, FC_NEXTSNAP, FC_QINT = range(4)
 
 ERR_HEAP, ERR_STUCK, ERR_EVLOG = 1, 2, 4
 
@@ -50,6 +50,8 @@ FIELDS = [
     # snapshots
     "snap_t", "snap_busy", "snap_qhp", "snap_qsp", "snap_run", "snap_maxfull",
     # scalars
+    # RL decision interface
+    "cand_job", "cand_pos", "obs", "amask",
     "sc", "fc",
 ]
 State = namedtuple("State", FIELDS)
@@ -560,8 +562,11 @@ def advance(S, t):
             S.fc[FC_NEXTSNAP] += S.fc[FC_SNAPDT]
     dt = t - now
     if dt > 0:
+        q = 0.0
         for p in range(S.pool_busy.shape[0]):
             S.util_int[p] += S.pool_busy[p] * dt
+            q += S.qprio[p, 0] + 0.3 * S.qprio[p, 1]
+        S.fc[FC_QINT] += q * dt / 3600.0
     S.fc[FC_NOW] = t
 
 
@@ -641,7 +646,7 @@ def estimate_array(w: Workload, mode: str, sigma: float = 1.0, seed: int = 0,
 
 def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = True, resume: bool = False,
                 est: np.ndarray | None = None, depth: int = 128, log_events: bool = False, early_stop: bool = False,
-                snapshot_dt: float | None = 3600.0, max_snapshots: int = 400000) -> State:
+                snapshot_dt: float | None = 3600.0, max_snapshots: int = 400000, rl_k: int = 8) -> State:
     N = len(w)
     P = cluster.n_pools
     M = len(cluster.node_pool)
@@ -660,7 +665,7 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
     if policy == FIFO:
         key = w.submit.copy()
     elif policy == SJF:
-        key = w.prio * 1e10 + w.dur
+        key = w.prio * 1e10 + (est if est is not None else w.dur)
     else:
         key = w.prio * 1e10 + w.submit
     if est is None:
@@ -672,6 +677,7 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
     n_snap = int(min(max_snapshots, horizon / snapshot_dt + 4)) if snap_on else 1
 
     sc = np.zeros(16, dtype=np.int64)
+    sc[SC_FOCUS] = -1
     sc[SC_PREEMPT] = int(preempt and policy != FIFO)
     sc[SC_RESUME] = int(resume)
     sc[SC_POLICY] = policy
@@ -702,6 +708,8 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
         ev_t=z(ev_cap, np.float64), ev_type=z(ev_cap), ev_job=z(ev_cap), ev_node=z(ev_cap), ev_mask=z(ev_cap),
         snap_t=z(n_snap, np.float64), snap_busy=z((n_snap, P)), snap_qhp=z((n_snap, P)), snap_qsp=z((n_snap, P)),
         snap_run=z((n_snap, P)), snap_maxfull=z((n_snap, P)),
+        cand_job=np.full(rl_k, -1, dtype=np.int64), cand_pos=np.full(rl_k, -1, dtype=np.int64),
+        obs=np.zeros(P + 6 + rl_k * 8, dtype=np.float32), amask=np.zeros(rl_k + 1, dtype=np.int64),
         sc=sc, fc=fc)
 
 

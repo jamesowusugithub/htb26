@@ -22,8 +22,8 @@ def setup(target_load: float = 0.85, min_nodes: int = 8):
 
 
 def run_policy(cluster, w, spec, resume=False, est_sigma=1.0, **kw):
-    est = None
-    if spec.est_mode:
+    est = kw.pop("est", None)
+    if est is None and spec.est_mode in ("oracle", "noisy", "median"):
         est = estimate_array(w, spec.est_mode, sigma=est_sigma)
     kw.setdefault("early_stop", True)
     return simulate(cluster, w, spec.policy, preempt=spec.preempt, resume=resume, est=est, **kw)

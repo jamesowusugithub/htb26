@@ -21,6 +21,13 @@ from .metrics import timeline
 from .policies import POLICIES
 from .run_baselines import setup
 from .whatif import PRESETS, Scenario, run_scenario, compare_table
+from .env import SchedulingEnv
+from .eval_rl import run_agent
+from .duration_model import load_or_fit
+
+RL_MODEL = Path(__file__).resolve().parents[1] / "models/ppo_bc/best.zip"
+RL_NAME = "rl_ppo"
+_rl: dict = {}
 
 RUNS_DIR = Path(__file__).resolve().parents[1] / "runs"
 MAX_DAYS = 7.0
@@ -73,6 +80,16 @@ def _json_safe(o):
     return o
 
 
+def rl_policy():
+    """Lazy-load the trained masked-PPO policy (behaviour-cloned from the hint heuristic, PPO fine-tuned)."""
+    if "model" not in _rl:
+        if not RL_MODEL.exists():
+            raise HTTPException(422, f"{RL_NAME} unavailable: {RL_MODEL.name} not found")
+        from sb3_contrib import MaskablePPO
+        _rl["model"] = MaskablePPO.load(RL_MODEL, device="cpu")
+    return _rl["model"]
+
+
 def env():
     with _lock:
         if not _env:
@@ -123,7 +140,9 @@ def meta():
                        "nodes": int(cl.node_counts()[i]), "capacity_gpus": float(cl.capacity_gpus()[i]),
                        "observed_nodes": int(e["base"].node_counts()[i]), "scale_vs_observed": float(cl.scale[i])}
                       for i, p in enumerate(e["pools"])],
-            "policies": [{"name": s.name, "realistic": s.realistic, "description": s.description} for s in POLICIES.values()],
+            "policies": [{"name": s.name, "realistic": s.realistic, "description": s.description} for s in POLICIES.values()]
+            + ([{"name": RL_NAME, "realistic": True, "description": "Learned scheduler: masked PPO over hint-ranked candidates (see analysis/rl)"}]
+               if RL_MODEL.exists() else []),
             "assumptions": data.load_assumptions()["items"],
             "trace_days": float(e["jobs"].submit_relative_s.max() / 86400),
             "websocket": "/runs/{run_id}/stream?speed=3600&start=0 sends {type:'batch', t_from, t_to, items:[...events]} then {type:'end'}"}
@@ -137,7 +156,7 @@ def presets():
 @app.post("/whatif")
 def whatif(req: WhatIfRequest):
     sc = _scenario_from(req)
-    bad = [p for p in req.policies if p not in POLICIES]
+    bad = [p for p in req.policies if p not in POLICIES and p != RL_NAME]
     if bad:
         raise HTTPException(422, f"unknown policies {bad}; choose from {list(POLICIES)}")
     key = f"{sc.scenario_id}-{req.snapshot_s:g}-{','.join(req.policies)}"
@@ -146,19 +165,29 @@ def whatif(req: WhatIfRequest):
     e = env()
     t0 = time.time()
     with _lock:
-        res = run_scenario(sc, e["jobs"], e["cluster"], req.policies, log_events=True, snapshot_dt=req.snapshot_s)
+        sim_policies = [p for p in req.policies if p != RL_NAME]
+        res = run_scenario(sc, e["jobs"], e["cluster"], sim_policies, log_events=True, snapshot_dt=req.snapshot_s)
+        if RL_NAME in req.policies:
+            model = rl_policy()
+            renv = SchedulingEnv(e["jobs"], e["cluster"], load_or_fit(e["jobs"], 40), log_events=True, snapshot_dt=req.snapshot_s)
+            m, _, _ = run_agent(renv, lambda o, mk: model.predict(o, action_masks=mk, deterministic=True)[0], sc)
+            res["policies"][RL_NAME] = {"realistic": True, "metrics": m}
+            res["_states"][RL_NAME] = renv.S
+            res["_rl_workload"] = (renv.w, renv.cluster)
     out_dir = RUNS_DIR / sc.scenario_id
     results = {}
     for name in req.policies:
         S = res["_states"][name]
         path = out_dir / f"{name}.ndjson"
-        export_ndjson(path, S, res["_workload"], res["_cluster"], policy_name=name, realistic=POLICIES[name].realistic,
-                      preempt=POLICIES[name].preempt, resume=sc.resume_preempted, window_len_s=sc.days * 86400,
+        w_, c_ = res["_rl_workload"] if name == RL_NAME else (res["_workload"], res["_cluster"])
+        spec = POLICIES.get(name)
+        export_ndjson(path, S, w_, c_, policy_name=name, realistic=spec.realistic if spec else True,
+                      preempt=spec.preempt if spec else True, resume=sc.resume_preempted, window_len_s=sc.days * 86400,
                       extra_meta={"scenario": sc.to_dict(), "scenario_id": sc.scenario_id})
-        tl = timeline(S, res["_cluster"])
+        tl = timeline(S, c_)
         tl = tl[tl.t <= sc.days * 86400]
         results[name] = {
-            "run_id": f"{sc.scenario_id}-{name}", "realistic": POLICIES[name].realistic,
+            "run_id": f"{sc.scenario_id}-{name}", "realistic": spec.realistic if spec else True,
             "metrics": res["policies"][name]["metrics"],
             "events_url": f"/runs/{sc.scenario_id}-{name}/events", "timeline_url": f"/runs/{sc.scenario_id}-{name}/timeline",
             "stream_url": f"/runs/{sc.scenario_id}-{name}/stream"}

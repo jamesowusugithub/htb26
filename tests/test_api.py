@@ -84,3 +84,19 @@ def test_nan_metrics_are_sent_as_null(client):
     assert r.status_code == 200
     assert r.json()["comparison"][0]["spot_wait_mean_h"] is None
     assert r.json()["results"]["fifo"]["metrics"]["spot"]["wait_mean_s"] is None
+
+
+def test_rl_policy_selectable_and_exports_valid_events(client):
+    from pathlib import Path
+    if not (Path(__file__).parents[1] / "models/ppo_bc/best.zip").exists():
+        pytest.skip("trained model not present")
+    r = client.post("/whatif", json={"scenario": {"start_day": 130, "days": 1}, "policies": ["priority_fifo", "rl_ppo"],
+                                     "snapshot_s": 1800})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert {c["policy"] for c in body["comparison"]} == {"priority_fifo", "rl_ppo"}
+    run_id = body["results"]["rl_ppo"]["run_id"]
+    v = jsonschema.Draft202012Validator(SCHEMA)
+    lines = [json.loads(x) for x in client.get(f"/runs/{run_id}/events", params={"t_to": 7200}).text.splitlines()]
+    assert lines and all(v.is_valid(o) for o in lines)
+    assert any(p["name"] == "rl_ppo" for p in client.get("/meta").json()["policies"])

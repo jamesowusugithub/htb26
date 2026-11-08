@@ -4,3 +4,5 @@ __pycache__/
 .vendor-history/
 runs/
 .numba_cache/
+models/*/tb/
+models/*.joblib

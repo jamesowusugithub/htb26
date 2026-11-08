@@ -39,9 +39,13 @@ def summarize(S: State, w: Workload, cluster: Cluster, util_hi: float | None = N
     hi = util_hi if util_hi is not None else float(S.submit.max())
     sel = (t >= 0) & (t <= hi)
     util = {}
+    span = max(float(S.fc[0]) - float(S.submit.min()), 1.0)   # no snapshots: whole-run average from the busy integral
     for p, pd_ in enumerate(cluster.pools):
         cap = max(S.pool_cap[p], 1)
-        util[pd_["id"]] = float((S.snap_busy[:n, p][sel] / cap).mean()) if sel.any() else float("nan")
+        if sel.any():
+            util[pd_["id"]] = float((S.snap_busy[:n, p][sel] / cap).mean())
+        else:
+            util[pd_["id"]] = float(S.util_int[p] / (cap * span))
     out = {"overall": block(ev), "hp": block(ev[ev.priority == "hp"]), "spot": block(ev[ev.priority == "spot"]),
            "pools": {pid: {"hp": block(ev[(ev.pool == pid) & (ev.priority == "hp")]),
                            "spot": block(ev[(ev.pool == pid) & (ev.priority == "spot")])}

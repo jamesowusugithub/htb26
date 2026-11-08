@@ -40,7 +40,7 @@ class Workload:
 
 def load_jobs(pools: list[dict]) -> pd.DataFrame:
     cols = ["job_id", "organisation_id", "gpu_model_identifier", "priority_class",
-            "gpu_request_recorded_count", "submit_relative_s", "duration_s"]
+            "gpu_request_recorded_count", "submit_relative_s", "duration_s", "cpu_request_vcpus", "worker_count"]
     j = pd.read_parquet(ROOT / "harmonized/alibaba/jobs.parquet", columns=cols)
     pidx = {p["gpu_model_identifier"]: i for i, p in enumerate(pools)}
     j["pool"] = j.gpu_model_identifier.map(pidx).astype("int64")

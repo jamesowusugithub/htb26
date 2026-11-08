@@ -21,6 +21,8 @@ POLICIES: dict[str, PolicySpec] = {p.name: p for p in [
                "Priority + EASY backfill using pool/priority median runtime as the estimate"),
     PolicySpec("backfill_oracle", BACKFILL, True, "oracle", False,
                "Priority + EASY backfill with perfect runtime estimates (ceiling)"),
+    PolicySpec("sjf_hint", SJF, True, "hint", True,
+               "HP first, shortest *predicted* job first (duration-hint model trained on earlier history)"),
     PolicySpec("sjf_oracle", SJF, True, None, False,
                "HP first, shortest true job first within class, greedy (ceiling)"),
 ]}
