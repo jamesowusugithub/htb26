@@ -27,3 +27,9 @@
 .score-btn{color:#173b78;font-size:10px;padding:4px 8px;min-height:26px;border:1px solid #cbd5de;border-radius:6px;background:#fff;cursor:pointer;font-weight:600}.score-btn:disabled{opacity:.55;cursor:wait}
 .score-table td:nth-child(n+2),.score-table th:nth-child(n+2){text-align:right}.score-table tr.ceiling td{color:#7b8c98}.score-table tr.selected td{background:#e9f4ee;color:#075d43}
 .score-table td{white-space:nowrap}.score-table td:first-child{white-space:normal;max-width:96px}
+
+.forecast-section{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.forecast-table td:last-child,.forecast-table th:last-child{text-align:right;white-space:nowrap}
+.forecast-table{width:100%;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums;margin-top:8px}
+.forecast-table th{font-weight:600;color:var(--muted);text-align:left;padding:3px 4px;font-size:10px}.forecast-table td{padding:5px 4px;border-top:1px solid #eef2f6}
+.forecast-table td:nth-child(2),.forecast-table td:nth-child(3){white-space:nowrap}
