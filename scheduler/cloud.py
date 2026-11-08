@@ -32,6 +32,9 @@ def pool_prices(pool_ids: list[str], multiplier: float = 1.0) -> np.ndarray:
     return np.array([tp[POOL_TIER.get(p, "premium")] * multiplier for p in pool_ids])
 
 
+DEFAULT_MAX_JOB_COST_USD = 30.0    # ASSUMPTION: a job is only sent to the cloud if its PREDICTED rental cost is at most this (about 1 h of an 8-GPU premium node)
+
+
 def provenance() -> dict:
     return {"evidence": "assumption", "tier_prices_usd_per_gpu_hour": tier_prices(), "pool_tier": POOL_TIER, "tier_offer_model": TIER_OFFER,
             "note": "No Alibaba GPU model has an exact price in the pricing data; tiers are anchored to the cheapest hourly offer of a related model. "

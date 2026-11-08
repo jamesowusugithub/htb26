@@ -27,7 +27,7 @@ EV_NAMES = ["arrive", "start", "finish", "preempt", "fail", "repair", "evict_fai
 SC_NRUN, SC_HEAP, SC_NEXT, SC_NEV, SC_NSNAP, SC_ERR, SC_PREEMPT, SC_RESUME, SC_POLICY, SC_DONE, \
     SC_LOG, SC_SNAP, SC_DEPTH, SC_NPREEMPT, SC_EARLY, SC_FOCUS, SC_FAILIDX, SC_NFAIL, SC_FAILEV = range(19)
 # float slots (`fc`)
-FC_NOW, FC_SNAPDT, FC_NEXTSNAP, FC_QINT, FC_CLOUDCOST, FC_CLOUDGPUH, FC_CLOUDJOBS, FC_OVFWAIT = range(8)
+FC_NOW, FC_SNAPDT, FC_NEXTSNAP, FC_QINT, FC_CLOUDCOST, FC_CLOUDGPUH, FC_CLOUDJOBS, FC_OVFWAIT, FC_OVFBUDGET = range(9)
 
 ERR_HEAP, ERR_STUCK, ERR_EVLOG = 1, 2, 4
 
@@ -51,7 +51,7 @@ FIELDS = [
     "snap_t", "snap_busy", "snap_qhp", "snap_qsp", "snap_run", "snap_maxfull",
     # scalars
     # simulated cloud overflow (takeaway): node flags, per-job flag, USD per GPU-hour per pool
-    "node_cloud", "job_cloud", "price_pool",
+    "node_cloud", "job_cloud", "price_pool", "ovf_est",
     # node failures (scheduled by the scenario) and queue heads for the frontend feed
     "node_down", "fail_t", "fail_node", "fail_kind", "snap_qhead",
     # RL decision interface
@@ -289,6 +289,10 @@ def overflow_pass(S, p, t):
     while i < S.qc[p] and i < depth * 4:
         j = S.queue[p, i]
         if S.submit[j] < 0.0 or t - S.submit[j] >= thr:
+            budget = S.fc[FC_OVFBUDGET]
+            if budget > 0.0 and S.ovf_est[j] / 3600.0 * (S.req[j] / UNIT) * S.price_pool[p] > budget:
+                i += 1                      # predicted rental cost exceeds the per-job budget: keep waiting for owned capacity
+                continue
             n, mask = find_cloud(S, p, S.req[j])
             if n >= 0:
                 q_remove(S, p, i)
@@ -773,7 +777,8 @@ def estimate_array(w: Workload, mode: str, sigma: float = 1.0, seed: int = 0,
 def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = True, resume: bool = False,
                 est: np.ndarray | None = None, depth: int = 128, log_events: bool = False, early_stop: bool = False,
                 snapshot_dt: float | None = 3600.0, max_snapshots: int = 400000, rl_k: int = 8,
-                failures: list | None = None, qhead: int = 5, cloud_price=None, overflow_wait_s: float = 0.0) -> State:
+                failures: list | None = None, qhead: int = 5, cloud_price=None, overflow_wait_s: float = 0.0,
+                max_job_cost_usd: float = 0.0, overflow_est=None) -> State:
     N = len(w)
     P = cluster.n_pools
     M = len(cluster.node_pool)
@@ -815,10 +820,11 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
     sc[SC_SNAP] = int(snap_on)
     sc[SC_DEPTH] = depth
     sc[SC_EARLY] = int(early_stop)
-    fc = np.zeros(8)
+    fc = np.zeros(12)
     fc[FC_SNAPDT] = snapshot_dt if snap_on else 1.0
     fc[FC_NEXTSNAP] = 0.0
     fc[FC_OVFWAIT] = float(overflow_wait_s)
+    fc[FC_OVFBUDGET] = float(max_job_cost_usd)
     fc[FC_NOW] = float(w.submit.min()) if N else 0.0
 
     z = lambda shape, dt=np.int64: np.zeros(shape, dtype=dt)
@@ -839,7 +845,7 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
         ev_t=z(ev_cap, np.float64), ev_type=z(ev_cap), ev_job=z(ev_cap), ev_node=z(ev_cap), ev_mask=z(ev_cap),
         snap_t=z(n_snap, np.float64), snap_busy=z((n_snap, P)), snap_qhp=z((n_snap, P)), snap_qsp=z((n_snap, P)),
         snap_run=z((n_snap, P)), snap_maxfull=z((n_snap, P)),
-        node_cloud=cluster.cloud_mask().astype(np.int64), job_cloud=z(N),
+        node_cloud=cluster.cloud_mask().astype(np.int64), job_cloud=z(N), ovf_est=est.astype(np.float64) if overflow_est is None else np.asarray(overflow_est, dtype=np.float64),
         price_pool=np.zeros(P) if cloud_price is None else np.asarray(cloud_price, dtype=np.float64),
         node_down=z(M), fail_t=np.array([f[0] for f in fl] + [0.0], dtype=np.float64),
         fail_node=np.array([f[1] for f in fl] + [0], dtype=np.int64), fail_kind=np.array([f[2] for f in fl] + [0], dtype=np.int64),
