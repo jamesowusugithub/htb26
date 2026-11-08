@@ -53,6 +53,10 @@ def _events_pending(S):
     return S.sc[SC_HEAP] > 0 or S.sc[SC_NEXT] < S.submit.shape[0] or S.sc[SC_FAILIDX] < S.sc[SC_NFAIL]
 
 
+# added to a spot job's hint when ranking candidates, so the K slots fill with HP jobs first (1e12 s >> any real runtime). Set to 0.0 for the old behaviour.
+HP_FIRST_PENALTY = 1e12
+
+
 @njit(cache=True)
 def build_decision(S, p, D):
     """Fill cand/obs/amask for pool p. Returns the number of startable candidates (after rule-based preemption)."""
@@ -105,8 +109,9 @@ def build_decision(S, p, D):
                     taken = True
             if taken:
                 continue
-            if S.est[j] < bestest:
-                bestest = S.est[j]
+            key = S.est[j] + (0.0 if S.prio[j] == 0 else HP_FIRST_PENALTY)   # HP candidates are offered before spot ones
+            if key < bestest:
+                bestest = key
                 best = pos
         if best < 0:
             break

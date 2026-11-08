@@ -32,7 +32,7 @@ import os
 _MODELS = Path(__file__).resolve().parents[1] / "models"
 # newest verified policy first; override with HTB_RL_MODEL
 RL_MODEL = Path(os.environ["HTB_RL_MODEL"]) if os.environ.get("HTB_RL_MODEL") else next(
-    (p for p in (_MODELS / "ppo_combined/best.zip", _MODELS / "ppo_k16/best.zip", _MODELS / "ppo_bc/best.zip") if p.exists()), _MODELS / "ppo_bc/best.zip")
+    (p for p in (_MODELS / "ppo_u4_hpfirst_s11/best.zip", _MODELS / "ppo_combined/best.zip", _MODELS / "ppo_k16/best.zip", _MODELS / "ppo_bc/best.zip") if p.exists()), _MODELS / "ppo_bc/best.zip")
 RL_NAME = "rl_ppo"
 _rl: dict = {}
 _thermal: dict = {}

@@ -1,0 +1,23 @@
+[bc] 1,603,267 samples from 150 windows
+/Users/carlkaziboni/Documents/htb26_gpu/htb26/scheduler/train_rl.py:67: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:821.)
+  tot += float(loss) * len(idx)
+[bc] epoch 1/12 nll=0.0411
+[bc] epoch 2/12 nll=0.0213
+[bc] epoch 3/12 nll=0.0199
+[bc] epoch 4/12 nll=0.0187
+[bc] epoch 5/12 nll=0.0178
+[bc] epoch 6/12 nll=0.0168
+[bc] epoch 7/12 nll=0.0162
+[bc] epoch 8/12 nll=0.0155
+[bc] epoch 9/12 nll=0.0148
+[bc] epoch 10/12 nll=0.0145
+[bc] epoch 11/12 nll=0.0141
+[bc] epoch 12/12 nll=0.0135
+[val] steps=300,000 queue-time ratio vs priority_fifo=0.369 HP wait=11.85h
+python(95673) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+python(95691) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+[val] steps=600,000 queue-time ratio vs priority_fifo=0.356 HP wait=11.43h
+[val] steps=900,000 queue-time ratio vs priority_fifo=0.355 HP wait=11.38h
+[val] steps=1,200,000 queue-time ratio vs priority_fifo=0.359 HP wait=11.56h
+done in 276s; best val ratio 0.355

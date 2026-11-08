@@ -1,0 +1,48 @@
+{
+ "args": {
+  "steps": 1200000,
+  "envs": 8,
+  "device": "cpu",
+  "out": "models/ppo_u4_hpfirst_s11",
+  "K": 16,
+  "days": 3.0,
+  "val_every": 300000,
+  "seed": 11,
+  "verbose": 0,
+  "bc_episodes": 150,
+  "wide": true,
+  "ent": 0.001,
+  "burst_prob": 0.6,
+  "offload": false,
+  "cloud_prob": 0.0,
+  "cost_weight": 0.0,
+  "lr": 0.0001,
+  "net": [
+   256,
+   256
+  ]
+ },
+ "seconds": 278.6275680065155,
+ "val": [
+  {
+   "steps": 300000,
+   "val_q_ratio": 0.3544703197197269,
+   "val_hp_wait_h": 11.275977159670292
+  },
+  {
+   "steps": 600000,
+   "val_q_ratio": 0.3558161657006918,
+   "val_hp_wait_h": 11.288802509600258
+  },
+  {
+   "steps": 900000,
+   "val_q_ratio": 0.35971309127576606,
+   "val_hp_wait_h": 11.368292680817193
+  },
+  {
+   "steps": 1200000,
+   "val_q_ratio": 0.35650135013534573,
+   "val_hp_wait_h": 11.300607557791858
+  }
+ ]
+}
