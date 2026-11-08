@@ -27,7 +27,7 @@ EV_NAMES = ["arrive", "start", "finish", "preempt", "fail", "repair", "evict_fai
 SC_NRUN, SC_HEAP, SC_NEXT, SC_NEV, SC_NSNAP, SC_ERR, SC_PREEMPT, SC_RESUME, SC_POLICY, SC_DONE, \
     SC_LOG, SC_SNAP, SC_DEPTH, SC_NPREEMPT, SC_EARLY, SC_FOCUS, SC_FAILIDX, SC_NFAIL, SC_FAILEV = range(19)
 # float slots (`fc`)
-FC_NOW, FC_SNAPDT, FC_NEXTSNAP, FC_QINT, FC_CLOUDCOST, FC_CLOUDGPUH, FC_CLOUDJOBS, FC_OVFWAIT, FC_OVFBUDGET = range(9)
+FC_NOW, FC_SNAPDT, FC_NEXTSNAP, FC_QINT, FC_CLOUDCOST, FC_CLOUDGPUH, FC_CLOUDJOBS, FC_OVFWAIT, FC_OVFBUDGET, FC_UTILCAP, FC_FAULT_A, FC_FAULT_B, FC_OFFMIN = range(13)
 
 ERR_HEAP, ERR_STUCK, ERR_EVLOG = 1, 2, 4
 
@@ -187,16 +187,38 @@ def log_event(S, t, typ, j, node, mask):
 
 # ----------------------------------------------------------------------------- placement
 @njit(cache=True)
+def cap_now(S):
+    """Thermal derating: while the scenario's cooling fault is active, a node may not be pushed past UTILCAP of its GPUs."""
+    c = S.fc[FC_UTILCAP]
+    if c < 1.0:
+        t = S.fc[FC_NOW]
+        if t >= S.fc[FC_FAULT_A] and t < S.fc[FC_FAULT_B]:
+            return c
+    return 1.0
+
+
+@njit(cache=True)
+def over_cap(S, n, req, cap):
+    busy = 0
+    for k in range(S.node_ngpu[n]):
+        busy += UNIT - S.gfree[n, k]
+    return busy + req > cap * S.node_ngpu[n] * UNIT
+
+
+@njit(cache=True)
 def find_place(S, p, req, excl):
     """Best-fit placement in pool p, skipping node `excl`. Returns (node, gpu_mask) or (-1, 0)."""
     n0 = S.pool_start[p]
     n1 = S.pool_start[p + 1]
     best = -1
     bestscore = 1 << 60
+    cap = cap_now(S)
     if req >= UNIT:
         g = req // UNIT
         for n in range(n0, n1):
             if n == excl or S.node_cloud[n] == 1:
+                continue
+            if cap < 1.0 and over_cap(S, n, req, cap):
                 continue
             f = S.node_full[n]
             if f >= g and f < bestscore:
@@ -216,6 +238,8 @@ def find_place(S, p, req, excl):
     bestk = -1
     for n in range(n0, n1):
         if n == excl or S.node_cloud[n] == 1 or S.node_maxfree[n] < req:
+            continue
+        if cap < 1.0 and over_cap(S, n, req, cap):
             continue
         for k in range(S.node_ngpu[n]):
             gf = S.gfree[n, k]
@@ -304,6 +328,9 @@ def overflow_pass(S, p, t):
 @njit(cache=True)
 def place_on_node(S, n, req):
     """Placement restricted to a single node."""
+    cap = cap_now(S)
+    if cap < 1.0 and over_cap(S, n, req, cap):
+        return 0
     if req >= UNIT:
         g = req // UNIT
         if S.node_full[n] < g:
@@ -778,7 +805,8 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
                 est: np.ndarray | None = None, depth: int = 128, log_events: bool = False, early_stop: bool = False,
                 snapshot_dt: float | None = 3600.0, max_snapshots: int = 400000, rl_k: int = 8,
                 failures: list | None = None, qhead: int = 5, cloud_price=None, overflow_wait_s: float = 0.0,
-                max_job_cost_usd: float = 0.0, overflow_est=None) -> State:
+                max_job_cost_usd: float = 0.0, overflow_est=None, util_cap: float = 1.0, derate_from_s: float = 0.0,
+                derate_to_s: float = float("inf"), rl_offload: bool = False, offload_min_wait_s: float = 0.0) -> State:
     N = len(w)
     P = cluster.n_pools
     M = len(cluster.node_pool)
@@ -820,11 +848,13 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
     sc[SC_SNAP] = int(snap_on)
     sc[SC_DEPTH] = depth
     sc[SC_EARLY] = int(early_stop)
-    fc = np.zeros(12)
+    fc = np.zeros(16)
     fc[FC_SNAPDT] = snapshot_dt if snap_on else 1.0
     fc[FC_NEXTSNAP] = 0.0
     fc[FC_OVFWAIT] = float(overflow_wait_s)
     fc[FC_OVFBUDGET] = float(max_job_cost_usd)
+    fc[FC_UTILCAP], fc[FC_FAULT_A], fc[FC_FAULT_B] = float(util_cap), float(derate_from_s), float(derate_to_s)
+    fc[FC_OFFMIN] = float(offload_min_wait_s)
     fc[FC_NOW] = float(w.submit.min()) if N else 0.0
 
     z = lambda shape, dt=np.int64: np.zeros(shape, dtype=dt)
@@ -851,7 +881,7 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
         fail_node=np.array([f[1] for f in fl] + [0], dtype=np.int64), fail_kind=np.array([f[2] for f in fl] + [0], dtype=np.int64),
         snap_qhead=np.full((n_snap, P, qhead), -1, dtype=np.int64),
         cand_job=np.full(rl_k, -1, dtype=np.int64), cand_pos=np.full(rl_k, -1, dtype=np.int64),
-        obs=np.zeros(P + 6 + rl_k * 8, dtype=np.float32), amask=np.zeros(rl_k + 1, dtype=np.int64),
+        obs=np.zeros(P + 6 + rl_k * 8 + (2 if rl_offload else 0), dtype=np.float32), amask=np.zeros(rl_k + (2 if rl_offload else 1), dtype=np.int64),
         sc=sc, fc=fc)
 
 

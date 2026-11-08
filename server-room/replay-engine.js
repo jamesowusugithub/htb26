@@ -224,7 +224,7 @@ export class ReplayEngine {
                alerts: gpus.filter(g => g.alert).length, arrivalsPerMin: this.arrivalsPerMin, routesDropped: this.counters.routesDropped,
                failureEvictions: this.meta?.failure_evictions ?? 0 },
       pools, events: this.events,
-      run: { runId: this.runId, scenarioId: this.meta?.scenario_id, scenario: sc, thermal: this.meta?.thermal ?? null, forecast: this.meta?.forecast ?? null,
+      run: { runId: this.runId, scenarioId: this.meta?.scenario_id, scenario: sc, thermal: this.meta?.thermal ?? null, forecast: this.meta?.forecast ?? null, demand: this.meta?.demand_forecast ?? null,
              display: disp ?? null, pools: this.meta?.pools ?? null, window: this.meta?.window ?? null, policyInfo: this.meta?.policy ?? null, metrics: this.metrics, comparison: this.comparison },
       effects: { burstActive: ops.burstActive(sc, nowH), coolingFaultActive: ops.coolingFaultActive(sc, nowH),
                  coolingDeltaC: snap?.cooling_fault_delta_c ?? 0, burst: sc.burst ?? null },

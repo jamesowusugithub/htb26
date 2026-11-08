@@ -19,33 +19,36 @@ from .run_baselines import setup
 from .duration_model import load_or_fit
 from .env import SchedulingEnv
 from .whatif import Scenario
-from .heuristics import hp_then_min_hint
+from .heuristics import hp_then_min_hint, hint_rule_with_offload
 
 VAL = [Scenario(name="val", start_day=d, days=3.0, seed=0) for d in (118.0, 121.0, 124.0)]
 
 
 WIDE = dict(arrival_mult=(0.7, 1.5), capacity_jitter=(0.85, 1.15))
+VAL_CLOUD = [Scenario(name="valc", start_day=d, days=3.0, seed=0, cloud={"nodes_per_pool": 5, "gpus_per_node": 8, "overflow_wait_s": 0.0, "max_job_cost_usd": 30.0,
+                                                                          "offload_min_wait_s": 1800.0}) for d in (118.0, 121.0, 124.0)]
 
 
-def make_env(rank, seed, K, days, wide=False, burst_prob=0.0):
+def make_env(rank, seed, K, days, wide=False, burst_prob=0.0, ox=None, shuffle=False):
     def _f():
         pools, jobs, base, cl = setup(0.85)
         hint = load_or_fit(jobs, 40)
         kw = WIDE if wide else {}
-        return SchedulingEnv(jobs, cl, hint, train_days=(45.0, 115.0), days=days, seed=seed + rank, K=K, burst_prob=burst_prob, **kw)
+        return SchedulingEnv(jobs, cl, hint, train_days=(45.0, 115.0), days=days, seed=seed + rank, K=K, burst_prob=burst_prob, shuffle_slots=shuffle, **(ox or {}), **kw)
     return _f
 
 
-def behaviour_clone(model, K, episodes, seed, wide, epochs=12, lr=1e-3, burst_prob=0.0):
+def behaviour_clone(model, K, episodes, seed, wide, epochs=12, lr=1e-3, burst_prob=0.0, ox=None, shuffle=False):
     """Imitate hp_then_min_hint on random training windows, then train the policy net on (obs, mask) -> action."""
-    env = make_env(999, seed, K, 3.0, wide, burst_prob)()
+    env = make_env(999, seed, K, 3.0, wide, burst_prob, ox, shuffle)()
+    rule = hint_rule_with_offload if (ox or {}).get("offload") else hp_then_min_hint
     X, M, A = [], [], []
     for _ in range(episodes):
         obs, _ = env.reset()
         done = False
         while not done:
             mask = env.action_masks()
-            act = hp_then_min_hint(obs, mask, K, env.base_cluster.n_pools)
+            act = rule(obs, mask, K, env.base_cluster.n_pools)
             X.append(obs); M.append(mask); A.append(act)
             obs, r, te, tr, info = env.step(act)
             done = te or tr
@@ -66,25 +69,27 @@ def behaviour_clone(model, K, episodes, seed, wide, epochs=12, lr=1e-3, burst_pr
 
 
 class ValCallback(BaseCallback):
-    def __init__(self, every, out, K):
+    def __init__(self, every, out, K, ox=None, cost_weight=0.0, shuffle=False):
         super().__init__()
         self.every, self.out, self.K = every, out, K
         self.best = np.inf
         self.last = 0
         pools, jobs, base, cl = setup(0.85)
-        self.env = SchedulingEnv(jobs, cl, load_or_fit(jobs, 40), K=K)
+        self.ox, self.cost_weight = ox or {}, cost_weight
+        self.env = SchedulingEnv(jobs, cl, load_or_fit(jobs, 40), K=K, shuffle_slots=shuffle, **{k: v for k, v in self.ox.items() if k == "offload"})
         self.hist = []
 
     def _val(self):
         ratios, hp = [], []
-        for sc in VAL:
+        for sc in (VAL_CLOUD if self.ox.get("offload") else VAL):
             obs, _ = self.env.reset(options={"scenario": sc})
             done = False
             while not done:
                 a, _ = self.model.predict(obs, action_masks=self.env.action_masks(), deterministic=True)
                 obs, r, te, tr, info = self.env.step(int(a))
                 done = te or tr
-            ratios.append(info["qint_ratio_vs_priority_fifo"])
+            # cost-adjusted ratio: weighted queue time plus cost_weight x cloud dollars, over priority-FIFO's queue time (so spending more cannot win)
+            ratios.append(info["qint_ratio_vs_priority_fifo"] + self.cost_weight * info.get("cloud_cost_usd", 0.0) / self.env.base_qint)
             hp.append(info["metrics"]["hp"]["wait_mean_s"] / 3600)
         return float(np.mean(ratios)), float(np.mean(hp))
 
@@ -116,13 +121,18 @@ def main():
     ap.add_argument("--wide", action="store_true", help="wider load/capacity randomisation")
     ap.add_argument("--ent", type=float, default=0.003)
     ap.add_argument("--burst-prob", type=float, default=0.0, help="share of training episodes using a BurstGPT arrival shape (combined layer)")
+    ap.add_argument("--offload", action="store_true", help="add the explicit 'send queue head to the SIMULATED cloud' action")
+    ap.add_argument("--cloud-prob", type=float, default=0.0, help="share of training episodes with simulated cloud capacity")
+    ap.add_argument("--cost-weight", type=float, default=0.0, help="weighted job-hours of queue time that one cloud dollar is worth in the reward (ASSUMPTION)")
     ap.add_argument("--lr", type=float, default=3e-4)
     ap.add_argument("--net", type=int, nargs="+", default=[128, 128])
+    ap.add_argument("--shuffle", action="store_true", help="randomly permute candidate slots so slot position carries no information")
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     torch.manual_seed(a.seed)
-    fns = [make_env(i, a.seed * 1000, a.K, a.days, a.wide, a.burst_prob) for i in range(a.envs)]
+    ox = dict(offload=a.offload, cloud_prob=a.cloud_prob, cost_weight=a.cost_weight) if a.offload else None
+    fns = [make_env(i, a.seed * 1000, a.K, a.days, a.wide, a.burst_prob, ox, a.shuffle) for i in range(a.envs)]
     venv = SubprocVecEnv(fns) if a.envs > 1 else DummyVecEnv(fns)
     venv = VecNormalize(venv, norm_obs=False, norm_reward=True, gamma=0.999)
     model = MaskablePPO("MlpPolicy", venv, device=a.device, learning_rate=a.lr, n_steps=2048, batch_size=4096,
@@ -130,8 +140,8 @@ def main():
                         policy_kwargs=dict(net_arch=dict(pi=a.net, vf=a.net)), seed=a.seed, verbose=a.verbose,
                         tensorboard_log=str(out / "tb"))
     if a.bc_episodes:
-        behaviour_clone(model, a.K, a.bc_episodes, a.seed, a.wide, burst_prob=a.burst_prob)
-    cb = ValCallback(a.val_every, out, a.K)
+        behaviour_clone(model, a.K, a.bc_episodes, a.seed, a.wide, burst_prob=a.burst_prob, ox=ox, shuffle=a.shuffle)
+    cb = ValCallback(a.val_every, out, a.K, ox, a.cost_weight, a.shuffle)
     t = time.time()
     model.learn(a.steps, callback=cb, progress_bar=False)
     model.save(out / "final")

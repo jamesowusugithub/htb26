@@ -35,6 +35,27 @@ export function PoolPanel({snap,selectedPool}){
   </section>;
 }
 
+// Demand forecast (calculated, not observed): GPUs requested by jobs arriving in the next 30 min, per pool, with a P10-P90 band, shown against what arrived.
+export function ForecastPanel({snap}){
+  const d=snap.run?.demand;
+  if(!d)return null;
+  if(!d.available)return <section className="forecast-section" aria-label="Demand forecast"><div className="section-heading"><h2>Demand forecast</h2><span>unavailable</span></div><p className="proxy-note">{d.reason}</p></section>;
+  const H=d.horizon_s, t=snap.time||0, S=d.series;
+  let now=null,done=null;
+  for(const e of S){ if(e.t<=t)now=e; if(e.t+H<=t)done=e; }
+  const ids=Object.keys((now||S[0]).pools), labels=Object.fromEntries((snap.run?.pools||[]).map(p=>[p.id,p.label]));
+  const all=d.heldout_skill?.per_pool?.ALL;
+  return <section className="forecast-section" aria-label="Demand forecast">
+    <div className="section-heading"><h2>Demand forecast</h2><span>next {Math.round(H/60)} min <em className="proxy-tag">calculated</em></span></div>
+    {!now?<p className="proxy-note">The first forecast is issued {Math.round(S[0].t/60)} min into the window.</p>:
+    <table className="forecast-table"><thead><tr><th>Pool (GPUs requested)</th><th>Expected</th><th>P10–P90</th><th>Last: said → got</th></tr></thead><tbody>
+      {ids.map(id=>{const v=now.pools[id], l=done?.pools[id];return <tr key={id} className={id===snap.gpus?.[0]?.pool?'':''}>
+        <td>{labels[id]||id}</td><td>{fmt(v.next_gpus,1)}</td><td>{fmt(v.p10,0)}–{fmt(v.p90,0)}</td><td>{l?`${fmt(l.next_gpus,1)} → ${fmt(l.realised_gpus,1)}`:'—'}</td></tr>;})}
+    </tbody></table>}
+    <p className="proxy-note">{all?`On held-out trace days the forecast error was ${Math.round(100*all.skill_vs_persistence)}% lower than "same rate as the last 30 min" overall; it has little skill on the A10 pool and does not anticipate sudden spikes. The P10–P90 band held ${Math.round(100*all.p10_p90_coverage)}% of outcomes (aimed at 80%). `:''}{d.in_training_period?'This window overlaps the days the model was trained on, so it flatters the model. ':''}Trained on trace days before 100.</p>
+  </section>;
+}
+
 const POLICY_LABEL={fifo:'First come, first served',priority_fifo:'Priority first',backfill_median:'Backfill',sjf_hint:'Shortest predicted job',rl_ppo:'Learned (RL)',sjf_oracle:'Shortest job (oracle)',backfill_oracle:'Backfill (oracle)'};
 export function LinkPanel({snap}){
   const l=snap.link,[,force]=React.useReducer(x=>x+1,0);

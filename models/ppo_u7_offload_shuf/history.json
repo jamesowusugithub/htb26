@@ -1,0 +1,49 @@
+{
+ "args": {
+  "steps": 1200000,
+  "envs": 8,
+  "device": "cpu",
+  "out": "models/ppo_u7_offload_shuf",
+  "K": 16,
+  "days": 3.0,
+  "val_every": 300000,
+  "seed": 21,
+  "verbose": 0,
+  "bc_episodes": 150,
+  "wide": true,
+  "ent": 0.001,
+  "burst_prob": 0.5,
+  "offload": true,
+  "cloud_prob": 0.7,
+  "cost_weight": 0.5,
+  "lr": 0.0001,
+  "net": [
+   256,
+   256
+  ],
+  "shuffle": true
+ },
+ "seconds": 164.3470528125763,
+ "val": [
+  {
+   "steps": 300000,
+   "val_q_ratio": 0.48565175266668287,
+   "val_hp_wait_h": 9.560506936870542
+  },
+  {
+   "steps": 600000,
+   "val_q_ratio": 0.49938895722234217,
+   "val_hp_wait_h": 9.650285097766979
+  },
+  {
+   "steps": 900000,
+   "val_q_ratio": 0.48452092828472587,
+   "val_hp_wait_h": 9.568584507303248
+  },
+  {
+   "steps": 1200000,
+   "val_q_ratio": 0.5118330587308639,
+   "val_hp_wait_h": 9.808829217522185
+  }
+ ]
+}

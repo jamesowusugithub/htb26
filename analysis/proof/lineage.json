@@ -1,24 +1,24 @@
 {
- "job_id_shown_in_ui": "311796",
+ "job_id_shown_in_ui": "311609",
  "ui_board": "GPU-08",
  "ui_subtitle": "Board 8 \u00b7 NVIDIA A10 \u00b7 slice 2 of 6 \u00b7 648 nodes (648 GPUs)",
- "run_id": "12fc9b35f8-rl_ppo",
+ "run_id": "eac66cec0e-rl_ppo",
  "harmonised": {
-  "raw__job_name": "311796",
+  "raw__job_name": "311609",
   "raw__organization": "13",
   "raw__gpu_model": "A10",
   "raw__gpu_request": "1.0",
   "raw__worker_num": "1",
-  "raw__submit_time": "11240726.0",
+  "raw__submit_time": "11238896.0",
   "raw__duration": "911.0",
   "raw__job_type": "HP",
   "gpu_model_identifier": "nvidia_a10",
   "priority_class": "high_priority",
   "gpu_request_recorded_count": 1.0,
-  "submit_relative_s": 11240726.0,
+  "submit_relative_s": 11238896.0,
   "duration_s": 911.0,
   "source_file": "job_info_df.csv",
-  "source_row_number": 374968
+  "source_row_number": 374944
  },
  "raw_csv_columns": [
   "job_name",
@@ -32,20 +32,20 @@
   "job_type"
  ],
  "raw_csv_row": {
-  "job_name": "311796",
+  "job_name": "311609",
   "organization": "13",
   "gpu_model": "A10",
   "cpu_request": "4.0",
   "gpu_request": "1.0",
   "worker_num": "1",
-  "submit_time": "11240726.0",
+  "submit_time": "11238896.0",
   "duration": "911.0",
   "job_type": "HP"
  },
  "feed_events": [
   {
    "type": "arrive",
-   "t": 8726.0,
+   "t": 6896.0,
    "pool": "a10",
    "gpus": 1.0,
    "priority": "hp",
@@ -54,7 +54,7 @@
   },
   {
    "type": "start",
-   "t": 8726.0,
+   "t": 6896.0,
    "pool": "a10",
    "node": 955,
    "board": 7,
@@ -69,7 +69,7 @@
   },
   {
    "type": "finish",
-   "t": 9637.0,
+   "t": 7807.0,
    "pool": "a10",
    "node": 955,
    "board": 7,

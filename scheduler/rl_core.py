@@ -17,7 +17,7 @@ from .sim import (State, schedule, try_preempt, find_place, start_job, q_remove,
                   apply_failure_event, SC_FAILIDX, SC_NFAIL,
                   log_event, SC_HEAP, SC_NEXT, SC_DONE, SC_ERR, SC_FOCUS, SC_POLICY, SC_PREEMPT, SC_NRUN,
                   FC_NOW, FC_QINT, RUNNING, DONE, QUEUED, EV_ARRIVE, EV_FINISH, ERR_STUCK, PRIO_FIFO)
-from .sim import q_insert, overflow_pass, FC_OVFWAIT
+from .sim import q_insert, overflow_pass, FC_OVFWAIT, FC_OFFMIN, FC_OVFBUDGET, find_cloud, start_on_cloud
 
 HINT_SCALE = 8.0
 
@@ -53,6 +53,10 @@ def _events_pending(S):
     return S.sc[SC_HEAP] > 0 or S.sc[SC_NEXT] < S.submit.shape[0] or S.sc[SC_FAILIDX] < S.sc[SC_NFAIL]
 
 
+# added to a spot job's hint when ranking candidates, so the K slots fill with HP jobs first (1e12 s >> any real runtime). Set to 0.0 for the old behaviour.
+HP_FIRST_PENALTY = 1e12
+
+
 @njit(cache=True)
 def build_decision(S, p, D):
     """Fill cand/obs/amask for pool p. Returns the number of startable candidates (after rule-based preemption)."""
@@ -85,6 +89,8 @@ def build_decision(S, p, D):
         S.cand_pos[k] = -1
         S.amask[k] = 0
     S.amask[K] = 1 if _events_pending(S) else 0
+    if S.amask.shape[0] == K + 2:
+        S.amask[K + 1] = 0
     # slots 0-1: oldest in queue order
     for k in range(min(2, qc)):
         S.cand_pos[k] = k
@@ -103,8 +109,9 @@ def build_decision(S, p, D):
                     taken = True
             if taken:
                 continue
-            if S.est[j] < bestest:
-                bestest = S.est[j]
+            key = S.est[j] + (0.0 if S.prio[j] == 0 else HP_FIRST_PENALTY)   # HP candidates are offered before spot ones
+            if key < bestest:
+                bestest = key
                 best = pos
         if best < 0:
             break
@@ -116,6 +123,28 @@ def build_decision(S, p, D):
         if j >= 0 and _fits(S.req[j], maxfull, maxfree):
             S.amask[k] = 1
             nvalid += 1
+    cost_feat = 0.0
+    cloud_free = 0.0
+    if S.amask.shape[0] == K + 2:                    # explicit 'send the queue head to the SIMULATED cloud' action
+        capu = 0
+        freeu = 0
+        for n in range(S.pool_start[p], S.pool_start[p + 1]):
+            if S.node_cloud[n] == 1:
+                capu += S.node_ngpu[n] * UNIT
+                for k in range(S.node_ngpu[n]):
+                    freeu += S.gfree[n, k]
+        if capu > 0:
+            cloud_free = freeu / capu
+        if qc > 0 and capu > 0:
+            hj = S.queue[p, 0]
+            cost_pred = S.ovf_est[hj] / 3600.0 * (S.req[hj] / UNIT) * S.price_pool[p]
+            cost_feat = np.log1p(cost_pred) / 6.0
+            ok = (now - S.submit[hj] >= S.fc[FC_OFFMIN]) and (S.fc[FC_OVFBUDGET] <= 0.0 or cost_pred <= S.fc[FC_OVFBUDGET])
+            if ok:
+                n2, m2 = find_cloud(S, p, S.req[hj])
+                if n2 >= 0:
+                    S.amask[K + 1] = 1
+                    nvalid += 1
     # observation
     o = S.obs
     o[:] = 0.0
@@ -141,6 +170,9 @@ def build_decision(S, p, D):
         o[b + 5] = np.log1p(S.est[j] / 60.0) / HINT_SCALE
         o[b + 6] = 1.0 if S.cand_pos[k] < 2 else 0.0
         o[b + 7] = np.log1p(S.cand_pos[k]) / 7.0
+    if S.amask.shape[0] == K + 2:
+        o[o.shape[0] - 2] = cloud_free
+        o[o.shape[0] - 1] = cost_feat
     return nvalid
 
 
@@ -220,10 +252,18 @@ def apply_action(S, a):
     """a in [0,K): start that candidate; a == K: advance (hold). Returns 1 if an invalid action was given."""
     K = S.cand_job.shape[0]
     p = S.sc[SC_FOCUS]
-    if a < 0 or a > K or S.amask[a] == 0 or p < 0:
+    if a < 0 or a >= S.amask.shape[0] or S.amask[a] == 0 or p < 0:
         return 1
     if a == K:
         S.sc[SC_FOCUS] = -1
+        return 0
+    if a == K + 1:                                   # offload the queue head to the simulated cloud (cost is charged by start_on_cloud)
+        hj = S.queue[p, 0]
+        n2, m2 = find_cloud(S, p, S.req[hj])
+        if n2 < 0:
+            return 1
+        q_remove(S, p, 0)
+        start_on_cloud(S, hj, n2, m2, S.fc[FC_NOW])
         return 0
     j = S.cand_job[a]
     n, mask = find_place(S, p, S.req[j], -1)

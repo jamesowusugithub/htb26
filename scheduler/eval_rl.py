@@ -30,9 +30,9 @@ def run_agent(env: SchedulingEnv, predict, scenario: Scenario):
     return info["metrics"], info["qint_ratio_vs_priority_fifo"], n
 
 
-def evaluate(jobs, cluster, hint, scenarios: list[Scenario], agents: dict, baselines=BASELINES, K=8) -> pd.DataFrame:
+def evaluate(jobs, cluster, hint, scenarios: list[Scenario], agents: dict, baselines=BASELINES, K=8, shuffle=False) -> pd.DataFrame:
     """agents: {name: predict(obs, mask)}. One row per (scenario, policy)."""
-    env = SchedulingEnv(jobs, cluster, hint, K=K)
+    env = SchedulingEnv(jobs, cluster, hint, K=K, shuffle_slots=shuffle)
     rows = []
     for sc in scenarios:
         w = build_workload(jobs, sc)
@@ -41,7 +41,10 @@ def evaluate(jobs, cluster, hint, scenarios: list[Scenario], agents: dict, basel
         est = np.where(np.isfinite(est), est, np.nanmedian(est))
         qb = None
         for b in sorted(baselines, key=lambda x: x != "priority_fifo"):   # priority_fifo first: it is the reference for q_ratio
-            S = run_policy(c, w, POLICIES[b], est=est if b == "sjf_hint" else None, snapshot_dt=None, **sim_kwargs(sc, c))
+            kw = sim_kwargs(sc, c)
+            if sc.cloud:
+                kw["overflow_est"] = est          # the cloud rule prices jobs with the HINT for every policy, never the true duration
+            S = run_policy(c, w, POLICIES[b], est=est if b == "sjf_hint" else None, snapshot_dt=None, **kw)
             m = summarize(S, w, c, util_hi=sc.days * 86400)
             from .sim import FC_QINT
             q = float(S.fc[FC_QINT])

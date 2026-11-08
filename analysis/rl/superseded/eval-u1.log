@@ -1,0 +1,39 @@
+
+=== observed windows (all): 17 windows ===
+                 hp_wait_mean_h  hp_wait_p95_h  spot_wait_mean_h  q_ratio   util  preemptions  wasted_gpu_h
+policy                                                                                                     
+fifo                      6.984         36.993            11.050    1.448  0.780        0.000         0.000
+priority_fifo             4.457         22.432            20.578    1.000  0.779      343.882       794.643
+backfill_median           3.742         21.373            14.929    0.806  0.780      378.941       859.439
+sjf_hint                  1.778          9.371            11.598    0.507  0.780      482.176      1021.539
+rl_ppo                    2.499         13.589             9.398    0.588  0.780      359.000       853.792
+sjf_oracle                0.967          3.508             6.799    0.323  0.786      490.412      1032.101
+  RL vs fifo     : RL has less queue time in 17 of 17 paired windows (worse in 0)
+  RL vs backfill : RL has less queue time in 16 of 17 paired windows (worse in 1)
+  RL vs sjf_hint : RL has less queue time in 2 of 17 paired windows (worse in 15)
+
+=== observed windows (busy only): 15 windows ===
+                 hp_wait_mean_h  hp_wait_p95_h  spot_wait_mean_h  q_ratio   util  preemptions  wasted_gpu_h
+policy                                                                                                     
+fifo                      7.810         41.690            12.343    1.340  0.772        0.000         0.000
+priority_fifo             5.023         25.386            22.923    1.000  0.771      377.200       850.683
+backfill_median           4.213         24.217            16.868    0.847  0.772      413.933       916.861
+sjf_hint                  2.002         10.619            13.092    0.518  0.773      529.667      1098.566
+rl_ppo                    2.815         15.400            10.592    0.603  0.772      390.000       905.814
+sjf_oracle                1.089          3.976             7.681    0.331  0.779      539.800      1120.178
+  RL vs fifo     : RL has less queue time in 15 of 15 paired windows (worse in 0)
+  RL vs backfill : RL has less queue time in 15 of 15 paired windows (worse in 0)
+  RL vs sjf_hint : RL has less queue time in 2 of 15 paired windows (worse in 13)
+
+=== held-out BurstGPT (trace 3) arrival shapes: 8 windows ===
+                 hp_wait_mean_h  hp_wait_p95_h  spot_wait_mean_h  q_ratio   util  preemptions  wasted_gpu_h
+policy                                                                                                     
+fifo                     24.235         89.771            40.801    1.067  0.781        0.000         0.000
+priority_fifo            19.974         78.732            83.550    1.000  0.770      221.375       595.037
+backfill_median          16.694         66.458            66.070    0.804  0.774      259.750       636.807
+sjf_hint                 12.249         63.429            50.656    0.596  0.774      439.250       882.824
+rl_ppo                   14.101         69.224            40.164    0.650  0.774      315.875      1043.585
+sjf_oracle                4.009         20.394            33.403    0.296  0.783      470.125       960.286
+  RL vs fifo     : RL has less queue time in 8 of 8 paired windows (worse in 0)
+  RL vs backfill : RL has less queue time in 6 of 8 paired windows (worse in 2)
+  RL vs sjf_hint : RL has less queue time in 3 of 8 paired windows (worse in 5)

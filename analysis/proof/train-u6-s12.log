@@ -1,0 +1,21 @@
+[bc] 1,603,346 samples from 150 windows
+/Users/carlkaziboni/Documents/htb26_gpu/htb26/scheduler/train_rl.py:67: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:821.)
+  tot += float(loss) * len(idx)
+[bc] epoch 1/12 nll=0.5531
+[bc] epoch 2/12 nll=0.3845
+[bc] epoch 3/12 nll=0.3613
+[bc] epoch 4/12 nll=0.3482
+[bc] epoch 5/12 nll=0.3383
+[bc] epoch 6/12 nll=0.3340
+[bc] epoch 7/12 nll=0.3286
+[bc] epoch 8/12 nll=0.3330
+[bc] epoch 9/12 nll=0.3247
+[bc] epoch 10/12 nll=0.3164
+[bc] epoch 11/12 nll=0.3167
+[bc] epoch 12/12 nll=0.3142
+[val] steps=300,000 queue-time ratio vs priority_fifo=0.348 HP wait=10.97h
+[val] steps=600,000 queue-time ratio vs priority_fifo=0.354 HP wait=11.08h
+[val] steps=900,000 queue-time ratio vs priority_fifo=0.362 HP wait=11.61h
+[val] steps=1,200,000 queue-time ratio vs priority_fifo=0.359 HP wait=11.52h
+done in 404s; best val ratio 0.348

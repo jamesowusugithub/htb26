@@ -1,0 +1,17 @@
+{
+ "full-queue sjf_hint":0.507,
+ "hint rule (16 candidates)":0.509,
+ "hint rule spot_wait_h":9.434,
+ "hint rule hp_p95_h":10.809,
+ "random valid choice":0.602,
+ "random-weights network":0.574,
+ "RL trained (seed 11)":0.513,
+ "RL trained (seed 11) spot_wait_h":9.212,
+ "RL trained (seed 11) hp_p95_h":10.863,
+ "RL trained (seed 12)":0.51,
+ "RL trained (seed 12) spot_wait_h":9.25,
+ "RL trained (seed 12) hp_p95_h":11.094,
+ "RL trained (seed 13)":0.509,
+ "RL trained (seed 13) spot_wait_h":9.27,
+ "RL trained (seed 13) hp_p95_h":10.613
+}

@@ -1,0 +1,32 @@
+
+HELD-OUT WINDOWS (days 130-172, never used in training/validation)
+                  hp_wait_mean_h  hp_wait_p95_h  spot_wait_mean_h  q_ratio
+policy                                                                   
+priority_fifo             7.886         26.743            39.173    1.000
+backfill_median           6.163         24.954            29.341    0.843
+sjf_hint                  2.927         18.647            22.806    0.468
+sjf_oracle                1.570          7.346            12.091    0.284
+rl_trained                3.243         21.427            16.545    0.451
+rl_untrained              4.567         28.393            16.119    0.571
+
+DECISIONS (day-130 window)
+ {
+ "trained": {
+  "window_day": 130.0,
+  "decisions": 5243,
+  "real_choices": 2160,
+  "pct_choices_where_rl_skips_the_queue_head": 67.0,
+  "pct_choices_identical_to_hint_rule": 43.8,
+  "pct_skips_that_pick_a_shorter_predicted_job": 94.5
+ },
+ "untrained": {
+  "window_day": 130.0,
+  "decisions": 5233,
+  "real_choices": 2053,
+  "pct_choices_where_rl_skips_the_queue_head": 68.1,
+  "pct_choices_identical_to_hint_rule": 10.9,
+  "pct_skips_that_pick_a_shorter_predicted_job": 70.0
+ }
+}
+
+model: {"file": "models/ppo_u6_shuf_s12/best.zip", "bytes": 2543724, "sha256": "65fc879e86221203", "policy_parameters": 208402, "training": {"steps": 1200000, "envs": 8, "lr": 0.0001, "bc_episodes": 150, "wide": true, "net": [256, 256], "seed": 12}, "training_seconds": 404, "validation_checks": 4}

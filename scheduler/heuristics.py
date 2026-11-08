@@ -14,3 +14,12 @@ def hp_then_min_hint(obs: np.ndarray, mask: np.ndarray, K: int = 8, P: int = 6) 
         if key < bk:
             bk, best = key, k
     return best if best is not None else K
+
+
+def hint_rule_with_offload(obs: np.ndarray, mask: np.ndarray, K: int = 8, P: int = 6, min_wait_h: float = 2.0) -> int:
+    """The shortest-predicted-job rule plus the baseline cloud rule: send the queue head to the simulated cloud once it has waited >= min_wait_h
+    (the environment's mask already enforces the predicted-cost budget). Used only to initialise the cost-aware policy by cloning."""
+    base = P + 6
+    if len(mask) == K + 2 and mask[K + 1] and obs[base + 4] >= np.log1p(min_wait_h) / 4.0:
+        return K + 1
+    return hp_then_min_hint(obs, mask[: K + 1], K, P)

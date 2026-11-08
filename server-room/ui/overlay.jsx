@@ -2,7 +2,7 @@ import React,{useState,useSyncExternalStore,useEffect} from 'react';
 import {createRoot} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 import {Pause,Play,Plus,Layers3,PanelRight,ChevronDown,MoreHorizontal,RotateCcw,AlertTriangle,Wrench,X,MousePointer2,CheckCircle2,Clock3,Move3d} from 'lucide-react';
-import {BackendSubtitle,BackendMetrics,PoolPanel,ScenarioBar,StatusBanner,LinkPanel,Scoreboard,evidenceLine} from './backend-panels.jsx';
+import {BackendSubtitle,BackendMetrics,PoolPanel,ForecastPanel,ScenarioBar,StatusBanner,LinkPanel,Scoreboard,evidenceLine} from './backend-panels.jsx';
 import {Button,Tooltip,DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem,DropdownMenuSeparator,DropdownMenuLabel,CameraTabs} from './components/index.jsx';
 
 const labels={idle:'Available',reserved:'In transit',running:'Processing',cooling:'Cooling',failed:'Failed'};
@@ -43,6 +43,7 @@ export function mountOverlay(host,actions,initial){
         <section className="queue-section"><div className="section-heading"><h2>Incoming jobs</h2><span>{snap.stats.queued??snap.queue.length} waiting</span></div>{snap.queue.length?<ul className="job-list">{snap.queue.slice(0,5).map(job=><li key={job.id}><span className={`queue-mark ${job.priority==='high'?'high':''}`}/><span>{job.position?`#${job.position} `:''}{job.id}</span><small>{job.priority==='high'?'High priority':'Spot'}{job.gpus?` · ${job.gpus} GPU`:''}</small></li>)}</ul>:<div className="queue-empty"><CheckCircle2 size={19}/><div><strong>{s.backend?(snap.stats.queued?'No jobs waiting in this pool':'Queue is clear'):'Queue is clear'}</strong><p>{s.backend?(snap.stats.queued?`${snap.stats.queued} waiting in other pools (see Pools)`:'Waiting for the next arrival from the backend.'):'New jobs arrive automatically.'}</p></div></div>}</section>
         {s.backend&&<Scoreboard snap={snap} actions={actions}/>}
         {s.backend&&<PoolPanel snap={snap} selectedPool={gpu.pool}/>}
+        {s.backend&&<ForecastPanel snap={snap}/>}
         {s.backend&&<LinkPanel snap={snap}/>}
         <div className="latest-event"><Clock3 size={14}/><p role="status" aria-live="polite" aria-atomic="true">{s.latestEvent}</p></div>
       </aside>

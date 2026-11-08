@@ -1,0 +1,49 @@
+{
+ "args": {
+  "steps": 1200000,
+  "envs": 8,
+  "device": "cpu",
+  "out": "models/ppo_u6_shuf_s13",
+  "K": 16,
+  "days": 3.0,
+  "val_every": 300000,
+  "seed": 13,
+  "verbose": 0,
+  "bc_episodes": 150,
+  "wide": true,
+  "ent": 0.001,
+  "burst_prob": 0.6,
+  "offload": false,
+  "cloud_prob": 0.0,
+  "cost_weight": 0.0,
+  "lr": 0.0001,
+  "net": [
+   256,
+   256
+  ],
+  "shuffle": true
+ },
+ "seconds": 394.2109751701355,
+ "val": [
+  {
+   "steps": 300000,
+   "val_q_ratio": 0.3568671282467564,
+   "val_hp_wait_h": 11.416877916419354
+  },
+  {
+   "steps": 600000,
+   "val_q_ratio": 0.3621544358736326,
+   "val_hp_wait_h": 11.627780456148079
+  },
+  {
+   "steps": 900000,
+   "val_q_ratio": 0.3734190718472046,
+   "val_hp_wait_h": 12.310440575691985
+  },
+  {
+   "steps": 1200000,
+   "val_q_ratio": 0.3649834128492219,
+   "val_hp_wait_h": 12.012209631893102
+  }
+ ]
+}

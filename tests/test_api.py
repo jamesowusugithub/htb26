@@ -88,7 +88,8 @@ def test_nan_metrics_are_sent_as_null(client):
 
 def test_rl_policy_selectable_and_exports_valid_events(client):
     from pathlib import Path
-    if not (Path(__file__).parents[1] / "models/ppo_bc/best.zip").exists():
+    from scheduler.api import RL_MODEL
+    if not RL_MODEL.exists():
         pytest.skip("trained model not present")
     r = client.post("/whatif", json={"scenario": {"start_day": 130, "days": 1}, "policies": ["priority_fifo", "rl_ppo"],
                                      "snapshot_s": 1800})
@@ -100,3 +101,24 @@ def test_rl_policy_selectable_and_exports_valid_events(client):
     lines = [json.loads(x) for x in client.get(f"/runs/{run_id}/events", params={"t_to": 7200}).text.splitlines()]
     assert lines and all(v.is_valid(o) for o in lines)
     assert any(p["name"] == "rl_ppo" for p in client.get("/meta").json()["policies"])
+
+
+def test_demand_forecast_block_matches_the_arrivals_in_the_feed(client):
+    """meta.demand_forecast: 'realised' must equal the GPUs of the arrive events in the next horizon (checked on a what-if with a 2x arrival burst)."""
+    r = client.post("/whatif", json={"scenario": {"start_day": 140, "days": 1, "arrival_mult": 2.0}, "policies": ["priority_fifo"], "snapshot_s": 900})
+    assert r.status_code == 200, r.text
+    run_id = next(iter(r.json()["results"].values()))["run_id"]
+    lines = [json.loads(x) for x in client.get(f"/runs/{run_id}/events").text.splitlines()]
+    d = client.get(f"/runs/{run_id}").json()["demand_forecast"]
+    assert d["available"] and d["in_training_period"] is False and d["trained_on"].startswith("trace days <")
+    assert d["heldout_skill"] is None or "a100" in d["heldout_skill"]["per_pool"]
+    arr = [x for x in lines if x["type"] == "arrive" and not x.get("carryover") and x["t"] > 0]
+    H = d["horizon_s"]
+    checked = 0
+    for pt in d["series"][:20]:
+        for pid, v in pt["pools"].items():
+            real = sum(x["gpus"] for x in arr if x["pool"] == pid and pt["t"] < x["t"] <= pt["t"] + H + 1e-6)
+            assert abs(real - v["realised_gpus"]) < 0.51, (pid, pt["t"], real, v)       # 5-min binning allows boundary slack
+            assert v["p10"] <= v["next_gpus"] <= v["p90"]
+            checked += 1
+    assert checked > 50

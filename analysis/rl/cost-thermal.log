@@ -1,0 +1,12 @@
+window 130.0
+window 133.0
+window 145.0
+window 151.0
+window 157.0
+window 169.0
+                 q_ratio  wasted_gpu_h  waste_usd  viol_normal  peak_normal_c  viol_fault  hot_nodes_fault  peak_fault_c
+policy                                                                                                                  
+priority_fifo       1.00       2581.18    8698.59          0.0          50.02    95074.12          4034.33         85.02
+backfill_median     0.84       2689.73    9064.38          0.0          50.02    95134.00          4034.50         85.02
+sjf_hint            0.47       2611.57    8801.00          0.0          50.02    95069.58          4034.50         85.02
+rl_ppo              0.44       2506.55    8447.07          0.0          50.02    95101.49          4034.50         85.02

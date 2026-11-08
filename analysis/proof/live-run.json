@@ -4,37 +4,37 @@
   "policy": "rl_ppo",
   "mode": "websocket",
   "status": "connected",
-  "runId": "12fc9b35f8-rl_ppo",
-  "simTime": 8100,
+  "runId": "eac66cec0e-rl_ppo",
+  "simTime": 6540,
   "link": {
    "base": "http://127.0.0.1:8010",
-   "runId": "12fc9b35f8-rl_ppo",
-   "batches": 135,
-   "events": 11432,
+   "runId": "eac66cec0e-rl_ppo",
+   "batches": 109,
+   "events": 11392,
    "loads": 1,
-   "lastBatchAt": 1794117668266
+   "lastBatchAt": 1794133423010
   },
   "running": 24,
-  "queued": 154,
-  "completed": 64,
+  "queued": 118,
+  "completed": 73,
   "policyLabel": "Learned (RL)"
  },
  "pick": {
   "board": 7,
-  "job": "311226",
-  "startT": 7809,
-  "service": 915,
+  "job": "311035",
+  "startT": 5984,
+  "service": 910,
   "pool": "a10",
   "priority": "hp",
   "gpus": 1
  },
  "shown": {
-  "jobIdInInspector": "311796",
+  "jobIdInInspector": "311609",
   "gpu": "GPU-08",
   "subtitle": "Board 8 · NVIDIA A10 · slice 2 of 6 · 648 nodes (648 GPUs)"
  },
  "scoreboard": {
-  "scenarioId": "12fc9b35f8",
+  "scenarioId": "eac66cec0e",
   "rows": [
    {
     "policy": "fifo",
@@ -72,13 +72,13 @@
    {
     "policy": "sjf_hint",
     "realistic": true,
-    "util": 0.8785,
-    "hp_wait_mean_h": 4.1574,
-    "hp_wait_p95_h": 28.5211,
-    "spot_wait_mean_h": 21.1023,
-    "hp_bsld": 17.82,
-    "preemptions": 281,
-    "wasted_gpu_h": 109.5328
+    "util": 0.8794,
+    "hp_wait_mean_h": 3.5008,
+    "hp_wait_p95_h": 26.5659,
+    "spot_wait_mean_h": 24.1353,
+    "hp_bsld": 12.0285,
+    "preemptions": 223,
+    "wasted_gpu_h": 70.9217
    },
    {
     "policy": "sjf_oracle",
@@ -94,13 +94,13 @@
    {
     "policy": "rl_ppo",
     "realistic": true,
-    "util": 0.8801,
-    "hp_wait_mean_h": 4.7804,
-    "hp_wait_p95_h": 21.0707,
-    "spot_wait_mean_h": 11.9009,
-    "hp_bsld": 26.9273,
-    "preemptions": 94,
-    "wasted_gpu_h": 122.1619
+    "util": 0.8799,
+    "hp_wait_mean_h": 4.0924,
+    "hp_wait_p95_h": 28.7013,
+    "spot_wait_mean_h": 12.3302,
+    "hp_bsld": 13.9833,
+    "preemptions": 84,
+    "wasted_gpu_h": 95.9458
    }
   ],
   "workload": {
@@ -126,17 +126,17 @@
     "series2": 224
    }
   },
-  "computeSeconds": 2.51
+  "computeSeconds": 3.17
  },
  "after": {
   "link": {
    "base": "http://127.0.0.1:8010",
-   "runId": "12fc9b35f8-rl_ppo",
-   "batches": 202,
-   "events": 11719,
+   "runId": "eac66cec0e-rl_ppo",
+   "batches": 195,
+   "events": 11796,
    "loads": 1,
-   "lastBatchAt": 1794117675131
+   "lastBatchAt": 1794133432571
   },
-  "simTime": 12120
+  "simTime": 11700
  }
 }

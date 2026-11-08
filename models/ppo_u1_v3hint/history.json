@@ -1,0 +1,45 @@
+{
+ "args": {
+  "steps": 1200000,
+  "envs": 8,
+  "device": "cpu",
+  "out": "models/ppo_u1_v3hint",
+  "K": 16,
+  "days": 3.0,
+  "val_every": 300000,
+  "seed": 11,
+  "verbose": 0,
+  "bc_episodes": 150,
+  "wide": true,
+  "ent": 0.001,
+  "burst_prob": 0.6,
+  "lr": 0.0001,
+  "net": [
+   256,
+   256
+  ]
+ },
+ "seconds": 260.6474440097809,
+ "val": [
+  {
+   "steps": 300000,
+   "val_q_ratio": 0.3691571896301715,
+   "val_hp_wait_h": 12.145064807983275
+  },
+  {
+   "steps": 600000,
+   "val_q_ratio": 0.3710066083044023,
+   "val_hp_wait_h": 12.177734740474333
+  },
+  {
+   "steps": 900000,
+   "val_q_ratio": 0.36955528180966196,
+   "val_hp_wait_h": 12.052725326645776
+  },
+  {
+   "steps": 1200000,
+   "val_q_ratio": 0.3679539968170608,
+   "val_hp_wait_h": 12.118493828673813
+  }
+ ]
+}

@@ -12,6 +12,7 @@ from sb3_contrib import MaskablePPO
 from .run_baselines import setup
 from .duration_model import load_or_fit
 from .eval_rl import evaluate, BASELINES
+from .env import model_uses_shuffle
 from .whatif import Scenario
 
 BUSY_Q = 3e4   # weighted job-hours of priority-FIFO queue time that makes a window "busy"
@@ -58,7 +59,7 @@ def main():
     plain, stress, llm = test_scenarios()
     if a.skip_stress:
         stress = []
-    df = evaluate(jobs, cl, hint, plain + stress + llm, {"rl_ppo": pred}, K=a.K)
+    df = evaluate(jobs, cl, hint, plain + stress + llm, {"rl_ppo": pred}, K=a.K, shuffle=model_uses_shuffle(a.model))
     df["kind"] = np.where(df.scenario == "observed", "observed", np.where(df.scenario == "llm_burst_heldout", "burstgpt-shape", "what-if"))
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,10 @@
+{
+ "full_queue_rule_hint2":0.506,
+ "in_env_rule_16cand_hint2":0.579,
+ "ppo_combined_under_hint2":0.575,
+ "ppo_u1_under_hint2":0.586,
+ "full_queue_rule_hint3":0.507,
+ "in_env_rule_16cand_hint3":0.571,
+ "ppo_combined_under_hint3":0.577,
+ "ppo_u1_under_hint3":0.588
+}
