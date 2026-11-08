@@ -717,6 +717,7 @@
             }
             // Create racks
             for (let i = 0; i < racks.length; i++) {
+                if (![0, 40, 80, 120, 160, 240].some(start => i >= start && i < start + 20)) continue;
                 const id = i >= 160 ? "builder.rack2" : "builder.rack";
                 const position = racks[i];
                 const param = {
@@ -729,10 +730,11 @@
                 };
                 const obj = await loadAsset(param.id, param);
                 obj.name = `Rack ${i + 1}`;
+                obj.visible = false; // Keep the original pool mapping anchors without drawing rack rows.
                 group.add(obj);
             }
             // Create columns
-            for (let i = 0; i < columns.length; i++) {
+            for (let i = 0; i < 0; i++) {
                 const position = columns[i];
                 const param = {
                     id: "builder.column",
@@ -746,7 +748,7 @@
                 group.add(obj);
             }
             // Create plants
-            for (let i = 0; i < plants.length; i++) {
+            for (let i = 0; i < 0; i++) {
                 const position = plants[i];
                 const param = {
                     id: "builder.plant",

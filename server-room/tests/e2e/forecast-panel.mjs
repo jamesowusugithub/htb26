@@ -17,7 +17,7 @@ try {
   await page.evaluate(() => window.gpuLab.engine.seek?.(3 * 3600));
   await page.waitForFunction(() => document.querySelector('.forecast-table'), { timeout: 60000 }).catch(() => {});
   await sleep(1500);
-  const panel = await page.evaluate(() => ({ text: document.querySelector('.forecast-section')?.innerText || '', rows: [...document.querySelectorAll('.forecast-table tbody tr')].map(r => [...r.children].map(c => c.innerText)),
+  const panel = await page.evaluate(() => ({ text: document.querySelector('.demand-section')?.innerText || '', rows: [...document.querySelectorAll('.forecast-table tbody tr')].map(r => [...r.children].map(c => c.innerText)),
     t: window.gpuLab.engine.snapshot().time }));
   check('panel is visible with a heading', /demand forecast/i.test(panel.text));
   check('one row per pool (6)', panel.rows.length === 6, String(panel.rows.length));
@@ -28,7 +28,7 @@ try {
   const got = done && a100 && a100[3].split('→')[1];
   check('"said → got" shows realised arrivals from the backend', !done || (got && Math.abs(Number(got) - done.pools.a100.realised_gpus) < 0.06), a100 && a100[3]);
   check('honest footnote: little skill on A10 and spikes not anticipated', /little skill on the A10/i.test(panel.text) && /spikes/i.test(panel.text));
-  await page.evaluate(() => document.querySelector('.forecast-section').scrollIntoView({ block: 'center' })); await sleep(400);
+  await page.evaluate(() => document.querySelector('.demand-section').scrollIntoView({ block: 'center' })); await sleep(400);
   await page.screenshot({ path: path.join(out, 'forecast-panel.png') });
 } catch (e) { check('ran without exception', false, String(e.stack || e).slice(0, 300)); } finally { await browser.close(); server.close(); }
 console.log(`\n${results.filter(Boolean).length}/${results.length} checks passed`); process.exit(results.every(Boolean) ? 0 : 1);

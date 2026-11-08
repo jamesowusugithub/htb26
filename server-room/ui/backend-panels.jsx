@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import {AlertTriangle,Flame,Wifi,Loader2,Zap,Thermometer} from 'lucide-react';
 
 // Panels shown only in backend mode. Every number is displayed exactly as the backend sent it; temperatures and power are
@@ -20,6 +20,53 @@ export function BackendMetrics({gpu}){
   </dl>;
 }
 
+export function RackPoolDetails({pool,onBack}){
+  if(!pool)return null;
+  return <section className="rack-pool-details" aria-label={`${pool.label} aggregate rack group`}>
+    <div className="device-name"><h3>{pool.label}</h3><span className={`state-badge ${pool.status}`}><i/>{pool.status}</span></div>
+    <p className="device-subtitle">Pool aggregate · 4 visual clusters · {pool.nodeCount} simulated nodes</p>
+    <dl className="device-metrics">
+      <div><dt>GPU capacity</dt><dd>{fmt(pool.busyGpus)}<span> / {fmt(pool.capacityGpus)}</span></dd></div>
+      <div><dt>Pool utilisation</dt><dd>{pct(pool.utilisation)}</dd></div>
+      <div><dt>Running jobs</dt><dd>{pool.runningJobs}</dd></div>
+      <div><dt>Queue</dt><dd>{pool.queueHp}<span> HP · </span>{pool.queueSpot}<span> spot</span></dd></div>
+      <div><dt>Largest free node</dt><dd>{fmt(pool.maxFreeGpusOnOneNode)}<span> GPUs</span></dd></div>
+      {pool.nodesMapped>0&&<div><dt>Nodes down</dt><dd className={pool.nodesDown?'warm':''}>{pool.nodesDown}<span> / {pool.nodesMapped}</span></dd></div>}
+      <div><dt>Thermal</dt><dd>{pool.thermalAvailable?<>{fmt(pool.maxTemperature,1)}<span> °C max (proxy)</span></>:'Not mapped'}</dd></div>
+    </dl>
+    <p className="proxy-note">These clusters represent one backend pool. Each visual cluster is not one physical GPU or simulated node.</p>
+    <button className="score-btn rack-back" onClick={onBack}>Inspect GPU boards</button>
+  </section>;
+}
+
+export function CustomJobForm({snap,onSubmit,disabled}){
+  const pools=snap.run?.pools||[],defaultPool=pools[0]?.id||'';
+  const [pool,setPool]=useState(defaultPool),[gpus,setGpus]=useState(1),[priority,setPriority]=useState('hp'),[minutes,setMinutes]=useState(15),[status,setStatus]=useState('');
+  useEffect(()=>{if(!pool&&defaultPool)setPool(defaultPool);},[pool,defaultPool]);
+  if(!pools.length)return null;
+  async function submit(e){e.preventDefault();setStatus('Submitting…');try{await onSubmit({pool,gpus:Number(gpus),priority,duration_s:Number(minutes)*60});setStatus('Submitted to backend scheduler');}catch(error){setStatus(`Submission failed: ${error.message||error}`);}}
+  return <section className="custom-job-section" aria-label="Submit custom job"><div className="section-heading"><h2>Submit custom job</h2><span>Backend scheduled</span></div>
+    <form className="custom-job-form" onSubmit={submit}>
+      <label>GPU pool<select value={pool} onChange={e=>setPool(e.target.value)}>{pools.map(p=><option key={p.id} value={p.id}>{p.label}</option>)}</select></label>
+      <label>GPU count<input type="number" min="1" step="1" required value={gpus} onChange={e=>setGpus(e.target.value)}/></label>
+      <label>Priority<select value={priority} onChange={e=>setPriority(e.target.value)}><option value="hp">High priority</option><option value="spot">Spot</option></select></label>
+      <label>Expected duration (minutes)<input type="number" min="1" step="1" required value={minutes} onChange={e=>setMinutes(e.target.value)}/></label>
+      <button className="score-btn" disabled={disabled||!pool} type="submit">Submit job</button>
+    </form>{status&&<p className="form-status" role="status">{status}</p>}
+  </section>;
+}
+
+export function ForecastPanel({snap,gpu}){
+  const f=gpu?.forecast,skill=snap.run?.forecast;
+  if(!f)return <section className="forecast-section"><div className="section-heading"><h2>Capacity forecast</h2><span>Unavailable</span></div><p className="proxy-note">The backend has no board-level forecast for this selected resource.</p></section>;
+  const pressure=f.util_pct>=90?'High':f.util_pct>=70?'Moderate':'Low';
+  return <section className="forecast-section" aria-label="Backend capacity forecast"><div className="section-heading"><h2>Capacity forecast</h2><span>30 minutes</span></div>
+    <dl className="forecast-grid"><div><dt>Current simulated</dt><dd>{pct(gpu.utilisation)}</dd></div><div><dt>Chosen forecast</dt><dd>{pct(f.util_pct)}</dd></div><div><dt>Capacity pressure</dt><dd>{pressure}</dd></div><div><dt>Survival projection</dt><dd>{pct(f.projection_util_pct)}</dd></div></dl>
+    <p className="proxy-note">Chosen method: persistence. Historical error: {skill?.mae_util_pct_points==null?'not available':`${fmt(skill.mae_util_pct_points,1)} percentage points`}. The backend supplies no prediction interval.</p>
+    <p className="proxy-note">Pressure is a UI band calculated from forecast utilisation: moderate at 70%, high at 90%. Job arrivals are forecast separately in the Demand forecast panel (next 30 minutes).</p>
+  </section>;
+}
+
 export function PoolPanel({snap,selectedPool}){
   const run=snap.run, pools=snap.pools||{};
   const labels=Object.fromEntries((run?.pools||[]).map(p=>[p.id,p.label]));
@@ -36,16 +83,16 @@ export function PoolPanel({snap,selectedPool}){
 }
 
 // Demand forecast (calculated, not observed): GPUs requested by jobs arriving in the next 30 min, per pool, with a P10-P90 band, shown against what arrived.
-export function ForecastPanel({snap}){
+export function DemandForecastPanel({snap}){
   const d=snap.run?.demand;
   if(!d)return null;
-  if(!d.available)return <section className="forecast-section" aria-label="Demand forecast"><div className="section-heading"><h2>Demand forecast</h2><span>unavailable</span></div><p className="proxy-note">{d.reason}</p></section>;
+  if(!d.available)return <section className="demand-section" aria-label="Demand forecast"><div className="section-heading"><h2>Demand forecast</h2><span>unavailable</span></div><p className="proxy-note">{d.reason}</p></section>;
   const H=d.horizon_s, t=snap.time||0, S=d.series;
   let now=null,done=null;
   for(const e of S){ if(e.t<=t)now=e; if(e.t+H<=t)done=e; }
   const ids=Object.keys((now||S[0]).pools), labels=Object.fromEntries((snap.run?.pools||[]).map(p=>[p.id,p.label]));
   const all=d.heldout_skill?.per_pool?.ALL;
-  return <section className="forecast-section" aria-label="Demand forecast">
+  return <section className="demand-section" aria-label="Demand forecast">
     <div className="section-heading"><h2>Demand forecast</h2><span>next {Math.round(H/60)} min <em className="proxy-tag">calculated</em></span></div>
     {!now?<p className="proxy-note">The first forecast is issued {Math.round(S[0].t/60)} min into the window.</p>:
     <table className="forecast-table"><thead><tr><th>Pool (GPUs requested)</th><th>Expected</th><th>P10–P90</th><th>Last: said → got</th></tr></thead><tbody>

@@ -10,7 +10,8 @@
     "preview": "http-server dist -a 127.0.0.1 -p 8081 -c-1",
     "test": "node --test tests/*.test.mjs",
     "test:e2e": "node tests/e2e/live-flow.mjs",
-    "test:model": "node tests/e2e/model-smoke.mjs"
+    "test:model": "node tests/e2e/model-smoke.mjs",
+    "test:mapping": "node tests/e2e/event-mapping.mjs"
   },
   "devDependencies": {
     "@types/three": "^0.170.0",

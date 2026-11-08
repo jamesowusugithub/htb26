@@ -1,0 +1,42 @@
+[
+ {
+  "name": "the room is replaying a run decided by rl_ppo",
+  "ok": true,
+  "detail": "eac66cec0e-rl_ppo | UI shows \"Learned (RL)\""
+ },
+ {
+  "name": "assignments: every animated routing particle goes to the board the scheduler chose",
+  "ok": true,
+  "detail": "1891 samples, 30 distinct jobs, 0 mismatches"
+ },
+ {
+  "name": "preemptions: every eviction particle leaves the board the scheduler evicted from",
+  "ok": true,
+  "detail": "1920 samples (19 jobs), 0 mismatches"
+ },
+ {
+  "name": "board inspector: the job shown on each board was started there by the scheduler",
+  "ok": true,
+  "detail": "0 mismatches over 90 frames"
+ },
+ {
+  "name": "queue: every queued job shown was a real arrival from the trace",
+  "ok": true,
+  "detail": "9 distinct queue entries"
+ },
+ {
+  "name": "completions: the completed counter only moves forward and matches finish events",
+  "ok": true,
+  "detail": "3 -> 65"
+ },
+ {
+  "name": "rl_ppo decides differently from fifo on the identical workload (real inference, not a copy)",
+  "ok": true,
+  "detail": "398 of the first 400 starts differ"
+ },
+ {
+  "name": "no page errors",
+  "ok": true,
+  "detail": ""
+ }
+]

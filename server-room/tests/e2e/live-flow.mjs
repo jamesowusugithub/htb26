@@ -24,7 +24,7 @@ const browser = await launch();
 const E = page => page.evaluate(() => { const s = window.gpuLab.engine.snapshot(); return { time: s.time, status: s.status, policy: s.policy, stats: s.stats, conn: s.connection, error: s.error, effects: s.effects,
   gpus: s.gpus.map(g => ({ i: g.index, status: g.status, temp: g.temperature, util: g.utilisation, alert: g.alert, nodesDown: g.nodesDown, pool: g.pool })), failures: window.gpuLab.engine.scenario.failures, scenario: window.gpuLab.engine.scenario }; });
 const waitFor = (page, fn, arg, timeout = 90000) => page.waitForFunction(fn, { timeout, polling: 200 }, arg);
-const ringHex = (page, i) => page.evaluate(idx => { let hex = null; window.gpuLab.lab.traverse(o => { if (o.userData?.gpuIndex === idx && o.material?.emissive) hex = o.material.color.getHex(); }); return hex; }, i);
+const ringHex = (page, i) => page.evaluate(idx => { const hs = []; window.gpuLab.lab.traverse(o => { if (o.userData?.gpuIndex === idx && o.material?.emissive) hs.push(o.material.color.getHex()); }); if (!hs.length) return null; const cnt = {}; hs.forEach(h => { cnt[h] = (cnt[h] || 0) + 1; }); /* the rack-fabric meshes also carry gpuIndex; the board ring is the odd one out */ return hs.filter(h => cnt[h] === Math.min(...Object.values(cnt))).pop(); }, i);
 const clickByText = (page, text) => page.evaluate(t => { const b = [...document.querySelectorAll('button')].find(x => x.textContent.trim().includes(t) && !x.disabled); if (!b) throw new Error('button not found: ' + t); b.click(); }, text);
 
 try {
@@ -45,7 +45,8 @@ try {
   // --- queue positions: chips above the gateway are the backend's queue head for the selected board's pool, in order
   const qpool = await page.evaluate(() => { const s = window.gpuLab.engine.snapshot(); const best = Object.entries(s.pools).sort((a, b) => (b[1].queue_hp + b[1].queue_spot) - (a[1].queue_hp + a[1].queue_spot))[0][0]; return { pool: best, board: window.gpuLab.engine.meta.display.boards.find(b => b.pool === best)?.index ?? null }; });
   if (qpool.board != null) {
-    await page.select('#device-select', String(qpool.board)); await sleep(700);
+    await page.select('#device-select', String(qpool.board));
+    for (let k = 0; k < 150; k++) { const n = await page.evaluate(() => { let c = 0; window.gpuLab.lab.traverse(o => { if (o.name === 'Queue position chip' && o.visible) c++; }); return c; }); if (n > 0) break; await sleep(200); }   // the dense hall renders ~1 fps in headless software GL
     const chips = await page.evaluate(() => { let n = 0; window.gpuLab.lab.traverse(o => { if (o.name === 'Queue position chip' && o.visible) n++; }); const q = window.gpuLab.engine.snapshot().queue; return { visible: n, head: q.length, first: q[0]?.id }; });
     check('queue chips at the gateway match the backend queue head of the selected pool', chips.visible === Math.min(12, chips.head) && chips.head > 0, `pool=${qpool.pool} chips=${chips.visible} head=${chips.head}`);
     await page.screenshot({ path: path.join(shots, 'live-01b-queue.png') });
@@ -76,13 +77,13 @@ try {
   const failed = await E(page);
   check('failed board is reported by the backend with all its nodes down', failed.gpus[7].status === 'failed' && failed.gpus[7].nodesDown > 0 && failed.stats.failed >= 1, `nodesDown=${failed.gpus[7].nodesDown}`);
   let failedRing = null;
-  for (let k = 0; k < 30 && failedRing !== 0xe94f64; k++) { failedRing = await ringHex(page, 7); if (failedRing !== 0xe94f64) await sleep(100); }   // allow the next render frame
+  for (let k = 0; k < 300 && failedRing !== 0xe94f64; k++) { failedRing = await ringHex(page, 7); if (failedRing !== 0xe94f64) await sleep(100); }   // allow the next render frame (slow in headless software GL)
   check('3D board ring turns the failure colour', failedRing === 0xe94f64, '0x' + (failedRing ?? 0).toString(16));
   await waitFor(page, () => window.gpuLab.engine.meta.failure_evictions > 0, undefined, 30000);
   check('running jobs on the failed node were evicted by the scheduler', (await E(page)).stats.failureEvictions > evictBefore, `evictions=${(await E(page)).stats.failureEvictions}`);
   await page.screenshot({ path: path.join(shots, 'live-02-board-failed.png') });
   await clickByText(page, 'Repair');
-  await waitFor(page, () => window.gpuLab.engine.snapshot().status === 'ready' && window.gpuLab.engine.snapshot().gpus[7].status !== 'failed' && window.gpuLab.engine.scenario.failures[0].repair_after_h != null, undefined, 90000);
+  await waitFor(page, () => window.gpuLab.engine.snapshot().status === 'ready' && window.gpuLab.engine.snapshot().gpus[7].status !== 'failed' && window.gpuLab.engine.scenario.failures[0].repair_after_h != null, undefined, 100000);   // slow under headless software GL with the dense hall
   check('Repair sends a repair and the board recovers', (await E(page)).gpus[7].status !== 'failed');
 
   // --- workload spike
