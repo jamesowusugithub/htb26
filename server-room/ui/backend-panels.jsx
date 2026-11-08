@@ -7,7 +7,7 @@ const fmt=(v,d=0)=>v==null?'n/a':Number(v).toFixed(d);
 const pct=x=>x==null?'n/a':`${Math.round(x)}%`;
 
 export function BackendSubtitle({gpu}){
-  return <p className="device-subtitle">Board {gpu.index+1} · {gpu.model} · slice {gpu.slice+1} of 6 · {gpu.nodes} nodes ({fmt(gpu.capacityGpus)} GPUs)</p>;
+  return <p className="device-subtitle">Board {gpu.index+1} is slice {gpu.slice+1} of 6 of the {gpu.model} pool: {gpu.nodes} nodes, {fmt(gpu.capacityGpus)} GPUs</p>;
 }
 
 export function BackendMetrics({gpu}){
@@ -100,6 +100,22 @@ export function DemandForecastPanel({snap}){
         <td>{labels[id]||id}</td><td>{fmt(v.next_gpus,1)}</td><td>{fmt(v.p10,0)}–{fmt(v.p90,0)}</td><td>{l?`${fmt(l.next_gpus,1)} → ${fmt(l.realised_gpus,1)}`:'—'}</td></tr>;})}
     </tbody></table>}
     <p className="proxy-note">{all?`On held-out trace days the forecast error was ${Math.round(100*all.skill_vs_persistence)}% lower than "same rate as the last 30 min" overall; it has little skill on the A10 pool and does not anticipate sudden spikes. The P10–P90 band held ${Math.round(100*all.p10_p90_coverage)}% of outcomes (aimed at 80%). `:''}{d.in_training_period?'This window overlaps the days the model was trained on, so it flatters the model. ':''}Trained on trace days before 100.</p>
+  </section>;
+}
+
+// Why jobs go where they do: the scheduler's latest decisions in plain words, straight from the backend's start events.
+export function AllocationPanel({snap}){
+  const a=snap.allocations||[], run=snap.run, labels=Object.fromEntries((run?.pools||[]).map(p=>[p.id,p.label]));
+  const pol=({fifo:'first come, first served',priority_fifo:'priority first',backfill_median:'backfill',sjf_hint:'shortest predicted job',rl_ppo:'the trained RL policy',sjf_oracle:'shortest job (oracle)'})[snap.policy]||snap.policy;
+  const wait=s=>s==null?'':s<90?'placed at once':`waited ${Math.round(s/60)} min`;
+  return <section className="alloc-section" aria-label="How jobs are allocated">
+    <div className="section-heading"><h2>How jobs are placed</h2><span>latest decisions</span></div>
+    <p className="alloc-how">Each box in the hall is one <b>slice</b> of a real GPU pool. When a job arrives it joins its pool's queue; <b>{pol}</b> decides which waiting job starts next and on which slice. The glowing streak shows each choice. Priority jobs can evict spot jobs.</p>
+    {a.length?<ol className="alloc-list">{a.slice(0,6).map((x,i)=><li key={`${x.job}-${i}`}>
+      <span className={`queue-mark ${x.priority==='hp'?'high':''}`}/>
+      <div><strong>Job {x.job}</strong> <small>{x.gpus} GPU{x.gpus>1?'s':''} · {x.priority==='hp'?'high priority':'spot'}</small>
+        <p>{x.cloud?'sent to the simulated cloud takeaway':<>placed on {x.board!=null?<b>board {x.board+1}</b>:<b>a rack</b>} ({labels[x.pool]||x.pool})</>}{x.attempt>1?' (restarted after an eviction)':''}{wait(x.waitS)?` · ${wait(x.waitS)}`:''}</p></div></li>)}</ol>
+      :<p className="proxy-note">Waiting for the first decision.</p>}
   </section>;
 }
 

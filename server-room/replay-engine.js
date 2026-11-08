@@ -50,6 +50,8 @@ export class ReplayEngine {
     this.running = new Map();           // job -> {board,pool,gpus,priority,startT,service,attempt}
     this.routes = [];                   // visual only: {job,board,priority,age,reverse}
     this.events = [];
+    this.allocations = [];              // the latest scheduler decisions, newest first, for the 'Why jobs go where they do' panel
+    this.arrivedAt = new Map();         // job -> arrival time, to show how long a job waited before it was placed
     this.latest = null;
     this.alertBoards = new Set();
     this.assigned = null; this.assignedVersion = -1;
@@ -77,7 +79,7 @@ export class ReplayEngine {
       const [meta, st] = await Promise.all([this.client.runMeta(runId), this.client.state(runId, seekT)]);
       if (token !== this.loadToken) return false;
       this.closeStream();
-      this.scenario = JSON.parse(JSON.stringify(scenario)); this.policy = policy; this.runId = runId; this.meta = meta;
+      this.scenario = JSON.parse(JSON.stringify(scenario)); this.policy = policy; this.allocations = []; this.arrivedAt.clear(); this.runId = runId; this.meta = meta;
       this.comparison = res.comparison; this.workload = res.workload; this.metrics = res.results[policy].metrics;
       this.counters.loads++;
       this.resetState();
@@ -138,10 +140,13 @@ export class ReplayEngine {
         return null;
       }
       case 'arrive':
+        if (!it.warm) { this.arrivedAt.set(it.job, it.t); if (this.arrivedAt.size > 5000) this.arrivedAt.delete(this.arrivedAt.keys().next().value); }
         return it.warm ? null : `Job ${it.job} entered the ${this.poolLabel(it.pool)} queue (${it.gpus} GPU, ${it.priority === 'hp' ? 'high priority' : 'spot'})`;
       case 'start': {
         this.running.set(it.job, { board: it.board, pool: it.pool, gpus: it.gpus, priority: it.priority, startT: it.t, service: it.service_s, attempt: it.attempt });
         if (it.warm) return null;
+        this.allocations.unshift({ t: it.t, job: it.job, gpus: it.gpus, priority: it.priority, board: it.board ?? null, pool: it.pool, cloud: !!it.cloud, attempt: it.attempt, waitS: this.arrivedAt.has(it.job) ? Math.max(0, it.t - this.arrivedAt.get(it.job)) : null });
+        if (this.allocations.length > 8) this.allocations.length = 8;
         this.addRoute({ job: it.job, board: it.board, pool: it.pool, priority: it.priority, reverse: false });
         return `Scheduler routed ${it.job} to ${it.board != null ? `board ${it.board + 1}` : this.poolLabel(it.pool)}${it.attempt > 1 ? ` (restart ${it.attempt})` : ''}`;
       }
@@ -226,7 +231,7 @@ export class ReplayEngine {
                queuedHp: sum('queue_hp'), queuedSpot: sum('queue_spot'), failed: count('failed'), idle: count('idle'), cooling: count('cooling'), reserved: 0,
                alerts: gpus.filter(g => g.alert).length, arrivalsPerMin: this.arrivalsPerMin, routesDropped: this.counters.routesDropped,
                failureEvictions: this.meta?.failure_evictions ?? 0 },
-      pools, rackPools, events: this.events,
+      pools, rackPools, events: this.events, allocations: this.allocations,
       run: { runId: this.runId, scenarioId: this.meta?.scenario_id, scenario: sc, thermal: this.meta?.thermal ?? null, forecast: this.meta?.forecast ?? null, demand: this.meta?.demand_forecast ?? null,
              display: disp ?? null, pools: this.meta?.pools ?? null, window: this.meta?.window ?? null, policyInfo: this.meta?.policy ?? null, metrics: this.metrics, comparison: this.comparison },
       effects: { burstActive: ops.burstActive(sc, nowH), coolingFaultActive: ops.coolingFaultActive(sc, nowH),

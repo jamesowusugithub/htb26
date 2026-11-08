@@ -159,8 +159,8 @@ export class RestaurantScene extends Phaser.Scene {
 
     // zone banners
     const banner = (x: number, y: number, t: string, fg = '#ffd84a') => pixelText(this, x, y, t, { color: fg, bg: '#3b2a20', pad: 2 }).setDepth(200)
-    banner(64, 92, 'A PREMIUM KITCHEN')
-    banner(225, 92, 'B STANDARD KITCHEN')
+    banner(64, 92, isTrace() ? 'A KITCHEN' : 'A PREMIUM KITCHEN')          // in trace mode chefs are real GPU types, not price tiers
+    banner(225, 92, isTrace() ? 'B KITCHEN' : 'B STANDARD KITCHEN')
     banner(275, ZONE_C.y + 21, 'C CLOUD TAKEAWAY', '#bfe3f5')
     banner(177, ZONE_D.y + 6, 'D WAITING AREA', '#e4d0a8')
     banner(34, 112, 'ENTRANCE', '#ffffff')

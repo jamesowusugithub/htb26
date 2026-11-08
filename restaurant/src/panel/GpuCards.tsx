@@ -2,7 +2,7 @@ import type { GpuView, JobView, SimState } from '../data/types'
 import { isTrace } from '../data/traceMeta'
 
 const TIER: Record<string, string> = { premium: 'Premium', standard: 'Standard', cloud: 'Cloud' }
-const ZONE: Record<string, string> = { premium: 'Zone A', standard: 'Zone B', cloud: 'Zone C' }
+const ZONE: Record<string, string> = { premium: 'Kitchen A', standard: 'Kitchen B', cloud: 'Takeaway' }
 
 function Bar({ pct, tone, label }: { pct: number; tone: string; label: string }) {
   return (
@@ -24,7 +24,7 @@ function Card({ g, jobs, state }: { g: GpuView; jobs: JobView[]; state: SimState
         <span className={`chip health-${health}`}>{health}</span>
       </div>
       <div className="gpu-row"><span>Util</span><Bar pct={g.util} tone="tone-blue" label={`${g.id} utilisation`} /><b className="mono">{Math.round(g.util)}%</b></div>
-      <div className="gpu-row"><span>{isTrace() ? 'GPUs' : 'VRAM'}</span><Bar pct={g.tier === 'cloud' && !isTrace() ? 0 : (g.vram_used_gb / g.vram_gb) * 100} tone="tone-blue" label={`${g.id} memory`} /><b className="mono">{g.vram_used_gb}/{g.tier === 'cloud' ? 'pool' : g.vram_gb} GB</b></div>
+      <div className="gpu-row"><span>{isTrace() ? 'GPUs' : 'VRAM'}</span><Bar pct={g.tier === 'cloud' && !isTrace() ? 0 : (g.vram_used_gb / g.vram_gb) * 100} tone="tone-blue" label={`${g.id} memory`} /><b className="mono">{g.vram_used_gb}/{g.tier === 'cloud' && !isTrace() ? 'pool' : g.vram_gb}{isTrace() ? ' GPUs' : ' GB'}</b></div>
       {g.tier === 'cloud' && isTrace() ? <div className="gpu-row"><span>Temp</span><span className="muted">n/a (cloud, not measured)</span></div> : <div className="gpu-row"><span>Temp</span><Bar pct={((g.temp - 30) / 70) * 100} tone={tone} label={`${g.id} temperature`} /><b className="mono">{g.temp.toFixed(0)}&deg;C</b></div>}
       <div className="gpu-job">
         {jobs.length === 0 ? <span className="muted">no active job</span> : jobs.map((j) => (

@@ -2,7 +2,7 @@ import React,{useState,useSyncExternalStore,useEffect} from 'react';
 import {createRoot} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 import {Pause,Play,Plus,Layers3,PanelRight,ChevronDown,MoreHorizontal,RotateCcw,AlertTriangle,Wrench,X,MousePointer2,CheckCircle2,Clock3,Move3d} from 'lucide-react';
-import {BackendSubtitle,BackendMetrics,RackPoolDetails,CustomJobForm,ForecastPanel,DemandForecastPanel,PoolPanel,ScenarioBar,StatusBanner,LinkPanel,Scoreboard,evidenceLine} from './backend-panels.jsx';
+import {BackendSubtitle,BackendMetrics,RackPoolDetails,CustomJobForm,ForecastPanel,DemandForecastPanel,PoolPanel,AllocationPanel,ScenarioBar,StatusBanner,LinkPanel,Scoreboard,evidenceLine} from './backend-panels.jsx';
 import {Button,Tooltip,DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem,DropdownMenuSeparator,DropdownMenuLabel,CameraTabs} from './components/index.jsx';
 
 const labels={idle:'Available',reserved:'In transit',running:'Processing',cooling:'Cooling',failed:'Failed'};
@@ -24,7 +24,7 @@ export function mountOverlay(host,actions,initial){
       {snap.testMode&&<div className="rack-test-banner">LOCAL TEST MODE · MOCK RACK POOLS · {snap.testMode.phase}</div>}
       <header className="workbench-header">
         <div className="brand"><h1>GPU Fabric</h1><p>Interactive server room</p></div>
-        <dl className="activity"><div><dt>Processing</dt><dd>{snap.stats.running}<span>/{snap.gpus.length}</span></dd></div><div><dt>Queued</dt><dd>{snap.stats.queued??snap.queue.length}</dd></div><div><dt>Completed</dt><dd>{new Intl.NumberFormat('en-GB').format(snap.stats.completed)}</dd></div></dl>
+        <dl className="activity"><div><dt>{s.backend?'Boards busy':'Processing'}</dt><dd>{snap.stats.running}<span>/{snap.gpus.length}</span></dd></div><div><dt>Queued</dt><dd>{snap.stats.queued??snap.queue.length}</dd></div><div><dt>Completed</dt><dd>{new Intl.NumberFormat('en-GB').format(snap.stats.completed)}</dd></div></dl>
         <div className="view-controls"><CameraTabs items={[{id:'room',label:'Room'},{id:'hall',label:'GPU hall'},{id:'gpu',label:'GPU detail'}]} value={s.cameraView} onChange={actions.onView}/><Tooltip content={open?'Hide device inspector':'Show device inspector'}><Button variant="ghost" className="inspector-toggle" onClick={()=>setOpen(!open)} aria-label={open?'Hide device inspector':'Show device inspector'} aria-expanded={open} aria-controls="device-inspector"><PanelRight size={18}/></Button></Tooltip></div>
       </header>
       <div className="stage-heading"><div><Move3d size={15}/><span>{s.cameraView==='gpu'?`${gpu.id} hardware detail`:s.cameraView==='hall'?'GPU compute hall':'Server room overview'}</span></div><span className="stage-help">Drag to orbit. Scroll to zoom.</span></div>
@@ -46,6 +46,7 @@ export function mountOverlay(host,actions,initial){
         {s.backend&&<ForecastPanel
           snap={snap} gpu={gpu}/>}
         <section className="queue-section"><div className="section-heading"><h2>Incoming jobs</h2><span>{snap.stats.queued??snap.queue.length} waiting</span></div>{snap.queue.length?<ul className="job-list">{snap.queue.slice(0,5).map(job=><li key={job.id}><span className={`queue-mark ${job.priority==='high'?'high':''}`}/><span>{job.position?`#${job.position} `:''}{job.id}</span><small>{job.priority==='high'?'High priority':'Spot'}{job.gpus?` · ${job.gpus} GPU`:''}</small></li>)}</ul>:<div className="queue-empty"><CheckCircle2 size={19}/><div><strong>{s.backend?(snap.stats.queued?'No jobs waiting in this pool':'Queue is clear'):'Queue is clear'}</strong><p>{s.backend?(snap.stats.queued?`${snap.stats.queued} waiting in other pools (see Pools)`:'Waiting for the next arrival from the backend.'):'New jobs arrive automatically.'}</p></div></div>}</section>
+        {s.backend&&<AllocationPanel snap={snap}/>}
         {s.backend&&<Scoreboard snap={snap} actions={actions}/>}
         {s.backend&&<PoolPanel snap={snap} selectedPool={gpu.pool}/>}
         {s.backend&&<DemandForecastPanel snap={snap}/>}

@@ -61,6 +61,16 @@ def add_orders(w: Workload, orders: list[dict], pidx: int, node_gpus: int = 8) -
                     eval_mask=cat(w.eval_mask, [True] * len(rows), bool), t0=w.t0, elapsed0=cat(w.elapsed0 if w.elapsed0 is not None else np.zeros(len(w)), [0.0] * len(rows), float))
 
 
+def _kitchen_summary(pools, node_pool, owned_g) -> str:
+    """'3 x NVIDIA A100 80GB nodes (8 GPUs each), 1 x NVIDIA A10 node (1 GPU) = 25 GPUs' instead of one long repeated list."""
+    from collections import Counter
+    cnt = Counter((int(p), int(g)) for p, g in zip(node_pool, owned_g)); parts = []
+    for (p, g), n in sorted(cnt.items()):
+        label = pools[p]["label"].replace(" SXM4 80GB", " 80GB").replace(" (unidentified)", "")
+        parts.append(f"{n} x {label} node{'s' if n > 1 else ''} ({g} GPU{'s' if g > 1 else ''} each)")
+    return ", ".join(parts) + f" = {int(np.sum(owned_g))} GPUs"
+
+
 def build_kitchen(jobs: pd.DataFrame, pools: list[dict], start_day: float, minutes: float, pool_id: str = "a100",
                   nodes: int = 5, gpus_per_node: int = 8, orders: list | None = None, cloud: dict | None = None, kitchen: list | None = None) -> Kitchen:
     ids = [p["id"] for p in pools]
@@ -108,7 +118,7 @@ def build_kitchen(jobs: pd.DataFrame, pools: list[dict], start_day: float, minut
     meta = {"source": "Alibaba GPU trace (harmonised jobs.parquet)", "pool": pool_id, "window_start_day": start_day, "window_minutes": minutes,
             "jobs": int(len(w)), "kitchen_nodes": nodes, "gpus_per_node": gpus_per_node,
             "real_pool_nodes_in_simulation": "about 290 A100 nodes", "time_unit": "min", "tick_s": TICK_S,
-            "scale_note": f"Real jobs, small demo kitchen ({nodes} nodes: " + ", ".join(f"{pools[p]['label']} x{g}" for p, g in zip(node_pool.tolist(), owned_g.tolist())) + ") instead of thousands, so queues are visible. Scale is illustrative; the full-scale numbers are in the scoreboard."}
+            "scale_note": "Real jobs on a small demo kitchen: " + _kitchen_summary(pools, node_pool, owned_g) + ", instead of thousands of GPUs, so queues are visible. Scale is illustrative; the full-scale numbers are in the scoreboard."}
     meta["orders"] = len(orders or [])
     if cloud_meta:
         meta["cloud"] = cloud_meta

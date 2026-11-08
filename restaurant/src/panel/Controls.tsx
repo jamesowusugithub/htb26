@@ -122,7 +122,7 @@ export function Controls({ ctl }: { ctl: Controller }) {
           ))}
         </div>
       </Group>}
-      {replay && <p className="note">Replay mode: play, pause, speed, reset and the tick slider work on the recording. Traffic, heat, GPU and scheduler buttons need the live backend.</p>}
+      {replay && !trace && <p className="note">Replay mode: play, pause, speed, reset and the tick slider work on the recording. Traffic, heat, GPU and scheduler buttons need the live backend.</p>}
       {meta.error && <p className="reject" role="alert">Control failed: {meta.error}</p>}
     </section>
   )
