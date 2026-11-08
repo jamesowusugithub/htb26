@@ -9,3 +9,5 @@ models/*.joblib
 restaurant/node_modules/
 restaurant/dist/
 restaurant/*.tsbuildinfo
+models/*/final.zip
+models/*/vecnormalize.pkl
