@@ -15,6 +15,7 @@ from . import data
 from .data import UNIT, Workload
 from .policies import POLICIES
 from .metrics import summarize
+from .display import Display, DEFAULT_PODS
 
 
 @dataclass
@@ -30,6 +31,11 @@ class Scenario:
     capacity: dict | float = 1.0               # node-count factor: one number or {pool_id: factor}
     load_target: float = 0.85                  # capacity calibration the factors are relative to
     resume_preempted: bool = False
+    # --- live what-if controls used by the 3D room (all times in hours since window start) ---
+    failures: list = field(default_factory=list)          # [{"board": 7, "at_h": 6.0, "repair_after_h": 4.0 | None}]
+    cooling_fault: dict | None = None                     # {"at_h": 6.0, "delta_c": 35.0, "duration_h": 6.0 | None}
+    injected_jobs: list = field(default_factory=list)     # [{"at_h": 3.0, "pool": "a10", "gpus": 1, "priority": "hp", "duration_s": 900}]
+    display_pools: list = field(default_factory=lambda: list(DEFAULT_PODS))   # pods 1..4 in the room
     note: str = ""
 
     def to_dict(self) -> dict:
@@ -56,7 +62,66 @@ PRESETS: dict[str, Scenario] = {s.name: s for s in [
     Scenario("longer_jobs", duration_mult=1.5, note="Jobs run 50% longer"),
     Scenario("lose_a10_capacity", capacity={"a10": 0.8}, note="A10 pool loses 20% of its nodes"),
     Scenario("capacity_plus_20", capacity=1.2, note="All pools gain 20% nodes"),
+    Scenario("live_demo", start_day=90.0, days=1.0, note="Busy day: one-day window used by the 3D room"),
+    Scenario("node_failure", start_day=90.0, days=1.0, failures=[{"board": 7, "at_h": 6.0, "repair_after_h": 4.0}],
+             note="Board 8 (A10 pod) loses its nodes at hour 6 and recovers at hour 10"),
+    Scenario("cooling_fault", start_day=90.0, days=1.0, cooling_fault={"at_h": 6.0, "delta_c": 35.0, "duration_h": 6.0},
+             note="Cooling fault: +35 C on every board from hour 6 to 12 (assumed fault size)"),
+    Scenario("spike_and_failure", start_day=90.0, days=1.0, burst={"start_h": 6.0, "duration_h": 4.0, "mult": 4.0},
+             failures=[{"board": 1, "at_h": 7.0, "repair_after_h": None}],
+             note="4x arrival spike from hour 6 and a permanent board failure at hour 7"),
 ]}
+
+
+def failure_events(sc: "Scenario", cluster: data.Cluster) -> list:
+    """Scenario failures -> [(t_s, global_node, kind)] with kind 1=fail, 2=repair. A board failure fails its node slice."""
+    if not sc.failures:
+        return []
+    disp = Display(tuple(sc.display_pools))
+    out = []
+    for f in sc.failures:
+        b = int(f["board"])
+        if not 0 <= b < disp.n_boards:
+            raise ValueError(f"failure board {b} out of range 0..{disp.n_boards - 1}")
+        t0 = float(f["at_h"]) * 3600.0
+        if t0 < 0:
+            raise ValueError("failure at_h must be >= 0")
+        nodes = disp.nodes_of_board(cluster, b)
+        ra = f.get("repair_after_h")
+        for n in nodes:
+            out.append((t0, int(n), 1))
+            if ra is not None:
+                out.append((t0 + float(ra) * 3600.0, int(n), 2))
+    return out
+
+
+def _inject_jobs(sc: "Scenario", out: Workload) -> Workload:
+    if not sc.injected_jobs:
+        return out
+    ids = [p["id"] for p in data.load_pool_config()]
+    T = sc.days * 86400
+    rows = []
+    for k, j in enumerate(sc.injected_jobs):
+        if j["pool"] not in ids:
+            raise ValueError(f"unknown pool {j['pool']!r}")
+        if j.get("priority", "hp") not in ("hp", "spot"):
+            raise ValueError("priority must be 'hp' or 'spot'")
+        t = float(j["at_h"]) * 3600.0
+        if not 0 <= t < T:
+            raise ValueError("injected job outside the window")
+        rows.append((f"INJ-{k + 1:03d}", t, float(j.get("duration_s", 900.0)), ids.index(j["pool"]),
+                     int(round(float(j.get("gpus", 1)) * UNIT)), 0 if j.get("priority", "hp") == "hp" else 1))
+    ids_a = np.concatenate([out.job_id.astype(object), np.array([r[0] for r in rows], dtype=object)])
+    sub = np.concatenate([out.submit, [r[1] for r in rows]])
+    order = np.argsort(sub, kind="stable")
+    cat = lambda a, b, dt=None: np.concatenate([a, np.array(b, dtype=dt)])[order]
+    return Workload(job_id=ids_a[order], submit=sub[order], dur=cat(out.dur, [r[2] for r in rows], float),
+                    pool=cat(out.pool, [r[3] for r in rows], np.int64), req=cat(out.req, [r[4] for r in rows], np.int64),
+                    prio=cat(out.prio, [r[5] for r in rows], np.int64),
+                    org=cat(out.org.astype(object), ["injected"] * len(rows), object),
+                    eval_mask=cat(out.eval_mask, [True] * len(rows), bool), t0=out.t0,
+                    elapsed0=cat(out.elapsed0 if out.elapsed0 is not None else np.zeros(len(out)), [0.0] * len(rows), float))
+
 
 
 def _capacity_factors(cluster: data.Cluster, cap) -> np.ndarray:
@@ -137,9 +202,10 @@ def build_workload(jobs: pd.DataFrame, sc: Scenario) -> Workload:
         req=np.concatenate([base.req[carry], req[order]]),
         prio=np.concatenate([base.prio[carry], prio[order]]),
         org=np.concatenate([base.org[carry], org[order]]),
-        eval_mask=np.concatenate([np.zeros(len(carry), bool), np.ones(len(order), bool)]), t0=s)
+        eval_mask=np.concatenate([np.zeros(len(carry), bool), np.ones(len(order), bool)]), t0=s,
+        elapsed0=np.concatenate([base.elapsed0[carry], np.zeros(len(order))]))
     assert len(out) == n
-    return out
+    return _inject_jobs(sc, out)
 
 
 def build_cluster(base_cluster: data.Cluster, sc: Scenario) -> data.Cluster:
@@ -169,7 +235,8 @@ def run_scenario(sc: Scenario, jobs: pd.DataFrame, calibrated: data.Cluster, pol
            "policies": {}, "_states": {}, "_workload": w, "_cluster": cluster}
     for name in names:
         spec = POLICIES[name]
-        S = run_policy(cluster, w, spec, resume=sc.resume_preempted, log_events=log_events, **sim_kw)
+        S = run_policy(cluster, w, spec, resume=sc.resume_preempted, log_events=log_events,
+                       failures=failure_events(sc, cluster), **sim_kw)
         m = summarize(S, w, cluster, util_hi=sc.days * 86400)
         out["policies"][name] = {"realistic": spec.realistic, "metrics": m}
         out["_states"][name] = S

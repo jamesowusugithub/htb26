@@ -17,6 +17,9 @@ from pydantic import BaseModel, Field
 
 from . import data
 from .export import export_ndjson, SCHEMA_VERSION
+from .display import Display, DEFAULT_PODS
+from .thermal import ThermalProxy
+from .forecast import SurvivalCurves
 from .metrics import timeline
 from .policies import POLICIES
 from .run_baselines import setup
@@ -28,6 +31,7 @@ from .duration_model import load_or_fit
 RL_MODEL = Path(__file__).resolve().parents[1] / "models/ppo_bc/best.zip"
 RL_NAME = "rl_ppo"
 _rl: dict = {}
+_thermal: dict = {}
 
 RUNS_DIR = Path(__file__).resolve().parents[1] / "runs"
 MAX_DAYS = 7.0
@@ -51,6 +55,7 @@ class RunIndex:
         self.times: list[float] = []
         self.lines: list[str] = []
         self.types: list[str] = []
+        self.objs: list[dict] = []
         with open(path) as f:
             for k, line in enumerate(f):
                 o = json.loads(line)
@@ -60,6 +65,33 @@ class RunIndex:
                 self.times.append(o["t"])
                 self.lines.append(line.rstrip("\n"))
                 self.types.append(o["type"])
+                self.objs.append(o)
+
+    def state_at(self, t: float) -> dict:
+        """Authoritative replay state at time t, so a client can jump (seek / what-if re-run) without replaying events."""
+        j = bisect.bisect_right(self.times, t)
+        running: dict[str, dict] = {}
+        queued: dict[str, dict] = {}
+        last_snap = None
+        down_nodes: dict[int, int] = {}
+        for o in self.objs[:j]:
+            typ = o["type"]
+            if typ == "snapshot":
+                last_snap = o
+            elif typ == "arrive":
+                queued[o["job"]] = {"job": o["job"], "pool": o["pool"], "priority": o["priority"], "gpus": o["gpus"], "t": o["t"]}
+            elif typ == "start":
+                queued.pop(o["job"], None)
+                running[o["job"]] = {"job": o["job"], "pool": o["pool"], "board": o.get("board"), "gpus": o["gpus"],
+                                     "priority": o["priority"], "start_t": o["t"], "service_s": o["service_s"], "attempt": o["attempt"]}
+            elif typ == "finish":
+                running.pop(o["job"], None)
+            elif typ == "preempt":
+                r = running.pop(o["job"], None)
+                if r:
+                    queued[o["job"]] = {"job": o["job"], "pool": o["pool"], "priority": r["priority"], "gpus": r["gpus"], "t": o["t"]}
+        return {"t": t, "snapshot": last_snap, "running": list(running.values()), "queued_total": len(queued),
+                "queued_sample": list(queued.values())[:200]}
 
     def slice(self, t0: float, t1: float, types: set[str] | None):
         i = bisect.bisect_left(self.times, t0)
@@ -78,6 +110,12 @@ def _json_safe(o):
     if isinstance(o, (list, tuple)):
         return [_json_safe(v) for v in o]
     return o
+
+
+def thermal() -> ThermalProxy:
+    if "p" not in _thermal:
+        _thermal["p"] = ThermalProxy.load()
+    return _thermal["p"]
 
 
 def rl_policy():
@@ -108,7 +146,7 @@ class WhatIfRequest(BaseModel):
     preset: str | None = Field(None, description="Name from GET /presets; overridden by `scenario` fields")
     scenario: dict | None = Field(None, description="Scenario fields (see GET /presets for examples)")
     policies: list[str] = Field(default_factory=lambda: ["fifo", "priority_fifo", "backfill_median", "sjf_oracle"])
-    snapshot_s: float = Field(900.0, ge=30, description="Seconds between snapshot lines in the exported run")
+    snapshot_s: float = Field(60.0, ge=10, description="Seconds between snapshot lines in the exported run")
 
 
 def _scenario_from(req: WhatIfRequest) -> Scenario:
@@ -145,7 +183,12 @@ def meta():
                if RL_MODEL.exists() else []),
             "assumptions": data.load_assumptions()["items"],
             "trace_days": float(e["jobs"].submit_relative_s.max() / 86400),
-            "websocket": "/runs/{run_id}/stream?speed=3600&start=0 sends {type:'batch', t_from, t_to, items:[...events]} then {type:'end'}"}
+            "display": Display().describe(cl), "thermal": thermal().meta(),
+            "scenario_controls": {"burst": "arrival spike", "failures": "board (node slice) failure with optional repair",
+                                  "cooling_fault": "ambient shift on every board", "injected_jobs": "single job at a chosen time",
+                                  "time_unit": "hours since window start"},
+            "websocket": "/runs/{run_id}/stream?speed=600&start=0&paused=false sends meta, then {type:'batch', t_from, t_to, speed, paused, items:[...]} then {type:'end'}; "
+                         "send {cmd:'pause'|'resume'|'speed'(value)|'seek'(t)} to control it"}
 
 
 @app.get("/presets")
@@ -166,7 +209,10 @@ def whatif(req: WhatIfRequest):
     t0 = time.time()
     with _lock:
         sim_policies = [p for p in req.policies if p != RL_NAME]
-        res = run_scenario(sc, e["jobs"], e["cluster"], sim_policies, log_events=True, snapshot_dt=req.snapshot_s)
+        try:
+            res = run_scenario(sc, e["jobs"], e["cluster"], sim_policies, log_events=True, snapshot_dt=req.snapshot_s)
+        except (ValueError, KeyError) as ex:
+            raise HTTPException(422, f"invalid scenario: {ex}")
         if RL_NAME in req.policies:
             model = rl_policy()
             renv = SchedulingEnv(e["jobs"], e["cluster"], load_or_fit(e["jobs"], 40), log_events=True, snapshot_dt=req.snapshot_s)
@@ -175,14 +221,19 @@ def whatif(req: WhatIfRequest):
             res["_states"][RL_NAME] = renv.S
             res["_rl_workload"] = (renv.w, renv.cluster)
     out_dir = RUNS_DIR / sc.scenario_id
+    hint = load_or_fit(e["jobs"], 40)
+    surv = SurvivalCurves.fit(e["jobs"], sc.start_day * 86400.0, e["cluster"].n_pools)
+    display = Display(tuple(sc.display_pools))
     results = {}
     for name in req.policies:
         S = res["_states"][name]
         path = out_dir / f"{name}.ndjson"
         w_, c_ = res["_rl_workload"] if name == RL_NAME else (res["_workload"], res["_cluster"])
         spec = POLICIES.get(name)
+        hint_est = hint.predict_seconds(w_.job_id)
         export_ndjson(path, S, w_, c_, policy_name=name, realistic=spec.realistic if spec else True,
                       preempt=spec.preempt if spec else True, resume=sc.resume_preempted, window_len_s=sc.days * 86400,
+                      display=display, thermal=thermal(), hint_est=hint_est, scenario=sc.to_dict(), survival=surv,
                       extra_meta={"scenario": sc.to_dict(), "scenario_id": sc.scenario_id})
         tl = timeline(S, c_)
         tl = tl[tl.t <= sc.days * 86400]
@@ -190,7 +241,7 @@ def whatif(req: WhatIfRequest):
             "run_id": f"{sc.scenario_id}-{name}", "realistic": spec.realistic if spec else True,
             "metrics": res["policies"][name]["metrics"],
             "events_url": f"/runs/{sc.scenario_id}-{name}/events", "timeline_url": f"/runs/{sc.scenario_id}-{name}/timeline",
-            "stream_url": f"/runs/{sc.scenario_id}-{name}/stream"}
+            "stream_url": f"/runs/{sc.scenario_id}-{name}/stream", "state_url": f"/runs/{sc.scenario_id}-{name}/state"}
     cmp_ = compare_table(res).round(4).to_dict(orient="records")
     body = {"scenario_id": sc.scenario_id, "scenario": sc.to_dict(), "workload": res["workload"],
             "comparison": cmp_, "results": results, "compute_seconds": round(time.time() - t0, 2),
@@ -223,7 +274,7 @@ def run_meta(run_id: str):
          description="NDJSON slice of events with t_from <= t <= t_to (one JSON object per line).")
 def run_events(run_id: str, t_from: float = Query(0.0), t_to: float = Query(float("inf")),
                types: str | None = Query(None, description="comma list: arrive,start,finish,preempt,snapshot"),
-               limit: int = Query(200000, ge=1)):
+               limit: int = Query(1000000, ge=1)):
     r = _run(run_id)
     tset = set(types.split(",")) if types else None
     out = []
@@ -232,6 +283,12 @@ def run_events(run_id: str, t_from: float = Query(0.0), t_to: float = Query(floa
         if len(out) >= limit:
             break
     return PlainTextResponse("\n".join(out) + ("\n" if out else ""), media_type="application/x-ndjson")
+
+
+@app.get("/runs/{run_id}/state")
+def run_state(run_id: str, t: float = Query(0.0, ge=0.0)):
+    """Replay state at time t: latest snapshot, running jobs (with start/service for progress) and queue totals."""
+    return _run(run_id).state_at(t)
 
 
 @app.get("/runs/{run_id}/timeline")
@@ -252,7 +309,10 @@ def run_timeline(run_id: str):
 
 
 @app.websocket("/runs/{run_id}/stream")
-async def stream(ws: WebSocket, run_id: str, speed: float = 3600.0, start: float = 0.0, tick: float = 0.1):
+async def stream(ws: WebSocket, run_id: str, speed: float = 600.0, start: float = 0.0, tick: float = 0.1,
+                 paused: bool = False):
+    """Paced replay. Clock = trace seconds; `speed` trace-seconds per real second. Client controls:
+    {cmd:'pause'} {cmd:'resume'} {cmd:'speed', value:N} {cmd:'seek', t:T} (client fetches /state?t=T first)."""
     await ws.accept()
     try:
         r = _run(run_id)
@@ -260,17 +320,43 @@ async def stream(ws: WebSocket, run_id: str, speed: float = 3600.0, start: float
         await ws.send_json({"type": "error", "detail": ex.detail})
         await ws.close()
         return
+    st = {"t": start, "speed": max(speed, 1.0), "paused": paused, "stop": False}
+
+    async def reader():
+        try:
+            while True:
+                m = await ws.receive_json()
+                c = m.get("cmd")
+                if c == "pause":
+                    st["paused"] = True
+                elif c == "resume":
+                    st["paused"] = False
+                elif c == "speed":
+                    st["speed"] = max(float(m.get("value", 1)), 1.0)
+                elif c == "seek":
+                    st["t"] = max(float(m.get("t", 0)), 0.0)
+        except (WebSocketDisconnect, RuntimeError):
+            st["stop"] = True
+    task = asyncio.create_task(reader())
     try:
         await ws.send_json(r.meta)
-        t = start
         end = r.times[-1] if r.times else 0.0
-        while t <= end:
-            nxt = t + max(speed, 1.0) * tick
-            items = [json.loads(x) for x in r.slice(t, nxt - 1e-9, None)]
-            await ws.send_json({"type": "batch", "t_from": t, "t_to": nxt, "items": items})
-            t = nxt
+        while not st["stop"] and st["t"] <= end:
+            if st["paused"]:
+                await ws.send_json({"type": "tick", "t": st["t"], "paused": True, "speed": st["speed"]})
+                await asyncio.sleep(0.25)
+                continue
+            t0 = st["t"]
+            t1 = t0 + st["speed"] * tick
+            st["t"] = t1
+            items = [json.loads(x) for x in r.slice(t0, t1 - 1e-9, None)]
+            await ws.send_json({"type": "batch", "t_from": t0, "t_to": t1, "speed": st["speed"], "paused": False,
+                                "items": items})
             await asyncio.sleep(tick)
-        await ws.send_json({"type": "end"})
-        await ws.close()
-    except WebSocketDisconnect:
-        return
+        if not st["stop"]:
+            await ws.send_json({"type": "end"})
+            await ws.close()
+    except (WebSocketDisconnect, RuntimeError):
+        pass
+    finally:
+        task.cancel()

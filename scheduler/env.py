@@ -15,7 +15,7 @@ from .policies import POLICIES
 from .sim import (build_state, PRIO_FIFO, FC_QINT, SC_ERR, SC_NPREEMPT, SC_NRUN, SC_DONE)
 from .rl_core import run_until_decision, apply_action
 from .metrics import summarize
-from .whatif import Scenario, build_workload, build_cluster
+from .whatif import Scenario, build_workload, build_cluster, failure_events
 from .run_baselines import run_policy
 
 
@@ -58,10 +58,12 @@ class SchedulingEnv(gym.Env):
         est = self.hint.predict_seconds(self.w.job_id)
         est = np.where(np.isfinite(est), est, np.nanmedian(est)).astype(np.float64)
         self.est = est
-        base = run_policy(self.cluster, self.w, POLICIES["priority_fifo"], est=est, snapshot_dt=None)
+        self.fail_events = failure_events(self.sc, self.cluster)
+        base = run_policy(self.cluster, self.w, POLICIES["priority_fifo"], est=est, snapshot_dt=None,
+                          failures=self.fail_events)
         self.base_qint = max(float(base.fc[FC_QINT]), 1e-6)
         self.S = build_state(self.cluster, self.w, PRIO_FIFO, preempt=True, est=est, early_stop=False,
-                             snapshot_dt=self.snapshot_dt, log_events=self.log_events, rl_k=self.K)
+                             snapshot_dt=self.snapshot_dt, log_events=self.log_events, rl_k=self.K, failures=self.fail_events)
         self.steps = 0
         self.stall = 0
         self.n_started = 0

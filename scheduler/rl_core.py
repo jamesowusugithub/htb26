@@ -14,6 +14,7 @@ from numba import njit
 
 from .data import UNIT
 from .sim import (State, schedule, try_preempt, find_place, start_job, q_remove, release_job, heap_pop, advance,
+                  apply_failure_event, SC_FAILIDX, SC_NFAIL,
                   log_event, SC_HEAP, SC_NEXT, SC_DONE, SC_ERR, SC_FOCUS, SC_POLICY, SC_PREEMPT, SC_NRUN,
                   FC_NOW, FC_QINT, RUNNING, DONE, QUEUED, EV_ARRIVE, EV_FINISH, ERR_STUCK, PRIO_FIFO)
 from .sim import q_insert
@@ -47,7 +48,7 @@ def _fits(req, maxfull, maxfree):
 def _events_pending(S):
     while S.sc[SC_HEAP] > 0 and (S.htok[0] != S.token[S.hj[0]] or S.status[S.hj[0]] != RUNNING):
         heap_pop(S)
-    return S.sc[SC_HEAP] > 0 or S.sc[SC_NEXT] < S.submit.shape[0]
+    return S.sc[SC_HEAP] > 0 or S.sc[SC_NEXT] < S.submit.shape[0] or S.sc[SC_FAILIDX] < S.sc[SC_NFAIL]
 
 
 @njit(cache=True)
@@ -151,6 +152,14 @@ def _process_next_event(S):
     tf = np.inf
     if S.sc[SC_HEAP] > 0:
         tf = S.ht[0]
+    tx = np.inf
+    if S.sc[SC_FAILIDX] < S.sc[SC_NFAIL]:
+        tx = S.fail_t[S.sc[SC_FAILIDX]]
+    if tx < tf and tx <= ta:
+        advance(S, tx)
+        p = apply_failure_event(S, S.sc[SC_FAILIDX], tx)
+        S.sc[SC_FAILIDX] += 1
+        return p
     if tf <= ta:
         j = S.hj[0]
         heap_pop(S)

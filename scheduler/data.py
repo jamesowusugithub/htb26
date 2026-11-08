@@ -33,6 +33,7 @@ class Workload:
     org: np.ndarray           # str organisation id
     eval_mask: np.ndarray     # bool: counted in metrics (False = lookback/warm-up)
     t0: float = 0.0           # window start in trace seconds
+    elapsed0: np.ndarray | None = None   # seconds a carry-over job had already run when the window opened (else 0)
 
     def __len__(self):
         return len(self.submit)
@@ -76,7 +77,8 @@ def make_workload(jobs: pd.DataFrame, start: float = 0.0, end: float | None = No
     w = jobs.iloc[sel]
     return Workload(
         job_id=w.job_id.to_numpy(), submit=t_sub, dur=t_dur, pool=w.pool.to_numpy(), req=w.req.to_numpy().copy(),
-        prio=w.prio.to_numpy(), org=w.organisation_id.to_numpy(), eval_mask=inwin[sel], t0=start)
+        prio=w.prio.to_numpy(), org=w.organisation_id.to_numpy(), eval_mask=inwin[sel], t0=start,
+        elapsed0=np.where(carry[sel], start - sub[sel], 0.0))
 
 
 @dataclass

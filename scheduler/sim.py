@@ -20,12 +20,12 @@ POLICY_NAMES = {FIFO: "fifo", PRIO_FIFO: "priority_fifo", BACKFILL: "backfill", 
 # job status
 NOT_ARRIVED, QUEUED, RUNNING, DONE = 0, 1, 2, 3
 # event types in the log
-EV_ARRIVE, EV_START, EV_FINISH, EV_PREEMPT = 0, 1, 2, 3
-EV_NAMES = ["arrive", "start", "finish", "preempt"]
+EV_ARRIVE, EV_START, EV_FINISH, EV_PREEMPT, EV_FAIL, EV_REPAIR, EV_NODEEVICT = 0, 1, 2, 3, 4, 5, 6
+EV_NAMES = ["arrive", "start", "finish", "preempt", "fail", "repair", "evict_failure"]
 
 # scalar slots (int64 array `sc`)
 SC_NRUN, SC_HEAP, SC_NEXT, SC_NEV, SC_NSNAP, SC_ERR, SC_PREEMPT, SC_RESUME, SC_POLICY, SC_DONE, \
-    SC_LOG, SC_SNAP, SC_DEPTH, SC_NPREEMPT, SC_EARLY, SC_FOCUS = range(16)
+    SC_LOG, SC_SNAP, SC_DEPTH, SC_NPREEMPT, SC_EARLY, SC_FOCUS, SC_FAILIDX, SC_NFAIL, SC_FAILEV = range(19)
 # float slots (`fc`)
 FC_NOW, FC_SNAPDT, FC_NEXTSNAP, FC_QINT = range(4)
 
@@ -50,6 +50,8 @@ FIELDS = [
     # snapshots
     "snap_t", "snap_busy", "snap_qhp", "snap_qsp", "snap_run", "snap_maxfull",
     # scalars
+    # node failures (scheduled by the scenario) and queue heads for the frontend feed
+    "node_down", "fail_t", "fail_node", "fail_kind", "snap_qhead",
     # RL decision interface
     "cand_job", "cand_pos", "obs", "amask",
     "sc", "fc",
@@ -304,7 +306,7 @@ def release_job(S, j):
 
 
 @njit(cache=True)
-def evict_job(S, j, t):
+def evict_job(S, j, t, cause):
     elapsed = t - S.run_start[j]
     S.token[j] += 1  # invalidates the pending finish event
     release_job(S, j)
@@ -314,9 +316,12 @@ def evict_job(S, j, t):
         S.wasted[j] += elapsed * S.req[j] / UNIT
         S.remaining[j] = S.dur[j]
     S.npre[j] += 1
-    S.sc[SC_NPREEMPT] += 1
+    if cause == 1:
+        S.sc[SC_FAILEV] += 1
+    else:
+        S.sc[SC_NPREEMPT] += 1
     S.status[j] = QUEUED
-    log_event(S, t, EV_PREEMPT, j, S.job_node[j], S.job_mask[j])
+    log_event(S, t, EV_NODEEVICT if cause == 1 else EV_PREEMPT, j, S.job_node[j], S.job_mask[j])
     q_insert(S, S.pool[j], j)
 
 
@@ -413,7 +418,7 @@ def try_preempt(S, p, j, t):
                 cand[yi] = cand[nc - 1]
                 nc -= 1
         for q in range(nv):
-            evict_job(S, victims[q], t)
+            evict_job(S, victims[q], t, 0)
         ok = nv > 0
     # cleanup scratch
     for ci in range(cnt):
@@ -479,6 +484,42 @@ def compute_reservation(S, p, head, t):
     S.res_time[p] = rtime
     return rnode, rtime
 
+
+
+# ----------------------------------------------------------------------------- node failures
+@njit(cache=True)
+def apply_failure_event(S, i, t):
+    """Fail or repair one node (scheduled by the scenario). A failed node loses all running jobs, which restart
+    from the queue (or resume, per SC_RESUME), and offers no capacity until repaired. Returns the node's pool."""
+    n = S.fail_node[i]
+    p = S.node_pool[n]
+    if S.fail_kind[i] == 1:
+        if S.node_down[n] == 0:
+            victims = np.empty(S.rlc[p], dtype=np.int64)
+            nv = 0
+            for idx in range(S.rlc[p]):
+                jj = S.rl[p, idx]
+                if S.job_node[jj] == n:
+                    victims[nv] = jj
+                    nv += 1
+            for q in range(nv):
+                evict_job(S, victims[q], t, 1)
+            S.node_down[n] = 1
+            for k in range(MAX_GPUS_PER_NODE):
+                S.gfree[n, k] = 0
+            S.node_full[n] = 0
+            S.node_maxfree[n] = 0
+            S.pver[p] += 1
+            log_event(S, t, EV_FAIL, -1, n, 0)
+    else:
+        if S.node_down[n] == 1:
+            S.node_down[n] = 0
+            for k in range(S.node_ngpu[n]):
+                S.gfree[n, k] = UNIT
+            recompute_node(S, n)
+            S.pver[p] += 1
+            log_event(S, t, EV_REPAIR, -1, n, 0)
+    return p
 
 # ----------------------------------------------------------------------------- scheduling pass
 @njit(cache=True)
@@ -550,6 +591,8 @@ def snapshot(S, ts):
             if S.node_full[n] > mf:
                 mf = S.node_full[n]
         S.snap_maxfull[i, p] = mf
+        for h in range(S.snap_qhead.shape[2]):
+            S.snap_qhead[i, p, h] = S.queue[p, h] if h < S.qc[p] else -1
     S.sc[SC_NSNAP] = i + 1
 
 
@@ -583,9 +626,12 @@ def run_sim(S):
         tf = np.inf
         if S.sc[SC_HEAP] > 0:
             tf = S.ht[0]
-        if ta == np.inf and tf == np.inf:
+        tx = np.inf
+        if S.sc[SC_FAILIDX] < S.sc[SC_NFAIL]:
+            tx = S.fail_t[S.sc[SC_FAILIDX]]
+        if ta == np.inf and tf == np.inf and tx == np.inf:
             break
-        if tf <= ta:
+        if tf <= ta and tf <= tx:
             j = S.hj[0]
             heap_pop(S)
             advance(S, tf)
@@ -597,6 +643,11 @@ def run_sim(S):
             S.sc[SC_DONE] += 1
             log_event(S, tf, EV_FINISH, j, S.job_node[j], S.job_mask[j])
             schedule(S, p, tf)
+        elif tx <= ta:
+            advance(S, tx)
+            p = apply_failure_event(S, S.sc[SC_FAILIDX], tx)
+            S.sc[SC_FAILIDX] += 1
+            schedule(S, p, tx)
         else:
             j = S.sc[SC_NEXT]
             S.sc[SC_NEXT] += 1
@@ -646,7 +697,8 @@ def estimate_array(w: Workload, mode: str, sigma: float = 1.0, seed: int = 0,
 
 def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = True, resume: bool = False,
                 est: np.ndarray | None = None, depth: int = 128, log_events: bool = False, early_stop: bool = False,
-                snapshot_dt: float | None = 3600.0, max_snapshots: int = 400000, rl_k: int = 8) -> State:
+                snapshot_dt: float | None = 3600.0, max_snapshots: int = 400000, rl_k: int = 8,
+                failures: list | None = None, qhead: int = 5) -> State:
     N = len(w)
     P = cluster.n_pools
     M = len(cluster.node_pool)
@@ -676,8 +728,10 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
     horizon = (w.submit.max() if N else 0.0) + (w.dur.max() if N else 0.0) * 1.0
     n_snap = int(min(max_snapshots, horizon / snapshot_dt + 4)) if snap_on else 1
 
-    sc = np.zeros(16, dtype=np.int64)
+    sc = np.zeros(24, dtype=np.int64)
     sc[SC_FOCUS] = -1
+    fl = sorted(failures or [], key=lambda f: (f[0], f[2]))   # (t_s, global_node, kind 1=fail 2=repair)
+    sc[SC_NFAIL] = len(fl)
     sc[SC_PREEMPT] = int(preempt and policy != FIFO)
     sc[SC_RESUME] = int(resume)
     sc[SC_POLICY] = policy
@@ -708,6 +762,9 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
         ev_t=z(ev_cap, np.float64), ev_type=z(ev_cap), ev_job=z(ev_cap), ev_node=z(ev_cap), ev_mask=z(ev_cap),
         snap_t=z(n_snap, np.float64), snap_busy=z((n_snap, P)), snap_qhp=z((n_snap, P)), snap_qsp=z((n_snap, P)),
         snap_run=z((n_snap, P)), snap_maxfull=z((n_snap, P)),
+        node_down=z(M), fail_t=np.array([f[0] for f in fl] + [0.0], dtype=np.float64),
+        fail_node=np.array([f[1] for f in fl] + [0], dtype=np.int64), fail_kind=np.array([f[2] for f in fl] + [0], dtype=np.int64),
+        snap_qhead=np.full((n_snap, P, qhead), -1, dtype=np.int64),
         cand_job=np.full(rl_k, -1, dtype=np.int64), cand_pos=np.full(rl_k, -1, dtype=np.int64),
         obs=np.zeros(P + 6 + rl_k * 8, dtype=np.float32), amask=np.zeros(rl_k + 1, dtype=np.int64),
         sc=sc, fc=fc)
