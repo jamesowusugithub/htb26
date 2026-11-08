@@ -75,10 +75,12 @@ def build_kitchen(jobs: pd.DataFrame, pools: list[dict], start_day: float, minut
         cn, cg = int(cloud["nodes"]), int(cloud.get("gpus_per_node", 8))
         wait_min, mult = float(cloud.get("overflow_wait_min", 30.0)), float(cloud.get("price_multiplier", 1.0))
         cl = add_cloud(cl, {pool_id: cn}, cg)
-        sim_kw = {"cloud_price": pool_prices([p["id"] for p in pools], mult), "overflow_wait_s": wait_min * 60.0}
+        from .cloud import DEFAULT_MAX_JOB_COST_USD
+        budget = float(cloud.get("max_job_cost_usd", DEFAULT_MAX_JOB_COST_USD))
+        sim_kw = {"cloud_price": pool_prices([p["id"] for p in pools], mult), "overflow_wait_s": wait_min * 60.0, "max_job_cost_usd": budget}
         price = float(sim_kw["cloud_price"][pidx])
         cloud_meta = {"enabled": True, "nodes": cn, "gpus_per_node": cg, "gpus": cn * cg, "overflow_wait_min": wait_min, "price_usd_per_gpu_hour": round(price, 2),
-                      "price_multiplier": mult, "evidence": "SIMULATED fallback, not Alibaba data", "price_basis": provenance()["note"]}
+                      "price_multiplier": mult, "max_job_cost_usd": budget, "evidence": "SIMULATED fallback, not Alibaba data", "price_basis": provenance()["note"]}
     meta = {"source": "Alibaba GPU trace (harmonised jobs.parquet)", "pool": pool_id, "window_start_day": start_day, "window_minutes": minutes,
             "jobs": int(len(w)), "kitchen_nodes": nodes, "gpus_per_node": gpus_per_node,
             "real_pool_nodes_in_simulation": "about 290 A100 nodes", "time_unit": "min", "tick_s": TICK_S,
@@ -86,7 +88,7 @@ def build_kitchen(jobs: pd.DataFrame, pools: list[dict], start_day: float, minut
     meta["orders"] = len(orders or [])
     if cloud_meta:
         meta["cloud"] = cloud_meta
-        meta["scale_note"] += f" Takeaway = SIMULATED cloud fallback ({cloud_meta['gpus']} GPUs, jobs waiting over {wait_min:g} min are sent there at an assumed ${cloud_meta['price_usd_per_gpu_hour']}/GPU-hour); it is not observed in the Alibaba trace."
+        meta["scale_note"] += f" Takeaway = SIMULATED cloud fallback ({cloud_meta['gpus']} GPUs, jobs waiting over {wait_min:g} min are sent there at an assumed ${cloud_meta['price_usd_per_gpu_hour']}/GPU-hour, only if the predicted rental cost is under ${budget:g}); it is not observed in the Alibaba trace."
     return Kitchen(w, cl, meta, sim_kw, cloud_meta, nodes, pool_id)
 
 
@@ -96,7 +98,10 @@ def _run_sim(k: Kitchen, policy: str, hint: DurationHint):
     if spec.est_mode == "hint":
         est = hint.predict_seconds(k.workload.job_id)
         est = np.where(np.isfinite(est), est, np.nanmedian(est))
-    S = run_policy(k.cluster, k.workload, spec, est=est, log_events=True, snapshot_dt=None, early_stop=False, **(k.sim_kw or {}))
+    kw = dict(k.sim_kw or {})
+    if kw:                                                    # the cloud rule prices jobs with the hint, never the true duration
+        oe = hint.predict_seconds(k.workload.job_id); kw["overflow_est"] = np.where(np.isfinite(oe), oe, np.nanmedian(oe))
+    S = run_policy(k.cluster, k.workload, spec, est=est, log_events=True, snapshot_dt=None, early_stop=False, **kw)
     return S, {}
 
 

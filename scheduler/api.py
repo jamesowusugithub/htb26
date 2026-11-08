@@ -25,6 +25,7 @@ from .policies import POLICIES
 from .run_baselines import setup
 from .whatif import PRESETS, Scenario, run_scenario, compare_table
 from .env import SchedulingEnv
+from . import restaurant_export as rx
 from .eval_rl import run_agent
 from .duration_model import load_or_fit
 
@@ -366,3 +367,63 @@ async def stream(ws: WebSocket, run_id: str, speed: float = 600.0, start: float 
         pass
     finally:
         task.cancel()
+
+
+# ------------------------------------------------------------------ restaurant demo (2D animation) -------------------------------------------
+class OrderIn(BaseModel):
+    at_min: float = Field(0.0, ge=0, description="minutes after the start of the kitchen window")
+    gpus: float = Field(1.0, gt=0, le=8)
+    priority: str = Field("high", pattern="^(high|spot)$")
+    duration_min: float = Field(15.0, ge=1, le=720)
+
+
+class CloudIn(BaseModel):
+    nodes: int = Field(1, ge=0, le=20, description="simulated takeaway nodes")
+    gpus_per_node: int = Field(8, ge=1, le=8)
+    overflow_wait_min: float = Field(30.0, ge=1, description="a job that has waited this long may be sent to the takeaway")
+    price_multiplier: float = Field(1.0, gt=0, le=10)
+    max_job_cost_usd: float | None = Field(None, gt=0, description="predicted rental cost cap per job (default from scheduler/cloud.py)")
+
+
+class RestaurantReq(BaseModel):
+    policy: str = "rl_ppo"
+    start_day: float = Field(145.0, ge=0, le=183)
+    minutes: float = Field(150.0, ge=30, le=480)
+    nodes: int = Field(5, ge=2, le=5)
+    orders: list[OrderIn] = Field(default_factory=list, max_length=200)
+    cloud: CloudIn | None = None
+
+
+_rest_cache: "OrderedDict[str, dict]" = OrderedDict()
+
+
+def _restaurant(req: RestaurantReq) -> dict:
+    key = req.model_dump_json()
+    if key in _rest_cache:
+        _rest_cache.move_to_end(key)
+        return _rest_cache[key]
+    e = env()
+    model = rl_policy() if req.policy == RL_NAME or req.policy == "rl_ppo" else None
+    cloud = req.cloud.model_dump(exclude_none=True) if req.cloud else None
+    try:
+        with _lock:
+            rec = rx.make_recording(e["jobs"], e["pools"], load_or_fit(e["jobs"], 40), "rl_ppo" if model else req.policy, model, _rl.get("K", 16),
+                                    req.start_day, req.minutes, 60.0, req.nodes, [o.model_dump() for o in req.orders], cloud)
+    except ValueError as ex:
+        raise HTTPException(422, str(ex))
+    _rest_cache[key] = rec
+    while len(_rest_cache) > 24:
+        _rest_cache.popitem(last=False)
+    return rec
+
+
+@app.post("/restaurant/trace")
+def restaurant_trace_post(req: RestaurantReq):
+    """Recording for the 2D animation: REAL trace jobs on a small kitchen, scheduled by the chosen policy (the trained RL policy for rl_ppo).
+    `orders` are NEW jobs that are not in the trace; `cloud` enables the SIMULATED takeaway fallback (configurable capacity and price)."""
+    return _restaurant(req)
+
+
+@app.get("/restaurant/trace")
+def restaurant_trace_get(policy: str = "rl_ppo", takeaway: bool = True):
+    return _restaurant(RestaurantReq(policy=policy, cloud=CloudIn() if takeaway else None))

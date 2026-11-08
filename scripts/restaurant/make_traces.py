@@ -15,7 +15,9 @@ model = None
 if a.rl:
     from sb3_contrib import MaskablePPO
     model = MaskablePPO.load(a.rl, device="cpu")
-recs = rx.make_recordings(jobs, pools, hint, model, a.K, a.start_day, a.minutes, 60.0, a.nodes)
+recs = {}
+for pol in ("fifo", "priority_fifo", "sjf_hint") + (("rl_ppo",) if model else ()):
+    recs[pol] = rx.make_recording(jobs, pools, hint, pol, model, a.K, a.start_day, a.minutes, 60.0, a.nodes, None, {"nodes": 1, "gpus_per_node": 8, "overflow_wait_min": 30})   # simulated takeaway ON
 out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
 for pol, rec in recs.items():
     (out / f"{pol}.json").write_text(json.dumps(rec, separators=(",", ":")))

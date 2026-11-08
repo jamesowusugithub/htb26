@@ -33,7 +33,7 @@ export type SimEvent =
       action: Action
       target_gpu_ids: string[]
       scheduler: SchedulerName
-      factors: { queue_len: number; deadline_slack: number; pred_temp: number; cost: number; hint_min?: number }
+      factors: { queue_len: number; deadline_slack: number; pred_temp: number; cost: number; hint_min?: number; waited_min?: number }
       mask_summary: { valid: number; total: number }
     })
   | (Base & { type: 'ALLOCATION_REJECTED'; job_id: string; gpu_id: string; reason: 'memory' | 'tier' | 'thermal' | 'down' })
@@ -79,7 +79,7 @@ export interface Decision {
   action: Action
   target_gpu_ids: string[]
   scheduler: SchedulerName
-  factors: { queue_len: number; deadline_slack: number; pred_temp: number; cost: number; hint_min?: number }
+  factors: { queue_len: number; deadline_slack: number; pred_temp: number; cost: number; hint_min?: number; waited_min?: number }
   mask_summary: { valid: number; total: number }
   t: number
   seq: number

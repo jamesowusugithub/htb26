@@ -1,5 +1,6 @@
 import { Crown, Flame, Pause, Play, Power, PowerOff, RotateCcw, Users, Zap } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
+import type { OrderSpec } from '../data/ReplaySource'
 import type { Controller } from '../data/controller'
 import { isTrace } from '../data/traceMeta'
 
@@ -23,6 +24,9 @@ export function Controls({ ctl }: { ctl: Controller }) {
   const sel = gpu || state.gpuOrder.find((g) => !g.startsWith('cloud')) || ''
   const gpuIds = state.gpuOrder.filter((g) => !g.startsWith('cloud'))
   const run = (p: Promise<unknown>) => { p.catch(() => undefined) } // errors are surfaced via meta.error
+  const [ord, setOrd] = useState<OrderSpec>({ gpus: 4, priority: 'high', duration_min: 60 })
+  const [busy, setBusy] = useState(false)
+  const place = (specs: OrderSpec[]) => { setBusy(true); ctl.placeOrders(specs).catch(() => undefined).finally(() => setBusy(false)) }
 
   const off = replay
   const trace = isTrace()
@@ -40,6 +44,21 @@ export function Controls({ ctl }: { ctl: Controller }) {
               <a key={k} className={`segbtn ${cur === k ? 'on' : ''}`} aria-current={cur === k} href={`?trace=${k}${api ? `&api=${encodeURIComponent(api)}` : ''}`}>{l}</a>
             ))}
           </div>
+        </Group>
+      )}
+      {trace && ctl.canOrder && (
+        <Group title={`New order (not in the trace)${ctl.orderCount ? ` - ${ctl.orderCount} placed` : ''}`}>
+          <select className="select" aria-label="GPUs requested" value={ord.gpus} onChange={(e) => setOrd({ ...ord, gpus: Number(e.target.value) })}>
+            {[1, 2, 4, 8].map((g) => <option key={g} value={g}>{g} GPU{g > 1 ? 's' : ''}</option>)}
+          </select>
+          <select className="select" aria-label="Priority" value={ord.priority} onChange={(e) => setOrd({ ...ord, priority: e.target.value as 'high' | 'spot' })}>
+            <option value="high">high priority</option><option value="spot">spot</option>
+          </select>
+          <select className="select" aria-label="Runtime" value={ord.duration_min} onChange={(e) => setOrd({ ...ord, duration_min: Number(e.target.value) })}>
+            {[15, 60, 180].map((d) => <option key={d} value={d}>{d} min</option>)}
+          </select>
+          <button className="btn primary" disabled={busy} onClick={() => place([ord])}>{busy ? 'Asking the manager...' : 'Place order'}</button>
+          <button className="btn" disabled={busy} onClick={() => place(Array.from({ length: 6 }, () => ({ gpus: 8, priority: 'high' as const, duration_min: 120 })))}><Zap size={15} aria-hidden /> Rush: 6 big orders</button>
         </Group>
       )}
       <Group title="Run">

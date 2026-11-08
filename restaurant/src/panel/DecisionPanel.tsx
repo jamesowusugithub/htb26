@@ -32,6 +32,8 @@ export function DecisionPanel({ state }: { state: SimState }) {
               : <div><dt>Deadline slack</dt><dd>{d.factors.deadline_slack} s</dd></div>}
             <div><dt>{trace ? 'Chef temp (proxy)' : 'Predicted temp'}</dt><dd>{d.factors.pred_temp ? `${d.factors.pred_temp} C` : 'n/a'}</dd></div>
             {!trace && <div><dt>Cost</dt><dd>{d.factors.cost} sim$</dd></div>}
+            {trace && d.action === 'cloud' && <div className="wide"><dt>Takeaway (simulated)</dt><dd>waited {d.factors.waited_min ?? '?'} min, rental about ${d.factors.cost} at an assumed price</dd></div>}
+            {trace && d.job_id.startsWith('ORDER-') && <div className="wide"><dt>New order</dt><dd>not in the Alibaba trace, scheduled live</dd></div>}
             {d.mask_summary.total > 0 && <div><dt>Choices offered</dt><dd>{d.mask_summary.valid} of {d.mask_summary.total}</dd></div>}
             <div className="wide"><dt>Scheduler</dt><dd><SchedulerLabel s={d.scheduler} /></dd></div>
           </dl>

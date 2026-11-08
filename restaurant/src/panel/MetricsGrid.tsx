@@ -1,7 +1,7 @@
 import { Activity, CheckCircle2, Clock, Coins, Flame, Gauge, Inbox, Target } from 'lucide-react'
 import type { ReactNode } from 'react'
 import type { SimState } from '../data/types'
-import { isTrace } from '../data/traceMeta'
+import { isTrace, traceMeta } from '../data/traceMeta'
 
 function Tile({ icon, label, value, unit }: { icon: ReactNode; label: string; value: string; unit?: string }) {
   return (
@@ -27,6 +27,7 @@ export function MetricsGrid({ state }: { state: SimState }) {
         {trace && <Tile icon={<Target size={13} aria-hidden />} label="Slowest 5% wait" value={m.p95_wait_s.toFixed(1)} unit=" min" />}
         <Tile icon={<Gauge size={13} aria-hidden />} label="Avg GPU util" value={m.avg_util.toFixed(0)} unit="%" />
         {!trace && <Tile icon={<Coins size={13} aria-hidden />} label="Cost" value={m.cost.toFixed(1)} unit=" sim$" />}
+        {trace && traceMeta()?.cloud && <Tile icon={<Coins size={13} aria-hidden />} label="Takeaway cost (simulated)" value={m.cost.toFixed(2)} unit=" USD" />}
         <Tile icon={<Flame size={13} aria-hidden />} label="Thermal incidents" value={String(m.thermal_incidents)} />
       </div>
     </section>

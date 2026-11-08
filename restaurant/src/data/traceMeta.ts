@@ -3,6 +3,8 @@
 export interface TraceMeta {
   source: string; pool: string; window_start_day: number; window_minutes: number; jobs: number; kitchen_nodes: number
   gpus_per_node: number; scale_note: string; scheduler: string; scheduler_label: string; thermal: string; hint: string; time_unit: string
+  orders?: number
+  cloud?: { enabled: boolean; nodes: number; gpus_per_node: number; gpus: number; overflow_wait_min: number; price_usd_per_gpu_hour: number; max_job_cost_usd: number; evidence: string }
 }
 let meta: TraceMeta | null = null
 export const setTraceMeta = (m: TraceMeta | null) => { meta = m }

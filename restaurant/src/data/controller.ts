@@ -1,5 +1,5 @@
 import { LiveSource } from './LiveSource'
-import { ReplaySource } from './ReplaySource'
+import { ReplaySource, type OrderSpec } from './ReplaySource'
 import type { ConnStatus, EventSource, SourceKind } from './source'
 import { applyEvent, emptyState, snapshotToState, stateFromConfig } from './store'
 import type { Config, SimEvent, SimState } from './types'
@@ -87,6 +87,19 @@ export class Controller {
   }
 
   get isReplay() { return this.meta.kind === 'replay' }
+  get canOrder() { return this.source instanceof ReplaySource && this.source.canOrder }
+  get orderCount() { return this.source instanceof ReplaySource ? this.source.orderCount : 0 }
+  /** New orders go to the backend, where the trained scheduler decides; the animation then reloads at the same tick. */
+  async placeOrders(specs: OrderSpec[]) {
+    if (!(this.source instanceof ReplaySource)) throw new Error('no recording attached')
+    try {
+      await this.source.placeOrders(specs)
+      this.setMeta({ error: null })
+    } catch (e) {
+      this.setMeta({ error: `new order: ${String(e)}` })
+      throw e
+    }
+  }
 
   // ---- controls ----
   async call(path: string, body?: unknown) {
