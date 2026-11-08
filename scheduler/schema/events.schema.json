@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "gpu-scheduling-lens/events/0.1.0",
+  "title": "One line of an NDJSON run file",
+  "description": "Each line is one JSON object. First line is `meta`; then `arrive`/`start`/`finish`/`preempt` events and periodic `snapshot` lines in time order. Times are seconds since window start. Waits, starts, evictions and node placement are SIMULATED (see meta.assumptions).",
+  "oneOf": [
+    {"$ref": "#/$defs/meta"}, {"$ref": "#/$defs/arrive"}, {"$ref": "#/$defs/start"},
+    {"$ref": "#/$defs/finish"}, {"$ref": "#/$defs/preempt"}, {"$ref": "#/$defs/snapshot"}
+  ],
+  "$defs": {
+    "poolId": {"type": "string", "description": "a10 | a100 | a800 | h800 | series1 | series2"},
+    "meta": {
+      "type": "object", "required": ["type", "schema_version", "time_unit", "window", "policy", "pools", "assumptions"],
+      "properties": {
+        "type": {"const": "meta"}, "schema_version": {"type": "string"}, "time_unit": {"type": "string"},
+        "window": {"type": "object"}, "policy": {"type": "object"},
+        "pools": {"type": "array", "items": {"type": "object", "required": ["id", "label", "capacity_gpus", "nodes"],
+          "properties": {"id": {"type": "string"}, "label": {"type": "string"}, "identity": {"type": "string"},
+                         "capacity_gpus": {"type": "number"}, "node_count": {"type": "integer"},
+                         "nodes": {"type": "array", "items": {"type": "integer"}, "description": "GPUs per node; the index is the node id used in events"},
+                         "scale_vs_observed": {"type": "number"}}}},
+        "assumptions": {"type": "array", "items": {"type": "object", "required": ["key", "evidence", "note"],
+          "properties": {"evidence": {"enum": ["observed", "calculated", "assumption"]}}}}
+      }
+    },
+    "arrive": {"type": "object", "required": ["type", "t", "job", "pool", "gpus", "priority", "duration_s"],
+      "properties": {"type": {"const": "arrive"}, "t": {"type": "number"}, "job": {"type": "string"}, "pool": {"$ref": "#/$defs/poolId"},
+                     "gpus": {"type": "number", "description": "GPUs requested (fractions allowed)"},
+                     "priority": {"enum": ["hp", "spot"]}, "duration_s": {"type": "number"},
+                     "carryover": {"type": "boolean", "description": "already running when the window opened"},
+                     "evidence": {"type": "string"}}},
+    "start": {"type": "object", "required": ["type", "t", "job", "pool", "node", "gpu_slots"],
+      "properties": {"type": {"const": "start"}, "t": {"type": "number"}, "job": {"type": "string"}, "pool": {"$ref": "#/$defs/poolId"},
+                     "node": {"type": "integer"}, "gpu_slots": {"type": "array", "items": {"type": "integer"}},
+                     "attempt": {"type": "integer", "description": "1 = first start, >1 = restart after preemption"}}},
+    "finish": {"type": "object", "required": ["type", "t", "job", "pool", "wait_s"],
+      "properties": {"type": {"const": "finish"}, "t": {"type": "number"}, "job": {"type": "string"}, "pool": {"$ref": "#/$defs/poolId"},
+                     "node": {"type": "integer"}, "wait_s": {"type": "number", "description": "first start minus arrival (simulated)"}}},
+    "preempt": {"type": "object", "required": ["type", "t", "job", "pool", "node", "gpu_slots"],
+      "properties": {"type": {"const": "preempt"}, "t": {"type": "number"}, "job": {"type": "string"}, "pool": {"$ref": "#/$defs/poolId"},
+                     "node": {"type": "integer"}, "gpu_slots": {"type": "array", "items": {"type": "integer"}},
+                     "work_lost_gpu_s": {"type": "number"}}},
+    "snapshot": {"type": "object", "required": ["type", "t", "pools"],
+      "properties": {"type": {"const": "snapshot"}, "t": {"type": "number"},
+                     "pools": {"type": "object", "additionalProperties": {"type": "object",
+                       "required": ["busy_gpus", "capacity_gpus", "queue_hp", "queue_spot", "running_jobs", "max_free_gpus_on_one_node"],
+                       "properties": {"busy_gpus": {"type": "number"}, "capacity_gpus": {"type": "number"},
+                         "queue_hp": {"type": "integer"}, "queue_spot": {"type": "integer"}, "running_jobs": {"type": "integer"},
+                         "max_free_gpus_on_one_node": {"type": "integer", "description": "largest block of whole free GPUs on one node: fragmentation signal"}}}}}}
+  }
+}

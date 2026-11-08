@@ -1,0 +1,19 @@
+# Every modelling choice, tagged so the UI can show what is observed vs assumed.
+# evidence: observed | calculated | assumption
+time_unit: seconds_since_trace_start
+gpu_unit_hundredths: 100            # capacity tracked in 1/100 GPU
+items:
+  - {key: arrivals,            evidence: observed,   note: "submit time, duration, GPU request, priority and GPU model come from the Alibaba trace"}
+  - {key: queue_and_wait,      evidence: assumption, note: "the trace has no queue/start/eviction records; waits are reconstructed by simulation"}
+  - {key: node_packing,        evidence: assumption, note: "a job's whole GPUs must sit on one node; fractional requests share one GPU"}
+  - {key: gpu_model_pinned,    evidence: assumption, note: "jobs run only on their recorded GPU model; no cross-hardware speedup data exists"}
+  - {key: worker_count,        evidence: assumption, note: "worker_count ignored; gpu_request_recorded_count is the job's total request"}
+  - {key: preemption,          evidence: assumption, note: "HP jobs may evict running spot jobs; evicted work restarts from scratch (switchable to resume)"}
+  - {key: capacity_scaling,    evidence: assumption, note: "whole nodes of the observed shapes are added/removed so offered load ~ target (default 0.85); a load sweep is reported"}
+  - {key: warm_start,          evidence: assumption, note: "a window starts with jobs submitted earlier and still running (assumed zero historic wait); ~5% of jobs hold ~95% of GPU-seconds"}
+  - {key: duration_hidden,     evidence: assumption, note: "schedulers do not see true durations except the oracle baselines"}
+  - {key: backfill_estimates,  evidence: assumption, note: "no user runtime estimates exist; backfill uses oracle / noisy / pool-median estimates, reported separately"}
+defaults:
+  target_load: 0.85
+  min_nodes_per_pool: 8
+  snapshot_dt_s: 3600
