@@ -27,18 +27,18 @@ VAL = [Scenario(name="val", start_day=d, days=3.0, seed=0) for d in (118.0, 121.
 WIDE = dict(arrival_mult=(0.7, 1.5), capacity_jitter=(0.85, 1.15))
 
 
-def make_env(rank, seed, K, days, wide=False):
+def make_env(rank, seed, K, days, wide=False, burst_prob=0.0):
     def _f():
         pools, jobs, base, cl = setup(0.85)
         hint = load_or_fit(jobs, 40)
         kw = WIDE if wide else {}
-        return SchedulingEnv(jobs, cl, hint, train_days=(45.0, 115.0), days=days, seed=seed + rank, K=K, **kw)
+        return SchedulingEnv(jobs, cl, hint, train_days=(45.0, 115.0), days=days, seed=seed + rank, K=K, burst_prob=burst_prob, **kw)
     return _f
 
 
-def behaviour_clone(model, K, episodes, seed, wide, epochs=12, lr=1e-3):
+def behaviour_clone(model, K, episodes, seed, wide, epochs=12, lr=1e-3, burst_prob=0.0):
     """Imitate hp_then_min_hint on random training windows, then train the policy net on (obs, mask) -> action."""
-    env = make_env(999, seed, K, 3.0, wide)()
+    env = make_env(999, seed, K, 3.0, wide, burst_prob)()
     X, M, A = [], [], []
     for _ in range(episodes):
         obs, _ = env.reset()
@@ -115,13 +115,14 @@ def main():
     ap.add_argument("--bc-episodes", type=int, default=0, help="behaviour-clone hp_then_min_hint on this many windows first")
     ap.add_argument("--wide", action="store_true", help="wider load/capacity randomisation")
     ap.add_argument("--ent", type=float, default=0.003)
+    ap.add_argument("--burst-prob", type=float, default=0.0, help="share of training episodes using a BurstGPT arrival shape (combined layer)")
     ap.add_argument("--lr", type=float, default=3e-4)
     ap.add_argument("--net", type=int, nargs="+", default=[128, 128])
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     torch.manual_seed(a.seed)
-    fns = [make_env(i, a.seed * 1000, a.K, a.days, a.wide) for i in range(a.envs)]
+    fns = [make_env(i, a.seed * 1000, a.K, a.days, a.wide, a.burst_prob) for i in range(a.envs)]
     venv = SubprocVecEnv(fns) if a.envs > 1 else DummyVecEnv(fns)
     venv = VecNormalize(venv, norm_obs=False, norm_reward=True, gamma=0.999)
     model = MaskablePPO("MlpPolicy", venv, device=a.device, learning_rate=a.lr, n_steps=2048, batch_size=4096,
@@ -129,7 +130,7 @@ def main():
                         policy_kwargs=dict(net_arch=dict(pi=a.net, vf=a.net)), seed=a.seed, verbose=a.verbose,
                         tensorboard_log=str(out / "tb"))
     if a.bc_episodes:
-        behaviour_clone(model, a.K, a.bc_episodes, a.seed, a.wide)
+        behaviour_clone(model, a.K, a.bc_episodes, a.seed, a.wide, burst_prob=a.burst_prob)
     cb = ValCallback(a.val_every, out, a.K)
     t = time.time()
     model.learn(a.steps, callback=cb, progress_bar=False)

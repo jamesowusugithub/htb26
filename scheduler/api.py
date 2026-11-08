@@ -28,7 +28,11 @@ from .env import SchedulingEnv
 from .eval_rl import run_agent
 from .duration_model import load_or_fit
 
-RL_MODEL = Path(__file__).resolve().parents[1] / "models/ppo_bc/best.zip"
+import os
+_MODELS = Path(__file__).resolve().parents[1] / "models"
+# newest verified policy first; override with HTB_RL_MODEL
+RL_MODEL = Path(os.environ["HTB_RL_MODEL"]) if os.environ.get("HTB_RL_MODEL") else next(
+    (p for p in (_MODELS / "ppo_combined/best.zip", _MODELS / "ppo_k16/best.zip", _MODELS / "ppo_bc/best.zip") if p.exists()), _MODELS / "ppo_bc/best.zip")
 RL_NAME = "rl_ppo"
 _rl: dict = {}
 _thermal: dict = {}
@@ -125,6 +129,8 @@ def rl_policy():
             raise HTTPException(422, f"{RL_NAME} unavailable: {RL_MODEL.name} not found")
         from sb3_contrib import MaskablePPO
         _rl["model"] = MaskablePPO.load(RL_MODEL, device="cpu")
+        dim = int(_rl["model"].observation_space.shape[0])
+        _rl["K"] = (dim - 12) // 8                      # obs = 6 pool one-hot + 6 globals + 8 features per candidate slot
     return _rl["model"]
 
 
@@ -179,7 +185,7 @@ def meta():
                        "observed_nodes": int(e["base"].node_counts()[i]), "scale_vs_observed": float(cl.scale[i])}
                       for i, p in enumerate(e["pools"])],
             "policies": [{"name": s.name, "realistic": s.realistic, "description": s.description} for s in POLICIES.values()]
-            + ([{"name": RL_NAME, "realistic": True, "description": "Learned scheduler: masked PPO over hint-ranked candidates (see analysis/rl)"}]
+            + ([{"name": RL_NAME, "realistic": True, "description": f"Learned scheduler: masked PPO over hint-ranked candidates ({RL_MODEL.parent.name}; see analysis/rl)"}]
                if RL_MODEL.exists() else []),
             "assumptions": data.load_assumptions()["items"],
             "trace_days": float(e["jobs"].submit_relative_s.max() / 86400),
@@ -215,7 +221,7 @@ def whatif(req: WhatIfRequest):
             raise HTTPException(422, f"invalid scenario: {ex}")
         if RL_NAME in req.policies:
             model = rl_policy()
-            renv = SchedulingEnv(e["jobs"], e["cluster"], load_or_fit(e["jobs"], 40), log_events=True, snapshot_dt=req.snapshot_s)
+            renv = SchedulingEnv(e["jobs"], e["cluster"], load_or_fit(e["jobs"], 40), K=_rl["K"], log_events=True, snapshot_dt=req.snapshot_s)
             m, _, _ = run_agent(renv, lambda o, mk: model.predict(o, action_masks=mk, deterministic=True)[0], sc)
             res["policies"][RL_NAME] = {"realistic": True, "metrics": m}
             res["_states"][RL_NAME] = renv.S
