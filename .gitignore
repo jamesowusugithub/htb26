@@ -2,3 +2,5 @@
 __pycache__/
 .deps/
 .vendor-history/
+runs/
+.numba_cache/
