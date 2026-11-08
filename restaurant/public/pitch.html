@@ -20,8 +20,8 @@
 <div class="wrap">
  <iframe id="anim" title="The Restaurant animation"></iframe>
  <aside>
-  <h1>30-second pitch <span class="draft">DRAFT</span></h1>
-  <div class="sub">Headline still to be agreed with James and Carl. Format follows the pitch skill: hook, problem, solution, proof, ask. No invented numbers.</div>
+  <h1>30-second pitch</h1>
+  <div class="sub">Hook, problem, solution, proof, ask. Every number is from held-out evaluation (analysis/rl/README.md) or the recordings.</div>
   <button id="play">Play pitch with animation</button><button id="speak" class="alt">Voice: off</button>
   <div id="beats"></div>
   <div class="meta" id="meta"></div>
@@ -29,26 +29,26 @@
 </div>
 <script>
 const BEATS=[
- ["Hook","Nobody can see how long GPU jobs wait, because the trace never recorded it.",
-  "On screen: the raw trace has columns job_name, organization, gpu_model, cpu_request, gpu_request, worker_num, submit_time, duration, job_type. No waits, no starts."],
- ["Problem","We replayed 466,867 real Alibaba jobs. Queues are long because schedulers cannot know how long a job will run.",
-  "On screen: customers are real jobs from the trace, replayed on a 5-node demo kitchen so queues are visible."],
- ["Solution","Jobs recur, so we predict runtime from each team's recent history, doubling prediction quality, then run the shortest first.",
-  "On screen: Manager Decision panel, 'Predicted runtime' beside '(actual ...)'. Rank correlation 0.26 to 0.51 on unseen days."],
- ["Proof","In simulation, on unseen days, that closes about three quarters of the gap to a perfect oracle, cutting worst case waits by a quarter or more.",
-  "__PROOF__"],
- ["Ask","Give us five minutes at the demo.","Then: the live 3D room connected to the scheduling backend."]];
+ ["Hook","Nobody can see how long GPU jobs wait, because Alibaba's trace never recorded it.",
+ "On screen: the raw trace columns: job_name, organization, gpu_model, submit_time, duration. No waits, no starts."],
+ ["Problem","We replayed 466,867 real jobs: queues grow because schedulers cannot know how long a job will run.",
+ "On screen: customers are real trace jobs; chefs are GPUs; build your own kitchen from six real GPU types."],
+ ["Solution","So we predict runtimes from each team's history, forecast demand, and trained a reinforcement-learning scheduler.",
+ "On screen: Manager Decision panel, 'Predicted runtime' beside '(actual ...)'. The same trained policy runs any GPU mix."],
+ ["Proof","On days it never saw, queue time halves versus priority scheduling, and RL matches the best rule with a third fewer preemptions.",
+ "__PROOF__"],
+ ["Ask","Add your own workload and watch it decide.","Then: the 3D room, and the comparison panel (RL against four other managers)."]];
 const words=s=>s.trim().split(/\s+/).length, total=BEATS.reduce((a,b)=>a+words(b[1]),0);
 const box=document.getElementById('beats');
 BEATS.forEach((b,i)=>{box.insertAdjacentHTML('beforeend',`<div class="beat" id="b${i}"><b>${b[0]} (${words(b[1])}w)</b><p>${b[1]}</p><div class="ev" id="e${i}">${b[2]}</div></div>`)});
 document.getElementById('meta').textContent=`Total ${total} words (budget 75 to 85), about ${Math.round(total/170*60)} s spoken at 170 words per minute.`;
 const frame=document.getElementById('anim'); const base=location.origin+'/';
-frame.src=base+'?trace=rl_ppo';
+frame.src=base+'?trace=rl_ppo'+(location.search.includes('api=')?'&'+location.search.slice(1):'');
 // proof numbers come from the recordings themselves
 async function last(name){const r=await (await fetch(base+'traces/'+name+'.json')).json();const m=r.events.filter(e=>e.type==='METRICS').pop();return {m,meta:r.trace_meta}}
 Promise.all([last('fifo'),last('priority_fifo'),last('rl_ppo')]).then(([f,p,r])=>{
   document.getElementById('e3').innerHTML=`On screen (same ${r.m.received} real jobs, ${r.meta.kitchen_nodes}-node demo kitchen, 150 simulated minutes): average wait <b>FIFO ${f.m.avg_wait_s.toFixed(1)} min</b>, priority ${p.m.avg_wait_s.toFixed(1)} min, <b>learned scheduler ${r.m.avg_wait_s.toFixed(1)} min</b>; slowest 5%: ${f.m.p95_wait_s.toFixed(1)} vs ${r.m.p95_wait_s.toFixed(1)} min. Illustrative scale. Full-scale held-out numbers are in the scoreboard.`;
-  document.getElementById('meta').insertAdjacentHTML('beforeend','<br>Demo-kitchen numbers are read from the recordings in /traces. The 75% and quarter claims come from the held-out evaluation of the prediction-based scheduler (analysis/rl).');
+  document.getElementById('meta').insertAdjacentHTML('beforeend','<br>Demo-kitchen numbers are read from the recordings in /traces. 'Halves' = RL 0.52 vs priority FIFO 1.00 and backfill 0.81 (17 held-out windows); 'a third fewer preemptions' = 326 vs 482 for the best rule. RL ties that rule on queue time. All waits are simulated (analysis/rl/README.md).');
 });
 let timers=[], speak=false;
 document.getElementById('speak').onclick=e=>{speak=!speak;e.target.textContent='Voice: '+(speak?'on':'off')};
@@ -56,7 +56,7 @@ function setBeat(i){BEATS.forEach((_,k)=>document.getElementById('b'+k).classLis
 function clickIn(txt){const d=frame.contentDocument;const b=[...d.querySelectorAll('button')].find(x=>x.textContent.trim()===txt);b&&b.click()}
 document.getElementById('play').onclick=()=>{
   timers.forEach(clearTimeout);timers=[];speechSynthesis.cancel();
-  frame.src=base+'?trace=rl_ppo';
+  frame.src=base+'?trace=rl_ppo'+(location.search.includes('api=')?'&'+location.search.slice(1):'');
   frame.onload=()=>{setTimeout(()=>{clickIn('Reset');clickIn('4x')},1500)};
   let t=2000;
   BEATS.forEach((b,i)=>{timers.push(setTimeout(()=>{setBeat(i);if(speak){const u=new SpeechSynthesisUtterance(b[1]);u.rate=1.05;speechSynthesis.speak(u)}},t));t+=Math.max(2500,words(b[1])/170*60*1000+900)});

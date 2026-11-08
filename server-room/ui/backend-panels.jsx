@@ -116,6 +116,7 @@ export function AllocationPanel({snap}){
       <div><strong>Job {x.job}</strong> <small>{x.gpus} GPU{x.gpus>1?'s':''} · {x.priority==='hp'?'high priority':'spot'}</small>
         <p>{x.cloud?'sent to the simulated cloud takeaway':<>placed on {x.board!=null?<b>board {x.board+1}</b>:<b>a rack</b>} ({labels[x.pool]||x.pool})</>}{x.attempt>1?' (restarted after an eviction)':''}{wait(x.waitS)?` · ${wait(x.waitS)}`:''}</p></div></li>)}</ol>
       :<p className="proxy-note">Waiting for the first decision.</p>}
+    {snap.link?.base&&<p className="alloc-how"><a href={`${location.protocol}//${location.hostname}:5174/?trace=rl_ppo&api=${encodeURIComponent(snap.link.base)}`}>See the same scheduler as a restaurant: build your own kitchen &rarr;</a></p>}
   </section>;
 }
 

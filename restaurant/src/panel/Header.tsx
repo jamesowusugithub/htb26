@@ -37,6 +37,9 @@ export function Header({ ctl }: { ctl: Controller }) {
           <span className="tag">GPU scheduler as a kitchen</span>
         </div>
         <div className="badges">
+          {isTrace() && new URLSearchParams(location.search).get('api') && (
+            <a className="source source-replay" href={`${location.protocol}//${location.hostname}:8082/index.html?api=${encodeURIComponent(new URLSearchParams(location.search).get('api') ?? '')}&preset=heldout_demo&policy=rl_ppo`}>3D server room &rarr;</a>
+          )}
           {meta.kind !== 'none' && (
             <span className={`source ${!live ? 'source-replay' : linked ? 'source-live' : 'source-lost'}`} data-testid="source-badge" aria-label={`Data source: ${!live ? 'REPLAY' : linked ? 'LIVE' : 'LIVE LINK LOST'}`}>
               {live ? <Radio size={14} aria-hidden /> : <Film size={14} aria-hidden />}
