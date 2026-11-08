@@ -12,7 +12,7 @@
     "MAE same time last week": 65.8183,
     "skill vs persistence": 0.1509,
     "skill vs best naive": 0.0552,
-    "P10-P90 coverage": 0.8979,
+    "P10-P90 coverage": 0.8101,
     "MAE model (busiest 10%)": 14.248,
     "MAE persistence (busiest 10%)": 12.4411
    },
@@ -26,7 +26,7 @@
     "MAE same time last week": 45.71,
     "skill vs persistence": 0.3305,
     "skill vs best naive": 0.3104,
-    "P10-P90 coverage": 0.8727,
+    "P10-P90 coverage": 0.8005,
     "MAE model (busiest 10%)": 99.1541,
     "MAE persistence (busiest 10%)": 104.2904
    },
@@ -96,7 +96,7 @@
     "MAE same time last week": 34.5979,
     "skill vs persistence": 0.2242,
     "skill vs best naive": 0.1673,
-    "P10-P90 coverage": 0.8762,
+    "P10-P90 coverage": 0.8495,
     "MAE model (busiest 10%)": 64.1208,
     "MAE persistence (busiest 10%)": 71.7767
    }
@@ -112,7 +112,7 @@
     "MAE same time last week": 15.6609,
     "skill vs persistence": 0.0489,
     "skill vs best naive": -0.0195,
-    "P10-P90 coverage": 0.8903,
+    "P10-P90 coverage": 0.6082,
     "MAE model (busiest 10%)": 22.2679,
     "MAE persistence (busiest 10%)": 17.6763
    },
@@ -126,7 +126,7 @@
     "MAE same time last week": 49.5732,
     "skill vs persistence": 0.314,
     "skill vs best naive": 0.296,
-    "P10-P90 coverage": 0.8626,
+    "P10-P90 coverage": 0.7918,
     "MAE model (busiest 10%)": 92.8377,
     "MAE persistence (busiest 10%)": 103.9624
    },
@@ -196,7 +196,7 @@
     "MAE same time last week": 20.1355,
     "skill vs persistence": 0.2685,
     "skill vs best naive": 0.2245,
-    "P10-P90 coverage": 0.8808,
+    "P10-P90 coverage": 0.822,
     "MAE model (busiest 10%)": 55.1375,
     "MAE persistence (busiest 10%)": 71.9498
    }

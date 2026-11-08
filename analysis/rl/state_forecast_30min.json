@@ -1,0 +1,218 @@
+{
+ "ALL policies": {
+  "ALL pools": {
+   "util_MAE_pp_model": 1.1794076281364156,
+   "util_MAE_pp_persistence": 1.0382216064028014,
+   "queue_MAE_model": 2.377309860976152,
+   "queue_MAE_persistence": 1.5921021321149837,
+   "mean_queue": 44.785336950314104,
+   "n": 84048,
+   "util_skill": -0.1359883293344195,
+   "queue_skill": -0.4931892954744561
+  },
+  "a10": {
+   "util_MAE_pp_model": 0.12013279457745557,
+   "util_MAE_pp_persistence": 0.05758524791108603,
+   "queue_MAE_model": 0.0002042822716863445,
+   "queue_MAE_persistence": 0.0,
+   "mean_queue": 0.0,
+   "n": 14008,
+   "util_skill": -1.086173090075873,
+   "queue_skill": NaN
+  },
+  "a100": {
+   "util_MAE_pp_model": 0.5900281299920181,
+   "util_MAE_pp_persistence": 0.6546659298135057,
+   "queue_MAE_model": 5.00182412594872,
+   "queue_MAE_persistence": 4.722944031981727,
+   "mean_queue": 90.85079954311821,
+   "n": 14008,
+   "util_skill": 0.09873402124332464,
+   "queue_skill": -0.059047935372203986
+  },
+  "a800": {
+   "util_MAE_pp_model": 1.7332816579478838,
+   "util_MAE_pp_persistence": 1.4402484294688749,
+   "queue_MAE_model": 1.0489437624148032,
+   "queue_MAE_persistence": 0.6837521416333538,
+   "mean_queue": 17.386136493432325,
+   "n": 14008,
+   "util_skill": -0.20346019650725933,
+   "queue_skill": -0.5340994178227743
+  },
+  "h800": {
+   "util_MAE_pp_model": 2.701913611511329,
+   "util_MAE_pp_persistence": 2.446561148731337,
+   "queue_MAE_model": 1.834826812694502,
+   "queue_MAE_persistence": 0.660551113649345,
+   "mean_queue": 24.649700171330668,
+   "n": 14008,
+   "util_skill": -0.1043719928735094,
+   "queue_skill": -1.7777211706716214
+  },
+  "series1": {
+   "util_MAE_pp_model": 0.053870227010592686,
+   "util_MAE_pp_persistence": 0.016650134021742306,
+   "queue_MAE_model": 2.697264101230185,
+   "queue_MAE_persistence": 1.7932609937178796,
+   "mean_queue": 99.69453169617361,
+   "n": 14008,
+   "util_skill": -2.235423026640334,
+   "queue_skill": -0.5041112870235804
+  },
+  "series2": {
+   "util_MAE_pp_model": 1.8772193477792145,
+   "util_MAE_pp_persistence": 1.6136187484702618,
+   "queue_MAE_model": 3.680796081297014,
+   "queue_MAE_persistence": 1.692104511707597,
+   "mean_queue": 36.130853797829815,
+   "n": 14008,
+   "util_skill": -0.16335990119032173,
+   "queue_skill": -1.1752770327303939
+  }
+ },
+ "priority_fifo": {
+  "ALL pools": {
+   "util_MAE_pp_model": 1.1900436664725424,
+   "util_MAE_pp_persistence": 1.0462698978252796,
+   "queue_MAE_model": 2.7609228385146647,
+   "queue_MAE_persistence": 1.9319436512469086,
+   "mean_queue": 56.71554349895298,
+   "n": 42024,
+   "util_skill": -0.13741556451743797,
+   "queue_skill": -0.4290907691498762
+  },
+  "a10": {
+   "util_MAE_pp_model": 0.12013279457745557,
+   "util_MAE_pp_persistence": 0.05758524791108603,
+   "queue_MAE_model": 0.00020428227168634448,
+   "queue_MAE_persistence": 0.0,
+   "mean_queue": 0.0,
+   "n": 7004,
+   "util_skill": -1.086173090075873,
+   "queue_skill": NaN
+  },
+  "a100": {
+   "util_MAE_pp_model": 0.6303675975819192,
+   "util_MAE_pp_persistence": 0.6919291193209791,
+   "queue_MAE_model": 6.6356497130652174,
+   "queue_MAE_persistence": 6.168189605939467,
+   "mean_queue": 117.13963449457452,
+   "n": 7004,
+   "util_skill": 0.0889708497880144,
+   "queue_skill": -0.07578562544115441
+  },
+  "a800": {
+   "util_MAE_pp_model": 1.7379304861258646,
+   "util_MAE_pp_persistence": 1.4228882197186024,
+   "queue_MAE_model": 1.3081131761374336,
+   "queue_MAE_persistence": 0.8419474585950906,
+   "mean_queue": 23.59323243860651,
+   "n": 7004,
+   "util_skill": -0.22141041161305464,
+   "queue_skill": -0.5536755444576162
+  },
+  "h800": {
+   "util_MAE_pp_model": 2.6912477062460898,
+   "util_MAE_pp_persistence": 2.4366178510239043,
+   "queue_MAE_model": 1.9576099461725942,
+   "queue_MAE_persistence": 0.670045688178186,
+   "mean_queue": 26.663620788121072,
+   "n": 7004,
+   "util_skill": -0.10450135014614048,
+   "queue_skill": -1.921606661622162
+  },
+  "series1": {
+   "util_MAE_pp_model": 0.053658528288311746,
+   "util_MAE_pp_persistence": 0.01648179143447666,
+   "queue_MAE_model": 2.914752417805003,
+   "queue_MAE_persistence": 2.0581096516276456,
+   "mean_queue": 124.94545973729298,
+   "n": 7004,
+   "util_skill": -2.255624760307832,
+   "queue_skill": -0.416227952431925
+  },
+  "series2": {
+   "util_MAE_pp_model": 1.9069248860156132,
+   "util_MAE_pp_persistence": 1.6521171575426288,
+   "queue_MAE_model": 3.749207495636053,
+   "queue_MAE_persistence": 1.8533695031410644,
+   "mean_queue": 47.951313535122786,
+   "n": 7004,
+   "util_skill": -0.15423102853794424,
+   "queue_skill": -1.0229142053335556
+  }
+ },
+ "sjf_hint": {
+  "ALL pools": {
+   "util_MAE_pp_model": 1.1687715898002886,
+   "util_MAE_pp_persistence": 1.0301733149803232,
+   "queue_MAE_model": 1.9936968834376392,
+   "queue_MAE_persistence": 1.252260612983059,
+   "mean_queue": 32.85513040167523,
+   "n": 42024,
+   "util_skill": -0.13453879342876673,
+   "queue_skill": -0.5920782485431495
+  },
+  "a10": {
+   "util_MAE_pp_model": 0.12013279457745557,
+   "util_MAE_pp_persistence": 0.05758524791108603,
+   "queue_MAE_model": 0.00020428227168634448,
+   "queue_MAE_persistence": 0.0,
+   "mean_queue": 0.0,
+   "n": 7004,
+   "util_skill": -1.086173090075873,
+   "queue_skill": NaN
+  },
+  "a100": {
+   "util_MAE_pp_model": 0.5496886624021172,
+   "util_MAE_pp_persistence": 0.617402740306032,
+   "queue_MAE_model": 3.367998538832223,
+   "queue_MAE_persistence": 3.2776984580239885,
+   "mean_queue": 64.5619645916619,
+   "n": 7004,
+   "util_skill": 0.10967570028981499,
+   "queue_skill": -0.02754984388120718
+  },
+  "a800": {
+   "util_MAE_pp_model": 1.7286328297699025,
+   "util_MAE_pp_persistence": 1.4576086392191474,
+   "queue_MAE_model": 0.7897743486921731,
+   "queue_MAE_persistence": 0.525556824671617,
+   "mean_queue": 11.179040548258138,
+   "n": 7004,
+   "util_skill": -0.18593755776306664,
+   "queue_skill": -0.5027382608638882
+  },
+  "h800": {
+   "util_MAE_pp_model": 2.712579516776568,
+   "util_MAE_pp_persistence": 2.4565044464387698,
+   "queue_MAE_model": 1.71204367921641,
+   "queue_MAE_persistence": 0.6510565391205042,
+   "mean_queue": 22.635779554540264,
+   "n": 7004,
+   "util_skill": -0.10424368281076557,
+   "queue_skill": -1.6296390195683563
+  },
+  "series1": {
+   "util_MAE_pp_model": 0.05408192573287361,
+   "util_MAE_pp_persistence": 0.01681847660900795,
+   "queue_MAE_model": 2.479775784655367,
+   "queue_MAE_persistence": 1.528412335808114,
+   "mean_queue": 74.44360365505426,
+   "n": 7004,
+   "util_skill": -2.2156257067841336,
+   "queue_skill": -0.6224520874101953
+  },
+  "series2": {
+   "util_MAE_pp_model": 1.8475138095428154,
+   "util_MAE_pp_persistence": 1.5751203393978952,
+   "queue_MAE_model": 3.612384666957975,
+   "queue_MAE_persistence": 1.5308395202741298,
+   "mean_queue": 24.310394060536836,
+   "n": 7004,
+   "util_skill": -0.17293502174509734,
+   "queue_skill": -1.359740925888234
+  }
+ }
+}

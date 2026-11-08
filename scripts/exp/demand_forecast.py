@@ -8,7 +8,7 @@ pools, jobs, base, cl = setup(0.85)
 P = len(pools); names = [p["id"] for p in pools]
 H = float(sys.argv[1]) if len(sys.argv) > 1 else 1800.0
 g, c, o = arrival_bins(jobs, P)
-f = DemandForecaster(H).fit(g, c, o, train_end_bin=100 * DAY_BINS)
+f = DemandForecaster(H).fit(g, c, o, train_end_bin=100 * DAY_BINS, calib_days=(100, 130))   # band calibrated on validation days only
 X, y = feature_frame(g, c, o, f.hb)
 day = X.t_bin.to_numpy() / DAY_BINS
 res = {"horizon_s": H, "splits": {}}

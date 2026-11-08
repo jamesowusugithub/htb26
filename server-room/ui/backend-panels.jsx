@@ -52,7 +52,7 @@ export function ForecastPanel({snap}){
       {ids.map(id=>{const v=now.pools[id], l=done?.pools[id];return <tr key={id} className={id===snap.gpus?.[0]?.pool?'':''}>
         <td>{labels[id]||id}</td><td>{fmt(v.next_gpus,1)}</td><td>{fmt(v.p10,0)}–{fmt(v.p90,0)}</td><td>{l?`${fmt(l.next_gpus,1)} → ${fmt(l.realised_gpus,1)}`:'—'}</td></tr>;})}
     </tbody></table>}
-    <p className="proxy-note">{all?`On held-out trace days the forecast error was ${Math.round(100*all.skill_vs_persistence)}% lower than "same rate as the last 30 min" overall; it has little skill on the A10 pool and does not anticipate sudden spikes. `:''}{d.in_training_period?'This window overlaps the days the model was trained on, so it flatters the model. ':''}Trained on trace days before 100.</p>
+    <p className="proxy-note">{all?`On held-out trace days the forecast error was ${Math.round(100*all.skill_vs_persistence)}% lower than "same rate as the last 30 min" overall; it has little skill on the A10 pool and does not anticipate sudden spikes. The P10–P90 band held ${Math.round(100*all.p10_p90_coverage)}% of outcomes (aimed at 80%). `:''}{d.in_training_period?'This window overlaps the days the model was trained on, so it flatters the model. ':''}Trained on trace days before 100.</p>
   </section>;
 }
 

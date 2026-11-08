@@ -1,0 +1,218 @@
+{
+ "ALL policies": {
+  "ALL pools": {
+   "util_MAE_pp_model": 4.849482874931961,
+   "util_MAE_pp_persistence": 4.7886856075095094,
+   "queue_MAE_model": 17.937399320390533,
+   "queue_MAE_persistence": 13.055978064048839,
+   "mean_queue": 47.67468570541673,
+   "n": 77316,
+   "util_skill": -0.012696024004396955,
+   "queue_skill": -0.37388399646467385
+  },
+  "a10": {
+   "util_MAE_pp_model": 0.7068618706673474,
+   "util_MAE_pp_persistence": 0.39390246817763475,
+   "queue_MAE_model": 0.0008479997902251579,
+   "queue_MAE_persistence": 0.0,
+   "mean_queue": 0.0,
+   "n": 12886,
+   "util_skill": -0.7945098794064425,
+   "queue_skill": NaN
+  },
+  "a100": {
+   "util_MAE_pp_model": 3.0023872523338104,
+   "util_MAE_pp_persistence": 4.141874769196186,
+   "queue_MAE_model": 36.41024940469367,
+   "queue_MAE_persistence": 38.96422474002794,
+   "mean_queue": 97.48323762222567,
+   "n": 12886,
+   "util_skill": 0.27511394727260585,
+   "queue_skill": 0.06554667396501712
+  },
+  "a800": {
+   "util_MAE_pp_model": 7.447267962304494,
+   "util_MAE_pp_persistence": 6.736433479604363,
+   "queue_MAE_model": 8.776207468927874,
+   "queue_MAE_persistence": 5.298618655905634,
+   "mean_queue": 18.767577215582804,
+   "n": 12886,
+   "util_skill": -0.10552089393479447,
+   "queue_skill": -0.6563198899294733
+  },
+  "h800": {
+   "util_MAE_pp_model": 8.765534514126248,
+   "util_MAE_pp_persistence": 9.77133267555043,
+   "queue_MAE_model": 13.205536054655981,
+   "queue_MAE_persistence": 4.7466242433648915,
+   "mean_queue": 25.867142635418283,
+   "n": 12886,
+   "util_skill": 0.10293357056001828,
+   "queue_skill": -1.7820900449652086
+  },
+  "series1": {
+   "util_MAE_pp_model": 0.36476091440329855,
+   "util_MAE_pp_persistence": 0.12722529897973853,
+   "queue_MAE_model": 28.429522203305595,
+   "queue_MAE_persistence": 16.259894459102902,
+   "mean_queue": 104.92775104764861,
+   "n": 12886,
+   "util_skill": -1.867047020745372,
+   "queue_skill": -0.748444448690113
+  },
+  "series2": {
+   "util_MAE_pp_model": 8.810084735756565,
+   "util_MAE_pp_persistence": 7.561344953548703,
+   "queue_MAE_model": 20.802032790969832,
+   "queue_MAE_persistence": 13.066506285891665,
+   "mean_queue": 39.002405711625016,
+   "n": 12886,
+   "util_skill": -0.16514783942264155,
+   "queue_skill": -0.592011845846695
+  }
+ },
+ "priority_fifo": {
+  "ALL pools": {
+   "util_MAE_pp_model": 4.7956468847679945,
+   "util_MAE_pp_persistence": 4.7892242456748635,
+   "queue_MAE_model": 21.830402729149018,
+   "queue_MAE_persistence": 16.73294014175591,
+   "mean_queue": 60.51624502043561,
+   "n": 38658,
+   "util_skill": -0.0013410604230803536,
+   "queue_skill": -0.30463639648556073
+  },
+  "a10": {
+   "util_MAE_pp_model": 0.7068618706673474,
+   "util_MAE_pp_persistence": 0.39390246817763475,
+   "queue_MAE_model": 0.0008479997902251579,
+   "queue_MAE_persistence": 0.0,
+   "mean_queue": 0.0,
+   "n": 6443,
+   "util_skill": -0.7945098794064425,
+   "queue_skill": NaN
+  },
+  "a100": {
+   "util_MAE_pp_model": 3.0921443268470026,
+   "util_MAE_pp_persistence": 4.155401879612731,
+   "queue_MAE_model": 48.27108265171777,
+   "queue_MAE_persistence": 52.415179264317864,
+   "mean_queue": 125.49402452273786,
+   "n": 6443,
+   "util_skill": 0.2558735793960849,
+   "queue_skill": 0.07906291022496281
+  },
+  "a800": {
+   "util_MAE_pp_model": 7.4263789155361986,
+   "util_MAE_pp_persistence": 6.725939356313406,
+   "queue_MAE_model": 11.595737991342197,
+   "queue_MAE_persistence": 6.8179419525065965,
+   "mean_queue": 25.481452739407107,
+   "n": 6443,
+   "util_skill": -0.10414003488825907,
+   "queue_skill": -0.700768072259556
+  },
+  "h800": {
+   "util_MAE_pp_model": 8.754585656365482,
+   "util_MAE_pp_persistence": 9.751585330702202,
+   "queue_MAE_model": 14.4807635821999,
+   "queue_MAE_persistence": 5.209374514977495,
+   "mean_queue": 28.053856898960113,
+   "n": 6443,
+   "util_skill": 0.10223975287359022,
+   "queue_skill": -1.7797509164615053
+  },
+  "series1": {
+   "util_MAE_pp_model": 0.3589912703233513,
+   "util_MAE_pp_persistence": 0.12636748467457554,
+   "queue_MAE_model": 31.18571553564037,
+   "queue_MAE_persistence": 20.098090951420147,
+   "mean_queue": 132.282787521341,
+   "n": 6443,
+   "util_skill": -1.8408515944416708,
+   "queue_skill": -0.5516755104263653
+  },
+  "series2": {
+   "util_MAE_pp_model": 8.434919268868587,
+   "util_MAE_pp_persistence": 7.582148954568635,
+   "queue_MAE_model": 25.44826861420364,
+   "queue_MAE_persistence": 15.857054167313363,
+   "mean_queue": 51.785348440167624,
+   "n": 6443,
+   "util_skill": -0.11247079415211347,
+   "queue_skill": -0.6048547444998293
+  }
+ },
+ "sjf_hint": {
+  "ALL pools": {
+   "util_MAE_pp_model": 4.903318865095926,
+   "util_MAE_pp_persistence": 4.788146969344155,
+   "queue_MAE_model": 14.04439591163204,
+   "queue_MAE_persistence": 9.379015986341766,
+   "mean_queue": 34.83312639039785,
+   "n": 38658,
+   "util_skill": -0.02405354231796819,
+   "queue_skill": -0.49742744143780704
+  },
+  "a10": {
+   "util_MAE_pp_model": 0.7068618706673474,
+   "util_MAE_pp_persistence": 0.39390246817763475,
+   "queue_MAE_model": 0.0008479997902251579,
+   "queue_MAE_persistence": 0.0,
+   "mean_queue": 0.0,
+   "n": 6443,
+   "util_skill": -0.7945098794064425,
+   "queue_skill": NaN
+  },
+  "a100": {
+   "util_MAE_pp_model": 2.912630177820618,
+   "util_MAE_pp_persistence": 4.128347658779644,
+   "queue_MAE_model": 24.549416157669587,
+   "queue_MAE_persistence": 25.51327021573801,
+   "mean_queue": 69.47245072171349,
+   "n": 6443,
+   "util_skill": 0.2944804026796515,
+   "queue_skill": 0.037778538380935034
+  },
+  "a800": {
+   "util_MAE_pp_model": 7.46815700907279,
+   "util_MAE_pp_persistence": 6.74692760289532,
+   "queue_MAE_model": 5.956676946513549,
+   "queue_MAE_persistence": 3.7792953593046716,
+   "mean_queue": 12.053701691758498,
+   "n": 6443,
+   "util_skill": -0.1068974574246162,
+   "queue_skill": -0.5761342737735851
+  },
+  "h800": {
+   "util_MAE_pp_model": 8.776483371887013,
+   "util_MAE_pp_persistence": 9.79108002039866,
+   "queue_MAE_model": 11.93030852711206,
+   "queue_MAE_persistence": 4.283873971752289,
+   "mean_queue": 23.680428371876456,
+   "n": 6443,
+   "util_skill": 0.10362458956497589,
+   "queue_skill": -1.7849345255672988
+  },
+  "series1": {
+   "util_MAE_pp_model": 0.37053055848324573,
+   "util_MAE_pp_persistence": 0.12808311328490152,
+   "queue_MAE_model": 25.67332887097082,
+   "queue_MAE_persistence": 12.42169796678566,
+   "mean_queue": 77.57271457395623,
+   "n": 6443,
+   "util_skill": -1.892891568454122,
+   "queue_skill": -1.066813163515862
+  },
+  "series2": {
+   "util_MAE_pp_model": 9.185250202644545,
+   "util_MAE_pp_persistence": 7.540540952528768,
+   "queue_MAE_model": 16.155796967736023,
+   "queue_MAE_persistence": 10.275958404469968,
+   "mean_queue": 26.219462983082416,
+   "n": 6443,
+   "util_skill": -0.21811555171837016,
+   "queue_skill": -0.5721936905377476
+  }
+ }
+}

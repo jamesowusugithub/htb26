@@ -73,6 +73,7 @@ class DemandForecaster:
     def __init__(self, horizon_s: float = 1800.0, seed: int = 0):
         self.hb = int(round(horizon_s / BIN_S)); self.horizon_s = horizon_s; self.seed = seed
         self.mean = None; self.lo = None; self.hi = None
+        self.cqr = None            # per-pool conformal widening of the P10-P90 band (fitted on VALIDATION days only)
 
     def _fit_one(self, X, y, loss="squared_error", q=None):
         kw = dict(loss=loss, max_iter=300, learning_rate=0.05, max_leaf_nodes=24, min_samples_leaf=100, l2_regularization=1.0,
@@ -81,17 +82,36 @@ class DemandForecaster:
             kw["quantile"] = q
         return HistGradientBoostingRegressor(**kw).fit(X, y)
 
-    def fit(self, gpus, cnt, orgs, train_end_bin: int):
+    def fit(self, gpus, cnt, orgs, train_end_bin: int, calib_days=None):
         X, y = feature_frame(gpus, cnt, orgs, self.hb)
         m = (X.t_bin.to_numpy() + self.hb < train_end_bin)          # the target window must also close before the cutoff (no peeking)
         Xt, yt = X.loc[m, FEATURES], np.log1p(y[m])
         self.mean = self._fit_one(Xt, yt)
         self.lo = self._fit_one(Xt, yt, "quantile", 0.1); self.hi = self._fit_one(Xt, yt, "quantile", 0.9)
+        if calib_days is not None:                                   # calibrate the band on validation days; never on the held-out test days
+            a, b = calib_days; tb = X.t_bin.to_numpy() / DAY_BINS
+            mv = (tb >= a) & (tb < b)
+            self.calibrate(X.loc[mv, FEATURES + ["t_bin"]], y[mv])
+        return self
+
+    def _raw(self, X):
+        mu = np.expm1(self.mean.predict(X[FEATURES])).clip(0)
+        lo = np.expm1(self.lo.predict(X[FEATURES])).clip(0); hi = np.expm1(self.hi.predict(X[FEATURES])).clip(0)
+        return mu, np.minimum(lo, mu), np.maximum(hi, mu)
+
+    def calibrate(self, X: pd.DataFrame, y: np.ndarray, coverage: float = 0.8):
+        """Conformalised quantile regression (Romano et al. 2019): per pool, shift both band edges by the `coverage` quantile of
+        max(lo - y, y - hi) measured on held-aside validation rows, so the band covers ~`coverage` of outcomes (it can also narrow)."""
+        mu, lo, hi = self._raw(X)
+        score = np.maximum(lo - y, y - hi); pool = X.pool.to_numpy()
+        self.cqr = {int(p): float(np.quantile(score[pool == p], min(1.0, coverage * (1 + 1.0 / max((pool == p).sum(), 1))))) for p in np.unique(pool)}
         return self
 
     def predict(self, X: pd.DataFrame):
-        mu = np.expm1(self.mean.predict(X[FEATURES])).clip(0)
-        lo = np.expm1(self.lo.predict(X[FEATURES])).clip(0); hi = np.expm1(self.hi.predict(X[FEATURES])).clip(0)
+        mu, lo, hi = self._raw(X)
+        if self.cqr:
+            q = np.array([self.cqr.get(int(p), 0.0) for p in X.pool.to_numpy()])
+            lo, hi = np.maximum(lo - q, 0.0), hi + q
         return mu, np.minimum(lo, mu), np.maximum(hi, mu)
 
 
@@ -101,14 +121,14 @@ _SKILL_JSON = Path(__file__).resolve().parents[1] / "analysis" / "rl" / "demand_
 
 
 def load_or_fit(jobs: pd.DataFrame, n_pools: int, horizon_s: float = 1800.0) -> DemandForecaster:
-    path = _MODEL_DIR / f"demand_forecaster_h{int(horizon_s)}.joblib"
+    path = _MODEL_DIR / f"demand_forecaster_v2_h{int(horizon_s)}.joblib"
     if path.exists():
         try:
             return joblib.load(path)
         except Exception:
             pass
     g, c, o = arrival_bins(jobs, n_pools)
-    f = DemandForecaster(horizon_s).fit(g, c, o, train_end_bin=TRAIN_END_DAY * DAY_BINS)
+    f = DemandForecaster(horizon_s).fit(g, c, o, train_end_bin=TRAIN_END_DAY * DAY_BINS, calib_days=(TRAIN_END_DAY, 130))
     try:
         joblib.dump(f, path)
     except OSError:
@@ -126,16 +146,20 @@ def heldout_skill() -> dict | None:
             "skill_vs_persistence": v["skill vs persistence"], "p10_p90_coverage": v["P10-P90 coverage"]} for k, v in t.items()}}
 
 
-def forecast_series(f: DemandForecaster, jobs: pd.DataFrame, w, pool_ids: list[str], t0_s: float, length_s: float, step_s: float = 1800.0) -> dict:
-    """Forecast vs realised demand for one scenario window. History before t0 = real trace arrivals; inside the window = the scenario's own
-    arrivals (so bursts / multipliers are forecast too). Row at time t uses only arrivals up to t."""
-    P = len(pool_ids)
+def combined_bins(jobs: pd.DataFrame, w, n_pools: int, t0_s: float, span_s: float):
+    """Arrival arrays: real trace arrivals before t0, the scenario workload's own arrivals inside the window."""
     keep = np.asarray(w.eval_mask) & (np.asarray(w.submit) > 0)
     win = pd.DataFrame({"submit_relative_s": t0_s + np.asarray(w.submit, float)[keep], "pool": np.asarray(w.pool)[keep], "req": np.asarray(w.req)[keep],
                         "organisation_id": np.asarray(w.org)[keep]})
     hist = jobs.loc[jobs.submit_relative_s < t0_s, ["submit_relative_s", "pool", "req", "organisation_id"]]
-    horizon_total = t0_s + length_s + 2 * f.horizon_s + 2 * BIN_S
-    g, c, o = arrival_bins(pd.concat([hist, win], ignore_index=True), P, horizon_s=horizon_total)
+    return arrival_bins(pd.concat([hist, win], ignore_index=True), n_pools, horizon_s=t0_s + span_s)
+
+
+def forecast_series(f: DemandForecaster, jobs: pd.DataFrame, w, pool_ids: list[str], t0_s: float, length_s: float, step_s: float = 1800.0) -> dict:
+    """Forecast vs realised demand for one scenario window. History before t0 = real trace arrivals; inside the window = the scenario's own
+    arrivals (so bursts / multipliers are forecast too). Row at time t uses only arrivals up to t."""
+    P = len(pool_ids)
+    g, c, o = combined_bins(jobs, w, P, t0_s, length_s + 2 * f.horizon_s + 2 * BIN_S)
     b0 = int(round(t0_s / BIN_S))
     ts_rel = np.arange(step_s, length_s + 1e-9, step_s)                              # forecast issued at t (seconds since window start)
     tb = b0 + (ts_rel / BIN_S).astype(int) - 1                                       # last fully observed bin
