@@ -16,6 +16,7 @@ from .data import UNIT, Workload
 from .policies import POLICIES
 from .metrics import summarize
 from .display import Display, DEFAULT_PODS
+from .cloud import pool_prices
 
 
 @dataclass
@@ -36,6 +37,7 @@ class Scenario:
     cooling_fault: dict | None = None                     # {"at_h": 6.0, "delta_c": 35.0, "duration_h": 6.0 | None}
     injected_jobs: list = field(default_factory=list)     # [{"at_h": 3.0, "pool": "a10", "gpus": 1, "priority": "hp", "duration_s": 900}]
     display_pools: list = field(default_factory=lambda: list(DEFAULT_PODS))   # pods 1..4 in the room
+    cloud: dict | None = None                    # SIMULATED takeaway: {"nodes_per_pool": 2 | {pool: n}, "gpus_per_node": 8, "overflow_wait_s": 7200, "price_multiplier": 1.0}
     arrival_profile: list | None = None          # per-hour arrival multipliers (mean 1), e.g. a BurstGPT shape
     arrival_profile_source: str | None = None    # provenance of the profile, e.g. "burstgpt_3 hours 120-192"
     note: str = ""
@@ -228,9 +230,19 @@ def build_workload(jobs: pd.DataFrame, sc: Scenario) -> Workload:
 
 def build_cluster(base_cluster: data.Cluster, sc: Scenario) -> data.Cluster:
     f = _capacity_factors(base_cluster, sc.capacity)
-    if np.allclose(f, 1.0):
-        return base_cluster
-    return data.scale_cluster(base_cluster, f)
+    c = base_cluster if np.allclose(f, 1.0) else data.scale_cluster(base_cluster, f)
+    if sc.cloud:
+        c = data.add_cloud(c, sc.cloud.get("nodes_per_pool", 1), int(sc.cloud.get("gpus_per_node", 8)))
+    return c
+
+
+def sim_kwargs(sc: Scenario, cluster: data.Cluster) -> dict:
+    """Everything a scenario adds to a simulator run: node failures and the simulated cloud overflow."""
+    kw = {"failures": failure_events(sc, cluster)}
+    if sc.cloud:
+        kw["cloud_price"] = pool_prices([p["id"] for p in cluster.pools], float(sc.cloud.get("price_multiplier", 1.0)))
+        kw["overflow_wait_s"] = float(sc.cloud.get("overflow_wait_s", 0.0))
+    return kw
 
 
 def workload_stats(w: Workload, cluster: data.Cluster) -> dict:
@@ -261,7 +273,7 @@ def run_scenario(sc: Scenario, jobs: pd.DataFrame, calibrated: data.Cluster, pol
             est = hint.predict_seconds(w.job_id)
             est = np.where(np.isfinite(est), est, np.nanmedian(est))
         S = run_policy(cluster, w, spec, resume=sc.resume_preempted, log_events=log_events, est=est,
-                       failures=failure_events(sc, cluster), **sim_kw)
+                       **sim_kwargs(sc, cluster), **sim_kw)
         m = summarize(S, w, cluster, util_hi=sc.days * 86400)
         out["policies"][name] = {"realistic": spec.realistic, "metrics": m}
         out["_states"][name] = S

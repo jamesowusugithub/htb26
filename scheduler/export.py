@@ -191,7 +191,8 @@ def export_ndjson(path, S: State, w: Workload, cluster: Cluster, *, policy_name:
             start_t[j] = t
             jb[j] = board
             attempts[j] += 1
-            rec = {"type": "start", **base, "job": str(w.job_id[j]), "node": local_node, "board": board if board >= 0 else None,
+            on_cloud = bool(node >= 0 and cluster.cloud_mask()[node])
+            rec = {"type": "start", **base, "job": str(w.job_id[j]), "node": local_node, "board": board if board >= 0 else None, "cloud": on_cloud,
                    "gpu_slots": _slots(int(S.ev_mask[i])), "attempt": int(attempts[j]), "service_s": float(rem[j]),
                    "gpus": float(g[j]), "priority": "hp" if S.prio[j] == 0 else "spot", "warm": warm}
         elif typ == EV_FINISH:
@@ -254,7 +255,8 @@ def export_ndjson(path, S: State, w: Workload, cluster: Cluster, *, policy_name:
         "pools": [{"id": p["id"], "label": p["label"], "gpu_model_identifier": p["gpu_model_identifier"],
                    "identity": p["identity"], "capacity_gpus": float(cluster.capacity_gpus()[i]),
                    "node_count": int(cluster.node_counts()[i]),
-                   "nodes": [int(x) for x in cluster.node_ngpu[pool_start[i]:pool_start[i + 1]]],
+                   "nodes": [int(x) for x, c in zip(cluster.node_ngpu[pool_start[i]:pool_start[i + 1]], cluster.cloud_mask()[pool_start[i]:pool_start[i + 1]]) if not c],
+                   "cloud_nodes": int(cluster.cloud_mask()[pool_start[i]:pool_start[i + 1]].sum()),
                    "scale_vs_observed": float(cluster.scale[i])} for i, p in enumerate(cluster.pools)],
         "display": display.describe(cluster),
         "thermal": thermal.meta(),

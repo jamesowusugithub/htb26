@@ -1,0 +1,18 @@
+{
+ "v2 (current)": {
+  "val_spearman": 0.667
+ },
+ "v3 all new": {
+  "val_spearman": 0.705
+ },
+ "v3 burst only": {
+  "val_spearman": 0.695
+ },
+ "v3 spread only": {
+  "val_spearman": 0.692
+ },
+ "v3 org-pool only": {
+  "val_spearman": 0.676
+ },
+ "chosen": "v3 all new"
+}

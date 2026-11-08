@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 from .data import UNIT, Cluster, Workload
-from .sim import State, SC_ERR, SC_NPREEMPT, SC_NSNAP
+from .sim import State, SC_ERR, SC_NPREEMPT, SC_NSNAP, FC_CLOUDCOST, FC_CLOUDGPUH, FC_CLOUDJOBS
 
 TAU = 10.0  # bounded-slowdown floor (s)
 
@@ -17,7 +17,7 @@ def job_table(S: State, w: Workload, cluster: Cluster) -> pd.DataFrame:
         "job_id": w.job_id, "pool": pool_ids[w.pool], "priority": np.where(w.prio == 0, "hp", "spot"),
         "gpus": w.req / UNIT, "submit_s": S.submit, "start_s": S.start_first, "finish_s": S.finish,
         "wait_s": wait, "duration_s": run, "bsld": bsld, "preemptions": S.npre,
-        "wasted_gpu_s": S.wasted, "evaluated": w.eval_mask})
+        "wasted_gpu_s": S.wasted, "cloud": S.job_cloud.astype(bool), "evaluated": w.eval_mask})
 
 
 def _q(x, q):
@@ -50,7 +50,9 @@ def summarize(S: State, w: Workload, cluster: Cluster, util_hi: float | None = N
            "pools": {pid: {"hp": block(ev[(ev.pool == pid) & (ev.priority == "hp")]),
                            "spot": block(ev[(ev.pool == pid) & (ev.priority == "spot")])}
                      for pid in util},
-           "utilisation": util, "error_flags": int(S.sc[SC_ERR]), "total_preemption_events": int(S.sc[SC_NPREEMPT])}
+           "utilisation": util, "error_flags": int(S.sc[SC_ERR]), "total_preemption_events": int(S.sc[SC_NPREEMPT]),
+           "cloud": {"jobs": int(S.fc[FC_CLOUDJOBS]), "gpu_hours": float(S.fc[FC_CLOUDGPUH]), "cost_usd": float(S.fc[FC_CLOUDCOST]),
+                     "evidence": "simulated fallback; prices are tier assumptions anchored to pricing offers (see scheduler/cloud.py)"}}
     caps = S.pool_cap.astype(float)
     out["utilisation_overall"] = float(sum(util[k] * caps[i] for i, k in enumerate(util)) / caps.sum())
     return out
