@@ -27,7 +27,7 @@ export function Header({ ctl }: { ctl: Controller }) {
       )}
       {isTrace() && (
         <div className="banner trace-banner" role="note" data-testid="trace-banner">
-          {traceMeta()!.scale_note} Customers are real jobs ({traceMeta()!.jobs} from the Alibaba trace); the manager is <b>{traceMeta()!.scheduler_label}</b>; temperature is a proxy; times are in minutes.
+          {(traceMeta()!.scale_note ?? '').split(', instead of')[0]}.{traceMeta()!.cloud ? ' The takeaway is a SIMULATED cloud fallback at an assumed price.' : ''} Waits are simulated minutes; temperature is a proxy.
         </div>
       )}
       <header className="topbar">

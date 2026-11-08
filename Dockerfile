@@ -22,6 +22,7 @@ COPY analysis/rl ./analysis/rl
 COPY analysis/graphs ./analysis/graphs
 COPY --from=web /src/server-room/dist ./server-room/dist
 COPY --from=web /src/restaurant/dist ./restaurant/dist
+RUN rm -f restaurant/dist/pitch.html          # internal presentation page: not for visitors
 # fail early with a clear message if the LFS files are still pointer stubs
 RUN python - <<'PY'
 import os, sys

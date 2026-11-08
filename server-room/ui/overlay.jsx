@@ -2,7 +2,7 @@ import React,{useState,useSyncExternalStore,useEffect} from 'react';
 import {createRoot} from 'react-dom/client';
 import {flushSync} from 'react-dom';
 import {Pause,Play,Plus,Layers3,PanelRight,ChevronDown,MoreHorizontal,RotateCcw,AlertTriangle,Wrench,X,MousePointer2,CheckCircle2,Clock3,Move3d} from 'lucide-react';
-import {BackendSubtitle,BackendMetrics,RackPoolDetails,CustomJobForm,ForecastPanel,DemandForecastPanel,PoolPanel,AllocationPanel,ScenarioBar,StatusBanner,LinkPanel,Scoreboard,evidenceLine} from './backend-panels.jsx';
+import {BackendSubtitle,BackendMetrics,RackPoolDetails,CustomJobForm,ForecastPanel,DemandForecastPanel,PoolPanel,AllocationPanel,ScenarioBar,StatusBanner,LinkPanel,Scoreboard,evidenceLine,evidenceShort,DEBUG} from './backend-panels.jsx';
 import {Button,Tooltip,DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem,DropdownMenuSeparator,DropdownMenuLabel,CameraTabs} from './components/index.jsx';
 
 const labels={idle:'Available',reserved:'In transit',running:'Processing',cooling:'Cooling',failed:'Failed'};
@@ -50,7 +50,7 @@ export function mountOverlay(host,actions,initial){
         {s.backend&&<Scoreboard snap={snap} actions={actions}/>}
         {s.backend&&<PoolPanel snap={snap} selectedPool={gpu.pool}/>}
         {s.backend&&<DemandForecastPanel snap={snap}/>}
-        {s.backend&&<LinkPanel snap={snap}/>}
+        {s.backend&&DEBUG&&<LinkPanel snap={snap}/>}
         <div className="latest-event"><Clock3 size={14}/><p role="status" aria-live="polite" aria-atomic="true">{s.latestEvent}</p></div>
       </aside>
       <div className="scene-legend" aria-label="GPU status legend"><span><i/>Available</span><span><i className="busy"/>Processing</span><span><i className="failed"/>Failed</span><span><i className="transit"/>In transit</span></div>
@@ -58,7 +58,7 @@ export function mountOverlay(host,actions,initial){
         <div className="playback">{s.backend&&<ScenarioBar s={s} actions={actions}/>}<label>Policy<select aria-label="Scheduling policy" value={snap.policy==='round-robin'?'round_robin':snap.policy} onChange={e=>actions.onPolicy(e.target.value)} disabled={s.busy}>{s.policies?s.policies.map(p=><option key={p.name} value={p.name} title={p.description}>{p.label}</option>):<><option value="priority">Priority first</option><option value="fcfs">First come, first served</option><option value="round_robin">Round robin</option></>}</select></label><label>Speed<select aria-label="Playback speed" value={s.speed} onChange={e=>actions.onSpeed(Number(e.target.value))}><option value={1}>1×</option><option value={2}>2×</option><option value={4}>4×</option></select></label>
         <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" className="icon-button" aria-label="More options"><MoreHorizontal size={20}/></Button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuLabel>Scene controls</DropdownMenuLabel><DropdownMenuItem onSelect={()=>actions.onView('room')}><Move3d size={15}/>Room overview</DropdownMenuItem><DropdownMenuItem onSelect={()=>setOpen(true)}><PanelRight size={15}/>Show inspector</DropdownMenuItem><DropdownMenuSeparator/><DropdownMenuItem onSelect={actions.onReset}><RotateCcw size={15}/>Reset scenario</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
       </section>
-      <footer className="evidence-strip">{s.backend?<><span><i/>Backend simulation</span><p>{evidenceLine(snap)}</p></>:<><span><i/>Illustrative scenario</span><p>Jobs, assignments and temperatures are synthetic.{s.fallbackNote?` ${s.fallbackNote} Showing the labelled synthetic demo instead.`:''}</p></>}</footer>
+      <footer className="evidence-strip">{s.backend?<><span><i/>Backend simulation</span><p>{DEBUG?evidenceLine(snap):evidenceShort(snap)}</p></>:<><span><i/>Illustrative scenario</span><p>Jobs, assignments and temperatures are synthetic.{s.fallbackNote?` ${s.fallbackNote} Showing the labelled synthetic demo instead.`:''}</p></>}</footer>
     </div>;
   }
   flushSync(()=>createRoot(host).render(<App/>));

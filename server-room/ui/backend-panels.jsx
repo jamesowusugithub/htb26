@@ -3,6 +3,7 @@ import {AlertTriangle,Flame,Wifi,Loader2,Zap,Thermometer} from 'lucide-react';
 
 // Panels shown only in backend mode. Every number is displayed exactly as the backend sent it; temperatures and power are
 // the backend's H100-profile PROXY and are labelled as such.
+export const DEBUG=typeof location!=='undefined'&&new URLSearchParams(location.search).has('debug');   // developer-only details (?debug=1)
 const fmt=(v,d=0)=>v==null?'n/a':Number(v).toFixed(d);
 const pct=x=>x==null?'n/a':`${Math.round(x)}%`;
 
@@ -61,9 +62,9 @@ export function ForecastPanel({snap,gpu}){
   if(!f)return <section className="forecast-section"><div className="section-heading"><h2>Capacity forecast</h2><span>Unavailable</span></div><p className="proxy-note">The backend has no board-level forecast for this selected resource.</p></section>;
   const pressure=f.util_pct>=90?'High':f.util_pct>=70?'Moderate':'Low';
   return <section className="forecast-section" aria-label="Backend capacity forecast"><div className="section-heading"><h2>Capacity forecast</h2><span>30 minutes</span></div>
-    <dl className="forecast-grid"><div><dt>Current simulated</dt><dd>{pct(gpu.utilisation)}</dd></div><div><dt>Chosen forecast</dt><dd>{pct(f.util_pct)}</dd></div><div><dt>Capacity pressure</dt><dd>{pressure}</dd></div><div><dt>Survival projection</dt><dd>{pct(f.projection_util_pct)}</dd></div></dl>
-    <p className="proxy-note">Chosen method: persistence. Historical error: {skill?.mae_util_pct_points==null?'not available':`${fmt(skill.mae_util_pct_points,1)} percentage points`}. The backend supplies no prediction interval.</p>
-    <p className="proxy-note">Pressure is a UI band calculated from forecast utilisation: moderate at 70%, high at 90%. Job arrivals are forecast separately in the Demand forecast panel (next 30 minutes).</p>
+    <dl className="forecast-grid"><div><dt>Current simulated</dt><dd>{pct(gpu.utilisation)}</dd></div><div><dt>Chosen forecast</dt><dd>{pct(f.util_pct)}</dd></div><div><dt>Capacity pressure</dt><dd>{pressure}</dd></div>{DEBUG&&<div><dt>Survival projection</dt><dd>{pct(f.projection_util_pct)}</dd></div>}</dl>
+    <p className="proxy-note">{DEBUG?<>Chosen method: persistence. Historical error: {skill?.mae_util_pct_points==null?'not available':`${fmt(skill.mae_util_pct_points,1)} percentage points`}. The backend supplies no prediction interval.</>:'Utilisation is held at its current level for 30 minutes: the learned alternatives we tested did not beat it.'}</p>
+    <p className="proxy-note">Pressure bands: moderate from 70% utilisation, high from 90%. Job arrivals are forecast in the Demand forecast panel.</p>
   </section>;
 }
 
@@ -162,6 +163,11 @@ export function StatusBanner({s,actions}){
   if(snap.stats.alerts)items.push(<span key="a" className="chip hot"><Flame size={13}/>{snap.stats.alerts} overheating (proxy)</span>);
   if(snap.stats.arrivalsPerMin!=null)items.push(<span key="r" className="chip"><Wifi size={13}/>{snap.stats.arrivalsPerMin.toFixed(1)} arrivals / sim-min</span>);
   return items.length?<div className="status-banner" aria-live="polite">{items}</div>:null;
+}
+
+export function evidenceShort(snap){
+  const th=snap.run?.thermal;
+  return `Simulated replay of the Alibaba GPU trace${th?' · temperature and power are a proxy from measured '+th.source_gpu.replace('nvidia_','').toUpperCase()+' profiles, not this hardware':''}`;
 }
 
 export function evidenceLine(snap){
