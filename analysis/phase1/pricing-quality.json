@@ -1,0 +1,58 @@
+{
+  "original_rows": {
+    "current_json_plans": 131,
+    "current_csv_plans": 131,
+    "history_daily": 181,
+    "history_by_model": 2997
+  },
+  "harmonized_rows": {
+    "plans": 131,
+    "offers": 393,
+    "current_csv_raw": 131,
+    "history": 9534
+  },
+  "csv_json_key_match": true,
+  "csv_json_row_prices_match": true,
+  "missing_model": 16,
+  "generic_model": 10,
+  "missing_price_offers": 162,
+  "providers": 8,
+  "duplicate_plan_keys": 3,
+  "missing": {
+    "source_id": 0,
+    "source_file": 0,
+    "source_row": 0,
+    "plan_record_id": 0,
+    "provider": 0,
+    "plan_id": 0,
+    "gpu_model_raw": 16,
+    "gpu_model_id": 26,
+    "gpu_model_identifier": 26,
+    "gpu_family": 26,
+    "gpu_count": 5,
+    "locations": 0,
+    "captured_date": 0,
+    "raw_record_json": 0
+  },
+  "history_days": 181,
+  "hourly_identified_plans": 18,
+  "hourly_per_gpu_quantiles": {
+    "0.0": 0.76,
+    "0.5": 4.1754999999999995,
+    "0.9": 7.025000000000001,
+    "0.95": 9.412499999999989,
+    "0.99": 14.682499999999987,
+    "1.0": 16.0
+  },
+  "price_observations_by_field": {
+    "price_hourly_usd": 46,
+    "price_monthly_eur": 76,
+    "price_monthly_usd": 109
+  },
+  "source_hashes": {
+    "current.csv": "2a92b08d1b9c14757950c5b3d66d7d10baeed0bb55dfed069a5761a443e988e4",
+    "current.json": "193f817329fd9a04bed7bfcfb0a608580476a25a572ac5d614fc9a3bdbca999a",
+    "download-manifest.json": "f14aa677dfe35045e074b7c131ad12c44c7daf945dc096689e7b77af48b39b1a",
+    "history-daily.json": "2b6ee592ee7b4ce2b6f0d297f466000a9af7e0199b21c242175ef827720c67d4"
+  }
+}

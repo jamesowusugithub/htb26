@@ -1,0 +1,144 @@
+{
+  "source": "https://github.com/alibaba/clusterdata/tree/master/cluster-trace-v2026-spot-gpu",
+  "row_counts": {
+    "jobs": {
+      "original": 466867,
+      "harmonized": 466867,
+      "parquet_metadata": 466867
+    },
+    "nodes": {
+      "original": 4278,
+      "harmonized": 4278,
+      "parquet_metadata": 4278
+    }
+  },
+  "raw_preservation": {
+    "jobs": {
+      "all_raw_fields_identical_after_parquet_roundtrip": true,
+      "raw_columns": [
+        "job_name",
+        "organization",
+        "gpu_model",
+        "cpu_request",
+        "gpu_request",
+        "worker_num",
+        "submit_time",
+        "duration",
+        "job_type"
+      ],
+      "source_sha256": "113ccee4c28f5c3bbaaca974cd164b9280b7d4c39e53b745443b28eea05e03dd",
+      "output_sha256": "5eae8fa5c46176c98fdb4d8c479be8165876e96154494ba84806a2ebfd4b3658"
+    },
+    "nodes": {
+      "all_raw_fields_identical_after_parquet_roundtrip": true,
+      "raw_columns": [
+        "gpu_model",
+        "gpu_capacity_num",
+        "cpu_num",
+        "node_name"
+      ],
+      "source_sha256": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18",
+      "output_sha256": "0259fc3155f103f406d3128b030577d6757652b707945cfe884fa710ddf906e3"
+    }
+  },
+  "missing": {
+    "jobs": {
+      "raw_blank_fields": {
+        "job_name": 0,
+        "organization": 0,
+        "gpu_model": 0,
+        "cpu_request": 0,
+        "gpu_request": 0,
+        "worker_num": 0,
+        "submit_time": 0,
+        "duration": 0,
+        "job_type": 0
+      },
+      "harmonized_null_fields": {
+        "raw__job_name": 0,
+        "raw__organization": 0,
+        "raw__gpu_model": 0,
+        "raw__cpu_request": 0,
+        "raw__gpu_request": 0,
+        "raw__worker_num": 0,
+        "raw__submit_time": 0,
+        "raw__duration": 0,
+        "raw__job_type": 0,
+        "source_dataset": 0,
+        "source_file": 0,
+        "source_url": 0,
+        "source_sha256": 0,
+        "source_row_number": 0,
+        "source_record_id": 0,
+        "job_id": 0,
+        "organisation_id": 0,
+        "gpu_model_identifier": 0,
+        "gpu_model_source": 0,
+        "gpu_model_identity_status": 0,
+        "priority_class": 0,
+        "cpu_request_vcpus": 0,
+        "gpu_request_recorded_count": 0,
+        "worker_count": 0,
+        "submit_relative_s": 0,
+        "duration_s": 0,
+        "submit_time_basis": 0,
+        "submitted_at_utc": 466867,
+        "gpu_request_scope": 0,
+        "request_duration_proxy_gpu_h": 0,
+        "worker_expanded_sensitivity_proxy_gpu_h": 0,
+        "demand_proxy_status": 0
+      }
+    },
+    "nodes": {
+      "raw_blank_fields": {
+        "gpu_model": 0,
+        "gpu_capacity_num": 0,
+        "cpu_num": 0,
+        "node_name": 0
+      },
+      "harmonized_null_fields": {
+        "raw__gpu_model": 0,
+        "raw__gpu_capacity_num": 0,
+        "raw__cpu_num": 0,
+        "raw__node_name": 0,
+        "source_dataset": 0,
+        "source_file": 0,
+        "source_url": 0,
+        "source_sha256": 0,
+        "source_row_number": 0,
+        "source_record_id": 0,
+        "node_id": 0,
+        "gpu_model_identifier": 0,
+        "gpu_model_source": 0,
+        "gpu_capacity_count": 0,
+        "cpu_capacity_vcpus": 0,
+        "gpu_model_identity_status": 0
+      }
+    }
+  },
+  "duplicates": {
+    "jobs": {
+      "exact_raw_duplicate_rows": 0,
+      "duplicate_source_ids": 0
+    },
+    "nodes": {
+      "exact_raw_duplicate_rows": 0,
+      "duplicate_source_ids": 0
+    }
+  },
+  "invalid": {
+    "negative_submit_relative_s": 0,
+    "nonpositive_duration_s": 0,
+    "nonpositive_gpu_request": 0,
+    "nonpositive_worker_count": 0,
+    "unmapped_priority_class": 0,
+    "nonpositive_node_gpu_capacity": 0,
+    "job_models_absent_from_node_catalogue": []
+  },
+  "schemas": {
+    "jobs": "raw__job_name: large_string\nraw__organization: large_string\nraw__gpu_model: large_string\nraw__cpu_request: large_string\nraw__gpu_request: large_string\nraw__worker_num: large_string\nraw__submit_time: large_string\nraw__duration: large_string\nraw__job_type: large_string\nsource_dataset: large_string\nsource_file: large_string\nsource_url: large_string\nsource_sha256: large_string\nsource_row_number: int64\nsource_record_id: large_string\njob_id: large_string\norganisation_id: large_string\ngpu_model_identifier: large_string\ngpu_model_source: large_string\ngpu_model_identity_status: large_string\npriority_class: large_string\ncpu_request_vcpus: double\ngpu_request_recorded_count: double\nworker_count: int64\nsubmit_relative_s: double\nduration_s: double\nsubmit_time_basis: large_string\nsubmitted_at_utc: timestamp[ns, tz=UTC]\ngpu_request_scope: large_string\nrequest_duration_proxy_gpu_h: double\nworker_expanded_sensitivity_proxy_gpu_h: double\ndemand_proxy_status: large_string\n-- schema metadata --\npandas: '{\"index_columns\": [], \"column_indexes\": [], \"columns\": [{\"name\":' + 4298",
+    "nodes": "raw__gpu_model: large_string\nraw__gpu_capacity_num: large_string\nraw__cpu_num: large_string\nraw__node_name: large_string\nsource_dataset: large_string\nsource_file: large_string\nsource_url: large_string\nsource_sha256: large_string\nsource_row_number: int64\nsource_record_id: large_string\nnode_id: large_string\ngpu_model_identifier: large_string\ngpu_model_source: large_string\ngpu_capacity_count: int64\ncpu_capacity_vcpus: int64\ngpu_model_identity_status: large_string\n-- schema metadata --\npandas: '{\"index_columns\": [], \"column_indexes\": [], \"columns\": [{\"name\":' + 2133"
+  },
+  "licensing": "Downloaded source README requests citation but supplies no explicit licence grant. Redistribution terms not established from local source files; do not assume CC-BY or another licence.",
+  "relationships": "Jobs and nodes share source-specific GPU model identifiers, not job-to-node allocation keys. No job-to-node join or cross-dataset record linkage is inferred."
+}

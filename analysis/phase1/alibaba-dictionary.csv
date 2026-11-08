@@ -1,0 +1,55 @@
+table,field,dtype,unit,definition
+jobs,raw__job_name,str,source literal,"Unchanged CSV field job_name stored as text, including empty text; see source README for source unit."
+jobs,raw__organization,str,source literal,"Unchanged CSV field organization stored as text, including empty text; see source README for source unit."
+jobs,raw__gpu_model,str,source literal,"Unchanged CSV field gpu_model stored as text, including empty text; see source README for source unit."
+jobs,raw__cpu_request,str,source literal,"Unchanged CSV field cpu_request stored as text, including empty text; see source README for source unit."
+jobs,raw__gpu_request,str,source literal,"Unchanged CSV field gpu_request stored as text, including empty text; see source README for source unit."
+jobs,raw__worker_num,str,source literal,"Unchanged CSV field worker_num stored as text, including empty text; see source README for source unit."
+jobs,raw__submit_time,str,source literal,"Unchanged CSV field submit_time stored as text, including empty text; see source README for source unit."
+jobs,raw__duration,str,source literal,"Unchanged CSV field duration stored as text, including empty text; see source README for source unit."
+jobs,raw__job_type,str,source literal,"Unchanged CSV field job_type stored as text, including empty text; see source README for source unit."
+jobs,source_dataset,str,identifier,Constant source dataset name.
+jobs,source_file,str,path,Original CSV basename.
+jobs,source_url,str,URL,Source dataset directory URL.
+jobs,source_sha256,str,SHA256,Hash of original source CSV bytes.
+jobs,source_row_number,int64,1-based row index,"CSV data record index, excluding header."
+jobs,source_record_id,str,identifier,Dataset+filename+row index unique provenance key.
+jobs,job_id,string,identifier,Exact source job_name string; not linked to other datasets.
+jobs,organisation_id,string,identifier,Exact source organisation identifier.
+jobs,gpu_model_identifier,string,identifier,Source-specific normalised label; NVIDIA prefix only for disclosed models; GPU-series labels stay Alibaba-specific.
+jobs,gpu_model_source,string,label,Original hardware label.
+jobs,gpu_model_identity_status,str,category,Anonymised unresolved versus source-model-specific.
+jobs,priority_class,string,category,HP -> high_priority; Spot -> spot.
+jobs,cpu_request_vcpus,float64,vCPU,Numeric source CPU request; worker scope not resolved.
+jobs,gpu_request_recorded_count,float64,GPU request count,"Numeric source GPU request, including fractions; worker scope unspecified."
+jobs,worker_count,int64,instances,Numeric source worker_num.
+jobs,submit_relative_s,float64,seconds,Seconds from first source job. No absolute calendar origin.
+jobs,duration_s,float64,seconds,Source job duration; missing censoring and lifecycle semantics cannot be reconstructed.
+jobs,submit_time_basis,str,label,Explicit relative-time origin.
+jobs,submitted_at_utc,"datetime64[ns, UTC]",UTC timestamp,All null because source calendar origin is unknown.
+jobs,gpu_request_scope,str,label,Explicit unresolved worker scope.
+jobs,request_duration_proxy_gpu_h,float64,GPU-request hours,"gpu_request_recorded_count * duration_s / 3600; request-based proxy, not actual use."
+jobs,worker_expanded_sensitivity_proxy_gpu_h,float64,GPU-request hours,Recorded request * duration * worker_count / 3600; sensitivity interpretation only.
+jobs,demand_proxy_status,str,label,Explicit request-proxy limitation.
+nodes,raw__gpu_model,str,source literal,"Unchanged CSV field gpu_model stored as text, including empty text; see source README for source unit."
+nodes,raw__gpu_capacity_num,str,source literal,"Unchanged CSV field gpu_capacity_num stored as text, including empty text; see source README for source unit."
+nodes,raw__cpu_num,str,source literal,"Unchanged CSV field cpu_num stored as text, including empty text; see source README for source unit."
+nodes,raw__node_name,str,source literal,"Unchanged CSV field node_name stored as text, including empty text; see source README for source unit."
+nodes,source_dataset,str,identifier,Constant source dataset name.
+nodes,source_file,str,path,Original CSV basename.
+nodes,source_url,str,URL,Source dataset directory URL.
+nodes,source_sha256,str,SHA256,Hash of original source CSV bytes.
+nodes,source_row_number,int64,1-based row index,"CSV data record index, excluding header."
+nodes,source_record_id,str,identifier,Dataset+filename+row index unique provenance key.
+nodes,node_id,string,identifier,Exact source node_name string.
+nodes,gpu_model_identifier,string,identifier,Source-specific normalised label; NVIDIA prefix only for disclosed models; GPU-series labels stay Alibaba-specific.
+nodes,gpu_model_source,string,label,Original hardware label.
+nodes,gpu_capacity_count,int64,GPUs,"Numeric source gpu_capacity_num; node catalogue, not a time-varying availability trace."
+nodes,cpu_capacity_vcpus,int64,vCPU,Numeric source cpu_num.
+nodes,gpu_model_identity_status,str,category,Anonymised unresolved versus source-model-specific.
+arrival_hourly,relative_hour_bin,int64,hour index,"Floor(submit_relative_s / 3600), including empty bins."
+arrival_hourly,HP,int64,job arrivals,High-priority arrivals in bin.
+arrival_hourly,Spot,int64,job arrivals,Spot arrivals in bin.
+arrival_hourly,total,int64,job arrivals,All job arrivals in bin.
+arrival_hourly,bin_start_relative_s,int64,seconds,Relative start of bin.
+arrival_hourly,bin_complete,bool,boolean,False for the final partially observed hour.

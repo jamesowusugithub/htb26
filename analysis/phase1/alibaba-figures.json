@@ -1,0 +1,47 @@
+[
+  {
+    "name": "alibaba_arrivals",
+    "files": [
+      "analysis\\figures\\alibaba_arrivals.png",
+      "analysis\\figures\\alibaba_arrivals.pdf"
+    ],
+    "caption": "Source: Alibaba 2026 Spot GPU | n=466,867 jobs; 4,417 full hourly bins plus one partial bin.\nLower panel excludes first-hour n=3,740; zero bins retained. Arrivals do not measure idle GPU capacity.",
+    "source": "https://github.com/alibaba/clusterdata/tree/master/cluster-trace-v2026-spot-gpu"
+  },
+  {
+    "name": "alibaba_priority_counts",
+    "files": [
+      "analysis\\figures\\alibaba_priority_counts.png",
+      "analysis\\figures\\alibaba_priority_counts.pdf"
+    ],
+    "caption": "Source: Alibaba 2026 Spot GPU | n=466,867 job records; no missing priority labels.\nCounts show submission volume, not occupied GPU capacity or computational work.",
+    "source": "https://github.com/alibaba/clusterdata/tree/master/cluster-trace-v2026-spot-gpu"
+  },
+  {
+    "name": "alibaba_duration_distribution",
+    "files": [
+      "analysis\\figures\\alibaba_duration_distribution.png",
+      "analysis\\figures\\alibaba_duration_distribution.pdf"
+    ],
+    "caption": "Source: Alibaba 2026 Spot GPU | n=466,867 jobs; all durations positive and present.\nEmpirical cumulative distributions retain the full duration range. Duration is source reported; censoring is not documented.",
+    "source": "https://github.com/alibaba/clusterdata/tree/master/cluster-trace-v2026-spot-gpu"
+  },
+  {
+    "name": "alibaba_hardware_demand",
+    "files": [
+      "analysis\\figures\\alibaba_hardware_demand.png",
+      "analysis\\figures\\alibaba_hardware_demand.pdf"
+    ],
+    "caption": "Source: Alibaba 2026 Spot GPU | n=466,867 jobs; two alternate interpretations, not additive.\nNeither proxy is measured GPU use. Worker scope is ambiguous; anonymised GPU-series labels remain unresolved.",
+    "source": "https://github.com/alibaba/clusterdata/tree/master/cluster-trace-v2026-spot-gpu"
+  },
+  {
+    "name": "alibaba_resource_requests",
+    "files": [
+      "analysis\\figures\\alibaba_resource_requests.png",
+      "analysis\\figures\\alibaba_resource_requests.pdf"
+    ],
+    "caption": "Source: Alibaba 2026 Spot GPU | HP n=415,713; Spot n=51,154; all requests present.\nFractional GPU requests are retained as requests. Worker counts do not establish occupied GPU counts.",
+    "source": "https://github.com/alibaba/clusterdata/tree/master/cluster-trace-v2026-spot-gpu"
+  }
+]

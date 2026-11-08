@@ -1,0 +1,276 @@
+{
+  "source": "https://github.com/alibaba/clusterdata/tree/master/cluster-trace-v2026-spot-gpu",
+  "jobs": 466867,
+  "nodes": 4278,
+  "types": {
+    "HP": {
+      "n": 415713,
+      "fraction": 0.8904313219824918,
+      "duration_s": {
+        "n": 415713,
+        "min": 1.0,
+        "p25": 205.0,
+        "p50": 1101.0,
+        "p75": 4009.0,
+        "p90": 58770.0,
+        "p95": 631952.7999999947,
+        "p99": 5972708.920000002,
+        "max": 15897599.0,
+        "mean": 206521.02081724652
+      },
+      "gpu_request_recorded_count": {
+        "n": 415713,
+        "min": 0.01,
+        "p25": 1.0,
+        "p50": 1.0,
+        "p75": 1.0,
+        "p90": 8.0,
+        "p95": 8.0,
+        "p99": 8.0,
+        "max": 8.0,
+        "mean": 2.0018039849607785
+      },
+      "worker_count": {
+        "n": 415713,
+        "min": 1.0,
+        "p25": 1.0,
+        "p50": 1.0,
+        "p75": 1.0,
+        "p90": 1.0,
+        "p95": 2.0,
+        "p99": 8.0,
+        "max": 182.0,
+        "mean": 1.3835675093153208
+      },
+      "multiworker_fraction": 0.055697079475503536,
+      "request_duration_proxy_gpu_h": 29584544.956683334,
+      "worker_expanded_sensitivity_proxy_gpu_h": 38572428.77973889
+    },
+    "Spot": {
+      "n": 51154,
+      "fraction": 0.10956867801750819,
+      "duration_s": {
+        "n": 51154,
+        "min": 1.0,
+        "p25": 543.0,
+        "p50": 2095.5,
+        "p75": 8630.0,
+        "p90": 21740.0,
+        "p95": 35864.0,
+        "p99": 186322.22000000166,
+        "max": 5848226.0,
+        "mean": 13679.581283966063
+      },
+      "gpu_request_recorded_count": {
+        "n": 51154,
+        "min": 0.5,
+        "p25": 1.0,
+        "p50": 1.0,
+        "p75": 2.0,
+        "p90": 8.0,
+        "p95": 8.0,
+        "p99": 8.0,
+        "max": 8.0,
+        "mean": 2.194442272354068
+      },
+      "worker_count": {
+        "n": 51154,
+        "min": 1.0,
+        "p25": 1.0,
+        "p50": 1.0,
+        "p75": 2.0,
+        "p90": 8.0,
+        "p95": 15.0,
+        "p99": 56.0,
+        "max": 332.0,
+        "mean": 4.186476130898854
+      },
+      "multiworker_fraction": 0.31530281111936503,
+      "request_duration_proxy_gpu_h": 377729.17555555556,
+      "worker_expanded_sensitivity_proxy_gpu_h": 959268.1908333332
+    }
+  },
+  "gpu_capacity_by_model": {
+    "A10": 2494,
+    "A100-SXM4-80GB": 3456,
+    "A800-SXM4-80GB": 176,
+    "GPU-series-1": 1558,
+    "GPU-series-2": 976,
+    "H800": 1752
+  },
+  "arrival_bins": {
+    "bin_width_s": 3600,
+    "full_bins": 4417,
+    "final_partial_bins": 1,
+    "last_submit_relative_s": 15902470.0,
+    "zero_submit_time_jobs": 3588,
+    "all_full_hour_counts": {
+      "n": 4417,
+      "min": 10.0,
+      "p25": 56.0,
+      "p50": 89.0,
+      "p75": 128.0,
+      "p90": 176.0,
+      "p95": 226.0,
+      "p99": 500.84000000000015,
+      "max": 3740.0,
+      "mean": 105.6964002716776
+    },
+    "p99_threshold_jobs_per_hour": 500.84000000000015,
+    "hours_strictly_above_p99": 45,
+    "zero_arrival_full_hours": 0,
+    "quiet_full_hours_at_most_10_jobs": 2,
+    "zero_HP_full_hours": 0,
+    "zero_Spot_full_hours": 1151,
+    "max_full_hour_excluding_origin": 841,
+    "top_10_full_bins": [
+      {
+        "relative_hour_bin": 0,
+        "HP": 3740,
+        "Spot": 0,
+        "total": 3740,
+        "bin_start_relative_s": 0
+      },
+      {
+        "relative_hour_bin": 2267,
+        "HP": 826,
+        "Spot": 15,
+        "total": 841,
+        "bin_start_relative_s": 8161200
+      },
+      {
+        "relative_hour_bin": 2253,
+        "HP": 754,
+        "Spot": 2,
+        "total": 756,
+        "bin_start_relative_s": 8110800
+      },
+      {
+        "relative_hour_bin": 2252,
+        "HP": 721,
+        "Spot": 10,
+        "total": 731,
+        "bin_start_relative_s": 8107200
+      },
+      {
+        "relative_hour_bin": 2266,
+        "HP": 694,
+        "Spot": 15,
+        "total": 709,
+        "bin_start_relative_s": 8157600
+      },
+      {
+        "relative_hour_bin": 2241,
+        "HP": 705,
+        "Spot": 2,
+        "total": 707,
+        "bin_start_relative_s": 8067600
+      },
+      {
+        "relative_hour_bin": 2261,
+        "HP": 702,
+        "Spot": 1,
+        "total": 703,
+        "bin_start_relative_s": 8139600
+      },
+      {
+        "relative_hour_bin": 2270,
+        "HP": 663,
+        "Spot": 31,
+        "total": 694,
+        "bin_start_relative_s": 8172000
+      },
+      {
+        "relative_hour_bin": 2264,
+        "HP": 661,
+        "Spot": 2,
+        "total": 663,
+        "bin_start_relative_s": 8150400
+      },
+      {
+        "relative_hour_bin": 2254,
+        "HP": 640,
+        "Spot": 7,
+        "total": 647,
+        "bin_start_relative_s": 8114400
+      }
+    ]
+  },
+  "temporal_description": {
+    "hourly_pearson_autocorrelation_full_bins": {
+      "1": 0.7416051164711523,
+      "24": 0.5639540328320248,
+      "168": 0.10944725023554903
+    },
+    "hourly_pearson_autocorrelation_excluding_origin_hour": {
+      "1": 0.8859473957849,
+      "24": 0.6601070271271835,
+      "168": 0.135792450687524
+    },
+    "complete_relative_days": 184,
+    "daily_pearson_autocorrelation": {
+      "1": 0.8044808301261843,
+      "7": 0.03958035892559459
+    },
+    "contiguous_runs_above_hourly_p99": 15,
+    "interpretation": "Descriptive serial association only; no out-of-sample predictability test, timezone or weekday inference."
+  },
+  "fractional_gpu_requests": 49238,
+  "hardware_job_counts": {
+    "A10": 228643,
+    "A100-SXM4-80GB": 169020,
+    "GPU-series-2": 30397,
+    "GPU-series-1": 18911,
+    "H800": 11097,
+    "A800-SXM4-80GB": 8799
+  },
+  "hardware_demand_proxy": {
+    "request_duration_proxy_gpu_h": {
+      "A10": 14603145.180711111,
+      "A100-SXM4-80GB": 8698988.849444445,
+      "A800-SXM4-80GB": 321392.99166666664,
+      "GPU-series-1": 5093920.924722223,
+      "GPU-series-2": 831801.1929166666,
+      "H800": 413024.9927777778
+    },
+    "worker_expanded_sensitivity_proxy_gpu_h": {
+      "A10": 14672215.28598889,
+      "A100-SXM4-80GB": 11328275.315,
+      "A800-SXM4-80GB": 526139.0477777778,
+      "GPU-series-1": 5217031.280277777,
+      "GPU-series-2": 2877435.5229166667,
+      "H800": 4910600.518611111
+    }
+  },
+  "worker_count": {
+    "n": 466867,
+    "min": 1.0,
+    "p25": 1.0,
+    "p50": 1.0,
+    "p75": 1.0,
+    "p90": 1.0,
+    "p95": 3.0,
+    "p99": 16.0,
+    "max": 332.0,
+    "mean": 1.6906785015861048
+  },
+  "gpu_request_recorded_count": {
+    "n": 466867,
+    "min": 0.01,
+    "p25": 1.0,
+    "p50": 1.0,
+    "p75": 1.0,
+    "p90": 8.0,
+    "p95": 8.0,
+    "p99": 8.0,
+    "max": 8.0,
+    "mean": 2.022911107446018
+  },
+  "versions": {
+    "python": "3.13.15",
+    "pandas": "3.1.1",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.1",
+    "matplotlib": "3.11.2"
+  }
+}
