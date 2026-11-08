@@ -105,16 +105,17 @@ def _run_sim(k: Kitchen, policy: str, hint: DurationHint):
     return S, {}
 
 
-def _run_rl(k: Kitchen, jobs: pd.DataFrame, hint: DurationHint, model, K: int):
+def _run_rl(k: Kitchen, jobs: pd.DataFrame, hint: DurationHint, model, K: int, shuffle: bool = False):
     from .env import SchedulingEnv
-    env = SchedulingEnv(jobs, k.cluster, hint, K=K, log_events=True, snapshot_dt=None)
+    env = SchedulingEnv(jobs, k.cluster, hint, K=K, log_events=True, snapshot_dt=None, shuffle_slots=shuffle)
     obs, _ = env.reset(options={"workload": k.workload, "cluster": k.cluster, "days": 1.0, "sim_kw": k.sim_kw or {}})
     info_by_job, done = {}, False
     while not done:
         mask = env.action_masks()
         a = int(model.predict(obs, action_masks=mask, deterministic=True)[0])
-        if a < K and env.S.cand_job[a] >= 0:
-            j = int(env.S.cand_job[a]); p = int(env.S.pool[j])
+        real = int(env._perm[a]) if (shuffle and a < K) else a          # shuffled slot -> real candidate slot
+        if a < K and env.S.cand_job[real] >= 0:
+            j = int(env.S.cand_job[real]); p = int(env.S.pool[j])
             info_by_job.setdefault(j, []).append({"valid": int(mask[:K].sum()), "total": K, "queue_len": int(env.S.qc[p])})
         obs, r, te, tr, _ = env.step(a)
         done = te or tr
@@ -209,7 +210,7 @@ def to_recording(k: Kitchen, S, policy: str, hint: DurationHint, info_by_job: di
 
 
 def make_recordings(jobs: pd.DataFrame, pools: list[dict], hint: DurationHint, rl_model=None, rl_K: int = 16, start_day: float = 130.0,
-                    minutes: float = 120.0, extra_minutes: float = 60.0, nodes: int = 5) -> dict[str, dict]:
+                    minutes: float = 120.0, extra_minutes: float = 60.0, nodes: int = 5, rl_shuffle: bool = False) -> dict[str, dict]:
     k = build_kitchen(jobs, pools, start_day, minutes, nodes=nodes)
     max_ticks = int((minutes + extra_minutes))
     recs = {}
@@ -217,13 +218,13 @@ def make_recordings(jobs: pd.DataFrame, pools: list[dict], hint: DurationHint, r
         S, info = _run_sim(k, pol, hint)
         recs[pol] = to_recording(k, S, pol, hint, info, max_ticks)
     if rl_model is not None:
-        S, info = _run_rl(k, jobs, hint, rl_model, rl_K)
+        S, info = _run_rl(k, jobs, hint, rl_model, rl_K, rl_shuffle)
         recs["rl_ppo"] = to_recording(k, S, "rl_ppo", hint, info, max_ticks, scheduler_note="Decisions by the trained MaskablePPO policy.")
     return recs
 
 
 def make_recording(jobs: pd.DataFrame, pools: list[dict], hint: DurationHint, policy: str, rl_model=None, rl_K: int = 16, start_day: float = 145.0,
-                   minutes: float = 150.0, extra_minutes: float = 60.0, nodes: int = 5, orders: list | None = None, cloud: dict | None = None) -> dict:
+                   minutes: float = 150.0, extra_minutes: float = 60.0, nodes: int = 5, orders: list | None = None, cloud: dict | None = None, rl_shuffle: bool = False) -> dict:
     """One recording for one scheduler, optionally with NEW ORDERS (jobs not in the trace) and the SIMULATED takeaway fallback."""
     if policy not in SCHED_LABEL:
         raise ValueError(f"unknown policy {policy!r}")
@@ -232,7 +233,7 @@ def make_recording(jobs: pd.DataFrame, pools: list[dict], hint: DurationHint, po
     if policy == "rl_ppo":
         if rl_model is None:
             raise ValueError("rl_ppo requested but no trained model is loaded")
-        S, info = _run_rl(k, jobs, hint, rl_model, rl_K)
+        S, info = _run_rl(k, jobs, hint, rl_model, rl_K, rl_shuffle)
         note = "Decisions by the trained MaskablePPO policy."
     else:
         S, info = _run_sim(k, policy, hint)

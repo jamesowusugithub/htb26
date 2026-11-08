@@ -419,7 +419,7 @@ def _restaurant(req: RestaurantReq) -> dict:
     try:
         with _lock:
             rec = rx.make_recording(e["jobs"], e["pools"], load_or_fit(e["jobs"], 40), "rl_ppo" if model else req.policy, model, _rl.get("K", 16),
-                                    req.start_day, req.minutes, 60.0, req.nodes, [o.model_dump() for o in req.orders], cloud)
+                                    req.start_day, req.minutes, 60.0, req.nodes, [o.model_dump() for o in req.orders], cloud, _rl.get("shuffle", False))
     except ValueError as ex:
         raise HTTPException(422, str(ex))
     _rest_cache[key] = rec

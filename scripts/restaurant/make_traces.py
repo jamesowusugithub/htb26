@@ -11,13 +11,14 @@ ap.add_argument("--start-day", type=float, default=145.0); ap.add_argument("--mi
 ap.add_argument("--out", default=str(ROOT / "restaurant/public/traces"))
 a = ap.parse_args()
 pools, jobs, base, cl = setup(0.85); hint = load_or_fit(jobs, 40)
-model = None
+model = None; shuffle = False
 if a.rl:
     from sb3_contrib import MaskablePPO
-    model = MaskablePPO.load(a.rl, device="cpu")
+    from scheduler.env import model_uses_shuffle
+    model = MaskablePPO.load(a.rl, device="cpu"); shuffle = model_uses_shuffle(a.rl)
 recs = {}
 for pol in ("fifo", "priority_fifo", "sjf_hint") + (("rl_ppo",) if model else ()):
-    recs[pol] = rx.make_recording(jobs, pools, hint, pol, model, a.K, a.start_day, a.minutes, 60.0, a.nodes, None, {"nodes": 1, "gpus_per_node": 8, "overflow_wait_min": 30})   # simulated takeaway ON
+    recs[pol] = rx.make_recording(jobs, pools, hint, pol, model, a.K, a.start_day, a.minutes, 60.0, a.nodes, None, {"nodes": 1, "gpus_per_node": 8, "overflow_wait_min": 30}, shuffle)   # simulated takeaway ON
 out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
 for pol, rec in recs.items():
     (out / f"{pol}.json").write_text(json.dumps(rec, separators=(",", ":")))
