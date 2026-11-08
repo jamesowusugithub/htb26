@@ -1,0 +1,23 @@
+{
+  "fifo": {
+    "lines": 13710,
+    "hp_wait_mean_s": 14367.957575757575,
+    "hp_wait_p95_s": 0.0,
+    "spot_wait_mean_s": 34188.3,
+    "utilisation": 0.8731231560225906
+  },
+  "priority_fifo": {
+    "lines": 13710,
+    "hp_wait_mean_s": 14361.951515151515,
+    "hp_wait_p95_s": 0.0,
+    "spot_wait_mean_s": 34494.0,
+    "utilisation": 0.8731231560225906
+  },
+  "sjf_oracle": {
+    "lines": 13710,
+    "hp_wait_mean_s": 4474.121212121212,
+    "hp_wait_p95_s": 0.0,
+    "spot_wait_mean_s": 34188.3,
+    "utilisation": 0.8731231560225906
+  }
+}

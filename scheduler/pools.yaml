@@ -1,0 +1,10 @@
+# A pool = all clusters (nodes) of the same GPU model.
+# Hardware identity of the two anonymised series is unknown; the UI should
+# label them "unidentified hardware".
+pools:
+  - {id: a10,     label: "NVIDIA A10",            gpu_model_identifier: nvidia_a10,            identity: source_model_specific}
+  - {id: a100,    label: "NVIDIA A100 SXM4 80GB", gpu_model_identifier: nvidia_a100_sxm4_80gb, identity: source_model_specific}
+  - {id: a800,    label: "NVIDIA A800 SXM4 80GB", gpu_model_identifier: nvidia_a800_sxm4_80gb, identity: source_model_specific}
+  - {id: h800,    label: "NVIDIA H800",           gpu_model_identifier: nvidia_h800,           identity: source_model_specific}
+  - {id: series1, label: "Alibaba GPU series 1 (unidentified)", gpu_model_identifier: alibaba_gpu_series_1, identity: anonymised_unresolved}
+  - {id: series2, label: "Alibaba GPU series 2 (unidentified)", gpu_model_identifier: alibaba_gpu_series_2, identity: anonymised_unresolved}
