@@ -1,0 +1,35 @@
+{
+  "title": "NLR HPC Kestrel Jobs Data",
+  "source": "https://data.nlr.gov/submissions/302",
+  "doi": "10.7799/3023270",
+  "retrieved_date": "2026-11-08",
+  "status": "complete",
+  "published_archive_md5": "8f1d3be1cbe6345ef45e658a783c2aa0",
+  "published_md5_verified": true,
+  "zip_crc_verified": true,
+  "zip_entries": 62,
+  "uncompressed_bytes": 913874789,
+  "files": [
+    {
+      "name": "esif.hpc.kestrel.job-anon.zip",
+      "url": "https://data.nlr.gov/system/files/302/1773544299-esif.hpc.kestrel.job-anon.zip",
+      "size_bytes": 731139558,
+      "md5": "8f1d3be1cbe6345ef45e658a783c2aa0",
+      "sha256": "3a90f9ac40991712f8718c686fa7b05d7a303a44a87ed1a8f21b403c11efd26f"
+    },
+    {
+      "name": "datacard.md",
+      "url": "https://data.nlr.gov/system/files/302/1773549083-datacard_0.md",
+      "size_bytes": 14860,
+      "md5": "2606841f353600b61b7108f4f8008080",
+      "sha256": "0139b75b80cd3029e0af54e22fc0dbad3080e92a8a7a602f1bd62cd7a36f62e9"
+    },
+    {
+      "name": "LICENSE.html",
+      "url": "https://data.nlr.gov/node/302/license",
+      "size_bytes": 23626,
+      "md5": "d1cbd8a955e9a6979d1aa465b1afb14c",
+      "sha256": "2d1ff8e1f87650a868ed4216d3a636b1a05972f791adb8a13f3fa91c5cbc6bcc"
+    }
+  ]
+}

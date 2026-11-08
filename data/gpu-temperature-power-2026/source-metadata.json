@@ -1,0 +1,150 @@
+{
+  "files": [
+    {
+      "id": 62953543,
+      "name": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare.zip",
+      "size": 209685111,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/62953543",
+      "supplied_md5": "f44c1bccc233ffe11916432d720a8034",
+      "computed_md5": "f44c1bccc233ffe11916432d720a8034",
+      "mimetype": "application/zip"
+    }
+  ],
+  "folder_structure": {},
+  "authors": [
+    {
+      "id": 23458531,
+      "full_name": "Ahmed Abdelaziz Elsayed",
+      "first_name": "Ahmed Abdelaziz",
+      "last_name": "Elsayed",
+      "is_active": true,
+      "url_name": "Ahmed_Abdelaziz_Elsayed",
+      "orcid_id": ""
+    },
+    {
+      "id": 23459611,
+      "full_name": "Abdullah Azhar Al-Obaidi",
+      "first_name": "Abdullah Azhar",
+      "last_name": "Al-Obaidi",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": "0000-0002-6541-8999"
+    },
+    {
+      "id": 23459666,
+      "full_name": "Hany E. Z. Farag",
+      "first_name": "Hany E. Z.",
+      "last_name": "Farag",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": "0000-0002-9098-3092"
+    }
+  ],
+  "custom_fields": [],
+  "figshare_url": "https://figshare.com/articles/dataset/High-resolution-AI-Data-Center-Training-Workloads-Dataset/31654879",
+  "download_disabled": false,
+  "description": "<p dir=\"ltr\"># High-resolution-AI-Data-Center-Training-Workloads-Dataset</p><p dir=\"ltr\">This dataset provides high-resolution, sub-second measurements of various AI training workloads executed on both single and multi-GPU nodes. It includes 32 training sessions performed on high-performance NVIDIA H100 and B200 8-GPU systems, as well as 40 sessions conducted on consumer-grade NVIDIA GeForce RTX 3060 GPUs. In total, the dataset comprises over 1.8 million samples, capturing detailed system-level metrics across diverse AI applications.</p><p dir=\"ltr\">The overall scope of the AI training workload dataset is structured around three principal aspects: (1) platform and deployment scale, (2) applications and training objectives, and (3) AI architectures and hyperparameters. The experiments were designed based on these aspects to provide an accurate representation of AI training workloads across diverse computational environments. Each session provides a 15-minute time-series recording, sampled at 100 ms in the single-machine setup and 20 ms in the multi-GPU node environment. </p><p>The platform and deployment scale aspect covers environments ranging from single-CPU and single-GPU systems to multi-GPU and multi–virtual CPU (vCPU) nodes. The applications and training objectives aspect includes a range of AI workloads such as image generation, text generation with LLMs, and feature forecasting. The workloads are assigned to appropriate environments according to their computational requirements, where tasks that demand substantial computing resources, such as image generation and LLM training, are executed in node-scale environments, while tasks requiring less computation, such as forecasting and image captioning, are conducted in single-machine environments.</p><p dir=\"ltr\"><br></p>",
+  "funding": "Natural Sciences and Engineering Research Council of Canada (NSERC)",
+  "funding_list": [
+    {
+      "id": 13455122,
+      "title": "Natural Sciences and Engineering Research Council of Canada (NSERC)",
+      "grant_code": "510996-2017",
+      "funder_name": "Natural Sciences and Engineering Research Council",
+      "is_user_defined": 0,
+      "url": "https://app.dimensions.ai/details/grant/grant.7721881"
+    }
+  ],
+  "version": 1,
+  "status": "public",
+  "size": 209685111,
+  "created_date": "2026-03-19T14:34:35Z",
+  "modified_date": "2026-03-19T14:34:35Z",
+  "is_public": true,
+  "is_confidential": false,
+  "is_metadata_record": false,
+  "confidential_reason": "",
+  "metadata_reason": "",
+  "license": {
+    "value": 1,
+    "name": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "tags": [
+    "AI Energy and Power",
+    "AI Training Workload",
+    "AI workload characterization",
+    "High resolution power datasets",
+    "Time-series power consumption",
+    "AI CPU and GPU trace",
+    "Single machine training",
+    "Node H100 and B200 Training"
+  ],
+  "keywords": [
+    "AI Energy and Power",
+    "AI Training Workload",
+    "AI workload characterization",
+    "High resolution power datasets",
+    "Time-series power consumption",
+    "AI CPU and GPU trace",
+    "Single machine training",
+    "Node H100 and B200 Training"
+  ],
+  "categories": [
+    {
+      "id": 28864,
+      "title": "Artificial intelligence not elsewhere classified",
+      "parent_id": 28825,
+      "path": "/28798/28825/28864",
+      "source_id": "460299",
+      "taxonomy_id": 100
+    },
+    {
+      "id": 30220,
+      "title": "Particle and high energy physics not elsewhere classified",
+      "parent_id": 30208,
+      "path": "/30082/30208/30220",
+      "source_id": "510799",
+      "taxonomy_id": 100
+    },
+    {
+      "id": 26482,
+      "title": "Electrical engineering not elsewhere classified",
+      "parent_id": 26455,
+      "path": "/26212/26455/26482",
+      "source_id": "400899",
+      "taxonomy_id": 100
+    }
+  ],
+  "references": [],
+  "has_linked_file": false,
+  "citation": "Elsayed, Ahmed Abdelaziz; Al-Obaidi, Abdullah Azhar; Farag, Hany E. Z. (2026). High-resolution-AI-Data-Center-Training-Workloads-Dataset. figshare. Dataset. https://doi.org/10.6084/m9.figshare.31654879.v1",
+  "related_materials": [],
+  "is_embargoed": false,
+  "embargo_date": null,
+  "embargo_type": null,
+  "embargo_title": "",
+  "embargo_reason": "",
+  "embargo_options": [],
+  "id": 31654879,
+  "title": "High-resolution-AI-Data-Center-Training-Workloads-Dataset",
+  "doi": "10.6084/m9.figshare.31654879.v1",
+  "handle": "",
+  "url": "https://api.figshare.com/v2/articles/31654879",
+  "published_date": "2026-03-19T14:34:35Z",
+  "thumb": "",
+  "defined_type": 3,
+  "defined_type_name": "dataset",
+  "group_id": null,
+  "url_private_api": "https://api.figshare.com/v2/account/articles/31654879",
+  "url_public_api": "https://api.figshare.com/v2/articles/31654879",
+  "url_private_html": "https://figshare.com/account/articles/31654879",
+  "url_public_html": "https://figshare.com/articles/dataset/High-resolution-AI-Data-Center-Training-Workloads-Dataset/31654879",
+  "timeline": {
+    "posted": "2026-03-19T14:34:35",
+    "firstOnline": "2026-03-19"
+  },
+  "resource_title": null,
+  "resource_doi": null
+}

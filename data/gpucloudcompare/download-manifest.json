@@ -1,0 +1,26 @@
+{
+  "retrieved_at": "2026-11-08T01:56:36.742427+00:00",
+  "files": [
+    {
+      "file": "current.json",
+      "url": "https://gpucloudcompare.com/data/current.json",
+      "bytes": 80535,
+      "sha256": "193f817329fd9a04bed7bfcfb0a608580476a25a572ac5d614fc9a3bdbca999a"
+    },
+    {
+      "file": "current.csv",
+      "url": "https://gpucloudcompare.com/data/current.csv",
+      "bytes": 22838,
+      "sha256": "2a92b08d1b9c14757950c5b3d66d7d10baeed0bb55dfed069a5761a443e988e4"
+    },
+    {
+      "file": "history-daily.json",
+      "url": "https://gpucloudcompare.com/data/history-daily.json",
+      "bytes": 923514,
+      "sha256": "2b6ee592ee7b4ce2b6f0d297f466000a9af7e0199b21c242175ef827720c67d4"
+    }
+  ],
+  "source": "https://gpucloudcompare.com/data/",
+  "license": "CC-BY-4.0",
+  "attribution": "Source: GPU Cloud Price Index \u2014 gpucloudcompare.com (CC-BY 4.0)"
+}

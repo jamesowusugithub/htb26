@@ -1,0 +1,23 @@
+{
+  "retrieved_at": "2026-11-08T01:56:36.741325+00:00",
+  "files": [
+    {
+      "file": "README.md",
+      "url": "https://raw.githubusercontent.com/alibaba/clusterdata/master/cluster-trace-v2026-spot-gpu/README.md",
+      "bytes": 5608,
+      "sha256": "11eb33818d3b40ba430c1bc1e0fd42786af214db334152141e29bccb3d26db2b"
+    },
+    {
+      "file": "job_info_df.csv",
+      "url": "https://raw.githubusercontent.com/alibaba/clusterdata/master/cluster-trace-v2026-spot-gpu/job_info_df.csv",
+      "bytes": 23055929,
+      "sha256": "113ccee4c28f5c3bbaaca974cd164b9280b7d4c39e53b745443b28eea05e03dd"
+    },
+    {
+      "file": "node_info_df.csv",
+      "url": "https://raw.githubusercontent.com/alibaba/clusterdata/master/cluster-trace-v2026-spot-gpu/node_info_df.csv",
+      "bytes": 78330,
+      "sha256": "1aba161961a5a4a1a61aa581383c5e5abe3400b59f8597ba8c4eef7597bc9d18"
+    }
+  ]
+}
