@@ -48,7 +48,7 @@ frame.src=base+'?trace=rl_ppo'+(location.search.includes('api=')?'&'+location.se
 async function last(name){const r=await (await fetch(base+'traces/'+name+'.json')).json();const m=r.events.filter(e=>e.type==='METRICS').pop();return {m,meta:r.trace_meta}}
 Promise.all([last('fifo'),last('priority_fifo'),last('rl_ppo')]).then(([f,p,r])=>{
   document.getElementById('e3').innerHTML=`On screen (same ${r.m.received} real jobs, ${r.meta.kitchen_nodes}-node demo kitchen, 150 simulated minutes): average wait <b>FIFO ${f.m.avg_wait_s.toFixed(1)} min</b>, priority ${p.m.avg_wait_s.toFixed(1)} min, <b>learned scheduler ${r.m.avg_wait_s.toFixed(1)} min</b>; slowest 5%: ${f.m.p95_wait_s.toFixed(1)} vs ${r.m.p95_wait_s.toFixed(1)} min. Illustrative scale. Full-scale held-out numbers are in the scoreboard.`;
-  document.getElementById('meta').insertAdjacentHTML('beforeend','<br>Demo-kitchen numbers are read from the recordings in /traces. 'Halves' = RL 0.52 vs priority FIFO 1.00 and backfill 0.81 (17 held-out windows); 'a third fewer preemptions' = 326 vs 482 for the best rule. RL ties that rule on queue time. All waits are simulated (analysis/rl/README.md).');
+  document.getElementById('meta').insertAdjacentHTML('beforeend','<br>Demo-kitchen numbers are read from the recordings in /traces. Halves means RL 0.52 vs priority FIFO 1.00 and backfill 0.81 (17 held-out windows); a third fewer preemptions means 326 vs 482 for the best rule. RL ties that rule on queue time. All waits are simulated (analysis/rl/README.md).');
 });
 let timers=[], speak=false;
 document.getElementById('speak').onclick=e=>{speak=!speak;e.target.textContent='Voice: '+(speak?'on':'off')};
