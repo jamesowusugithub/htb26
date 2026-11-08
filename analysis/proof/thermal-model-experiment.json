@@ -1,0 +1,41 @@
+{
+ "n_examples": 19968,
+ "sessions": 32,
+ "horizon_s": 60,
+ "rmse_c": {
+  "persist": 5.8,
+  "proxy_static": 9.78,
+  "learned": 5.6
+ },
+ "by_model": {
+  "nvidia_b200": {
+   "persist": 5.05,
+   "proxy_static": 10.73,
+   "learned": 5.08
+  },
+  "nvidia_h100": {
+   "persist": 6.46,
+   "proxy_static": 8.73,
+   "learned": 6.07
+  }
+ },
+ "target_std_c": 10.34,
+ "rmse_when_load_changes_gt30pct": {
+  "persist": 7.71,
+  "proxy_static": 8.48,
+  "learned": 6.1
+ },
+ "n_load_change": 102,
+ "transfer": {
+  "train_h100_test_b200": {
+   "learned_rmse_c": 5.31,
+   "persistence_rmse_c": 5.05,
+   "static_proxy_rmse_c": 10.73
+  },
+  "train_b200_test_h100": {
+   "learned_rmse_c": 6.4,
+   "persistence_rmse_c": 6.46,
+   "static_proxy_rmse_c": 8.73
+  }
+ }
+}
