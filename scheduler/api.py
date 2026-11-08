@@ -20,6 +20,7 @@ from .export import export_ndjson, SCHEMA_VERSION
 from .display import Display, DEFAULT_PODS
 from .thermal import ThermalProxy
 from .forecast import SurvivalCurves
+from . import demand_forecast as dfc
 from .metrics import timeline
 from .policies import POLICIES
 from .run_baselines import setup
@@ -230,6 +231,11 @@ def whatif(req: WhatIfRequest):
     hint = load_or_fit(e["jobs"], 40)
     surv = SurvivalCurves.fit(e["jobs"], sc.start_day * 86400.0, e["cluster"].n_pools)
     display = Display(tuple(sc.display_pools))
+    try:     # demand forecast vs realised arrivals for this scenario (same for every policy); never allowed to break the feed
+        dem = dfc.forecast_series(dfc.load_or_fit(e["jobs"], e["cluster"].n_pools), e["jobs"], res["_workload"],
+                                  [p["id"] for p in e["cluster"].pools], sc.start_day * 86400.0, sc.days * 86400.0)
+    except Exception as ex:                      # noqa: BLE001
+        dem = {"available": False, "reason": f"forecast failed: {type(ex).__name__}"}
     results = {}
     for name in req.policies:
         S = res["_states"][name]
@@ -240,7 +246,7 @@ def whatif(req: WhatIfRequest):
         export_ndjson(path, S, w_, c_, policy_name=name, realistic=spec.realistic if spec else True,
                       preempt=spec.preempt if spec else True, resume=sc.resume_preempted, window_len_s=sc.days * 86400,
                       display=display, thermal=thermal(), hint_est=hint_est, scenario=sc.to_dict(), survival=surv,
-                      extra_meta={"scenario": sc.to_dict(), "scenario_id": sc.scenario_id})
+                      extra_meta={"scenario": sc.to_dict(), "scenario_id": sc.scenario_id, "demand_forecast": dem})
         tl = timeline(S, c_)
         tl = tl[tl.t <= sc.days * 86400]
         results[name] = {
