@@ -87,21 +87,45 @@ class Cluster:
     node_pool: np.ndarray     # int64, nodes sorted by pool
     node_ngpu: np.ndarray     # int64 GPUs per node
     scale: np.ndarray         # per-pool node-count multiplier applied (1.0 = observed)
+    node_cloud: np.ndarray | None = None   # int64 flags: 1 = simulated cloud (takeaway) node, hidden from normal placement
 
     @property
     def n_pools(self):
         return len(self.pools)
 
+    def cloud_mask(self) -> np.ndarray:
+        return np.zeros(len(self.node_pool), dtype=bool) if self.node_cloud is None else self.node_cloud.astype(bool)
+
     def capacity_gpus(self) -> np.ndarray:
-        return np.bincount(self.node_pool, weights=self.node_ngpu, minlength=self.n_pools)
+        own = ~self.cloud_mask()
+        return np.bincount(self.node_pool[own], weights=self.node_ngpu[own], minlength=self.n_pools)
 
     def node_counts(self) -> np.ndarray:
-        return np.bincount(self.node_pool, minlength=self.n_pools)
+        return np.bincount(self.node_pool[~self.cloud_mask()], minlength=self.n_pools)
+
+    def cloud_capacity_gpus(self) -> np.ndarray:
+        c = self.cloud_mask()
+        return np.bincount(self.node_pool[c], weights=self.node_ngpu[c], minlength=self.n_pools)
 
     def max_node_gpus(self) -> np.ndarray:
         out = np.zeros(self.n_pools, dtype=np.int64)
-        np.maximum.at(out, self.node_pool, self.node_ngpu)
+        own = ~self.cloud_mask()
+        np.maximum.at(out, self.node_pool[own], self.node_ngpu[own])
         return out
+
+
+def add_cloud(cluster: "Cluster", nodes_per_pool, gpus_per_node: int = 8) -> "Cluster":
+    """Append simulated cloud (takeaway) nodes at the end of each pool's block. nodes_per_pool: int or {pool_id: int}."""
+    ids = [p["id"] for p in cluster.pools]
+    npp = np.array([nodes_per_pool.get(i, 0) if isinstance(nodes_per_pool, dict) else int(nodes_per_pool) for i in ids])
+    pool_o, ngpu_o, cloud_o = [], [], []
+    base_cloud = cluster.cloud_mask()
+    for p in range(cluster.n_pools):
+        m = cluster.node_pool == p
+        pool_o += [p] * int(m.sum()); ngpu_o += cluster.node_ngpu[m].tolist(); cloud_o += base_cloud[m].astype(int).tolist()
+        pool_o += [p] * int(npp[p]); ngpu_o += [gpus_per_node] * int(npp[p]); cloud_o += [1] * int(npp[p])
+    return Cluster(cluster.pools, np.array(pool_o, dtype=np.int64), np.array(ngpu_o, dtype=np.int64), cluster.scale.copy(),
+                   np.array(cloud_o, dtype=np.int64))
 
 
 def observed_cluster(nodes: pd.DataFrame, pools: list[dict]) -> Cluster:

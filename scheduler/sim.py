@@ -27,7 +27,7 @@ EV_NAMES = ["arrive", "start", "finish", "preempt", "fail", "repair", "evict_fai
 SC_NRUN, SC_HEAP, SC_NEXT, SC_NEV, SC_NSNAP, SC_ERR, SC_PREEMPT, SC_RESUME, SC_POLICY, SC_DONE, \
     SC_LOG, SC_SNAP, SC_DEPTH, SC_NPREEMPT, SC_EARLY, SC_FOCUS, SC_FAILIDX, SC_NFAIL, SC_FAILEV = range(19)
 # float slots (`fc`)
-FC_NOW, FC_SNAPDT, FC_NEXTSNAP, FC_QINT = range(4)
+FC_NOW, FC_SNAPDT, FC_NEXTSNAP, FC_QINT, FC_CLOUDCOST, FC_CLOUDGPUH, FC_CLOUDJOBS, FC_OVFWAIT = range(8)
 
 ERR_HEAP, ERR_STUCK, ERR_EVLOG = 1, 2, 4
 
@@ -50,6 +50,8 @@ FIELDS = [
     # snapshots
     "snap_t", "snap_busy", "snap_qhp", "snap_qsp", "snap_run", "snap_maxfull",
     # scalars
+    # simulated cloud overflow (takeaway): node flags, per-job flag, USD per GPU-hour per pool
+    "node_cloud", "job_cloud", "price_pool",
     # node failures (scheduled by the scenario) and queue heads for the frontend feed
     "node_down", "fail_t", "fail_node", "fail_kind", "snap_qhead",
     # RL decision interface
@@ -194,7 +196,7 @@ def find_place(S, p, req, excl):
     if req >= UNIT:
         g = req // UNIT
         for n in range(n0, n1):
-            if n == excl:
+            if n == excl or S.node_cloud[n] == 1:
                 continue
             f = S.node_full[n]
             if f >= g and f < bestscore:
@@ -213,7 +215,7 @@ def find_place(S, p, req, excl):
         return best, mask
     bestk = -1
     for n in range(n0, n1):
-        if n == excl or S.node_maxfree[n] < req:
+        if n == excl or S.node_cloud[n] == 1 or S.node_maxfree[n] < req:
             continue
         for k in range(S.node_ngpu[n]):
             gf = S.gfree[n, k]
@@ -226,6 +228,73 @@ def find_place(S, p, req, excl):
     if best < 0:
         return -1, 0
     return best, 1 << bestk
+
+
+@njit(cache=True)
+def find_cloud(S, p, req):
+    """Best-fit placement on the SIMULATED cloud nodes of pool p. Returns (node, gpu_mask) or (-1, 0)."""
+    best = -1
+    bestscore = 1 << 60
+    bestk = -1
+    for n in range(S.pool_start[p], S.pool_start[p + 1]):
+        if S.node_cloud[n] == 0:
+            continue
+        if req >= UNIT:
+            g = req // UNIT
+            f = S.node_full[n]
+            if f >= g and f < bestscore:
+                bestscore = f
+                best = n
+        else:
+            if S.node_maxfree[n] < req:
+                continue
+            for k in range(S.node_ngpu[n]):
+                gf = S.gfree[n, k]
+                if gf >= req and gf - req < bestscore:
+                    bestscore = gf - req
+                    best = n
+                    bestk = k
+    if best < 0:
+        return -1, 0
+    if req >= UNIT:
+        g = req // UNIT
+        mask = 0
+        c = 0
+        for k in range(S.node_ngpu[best]):
+            if S.gfree[best, k] == UNIT and c < g:
+                mask |= 1 << k
+                c += 1
+        return best, mask
+    return best, 1 << bestk
+
+
+@njit(cache=True)
+def start_on_cloud(S, j, n, mask, t):
+    """Run job j on a simulated cloud node and charge its cost (service time x GPUs x pool price)."""
+    start_job(S, j, n, mask, t)
+    S.job_cloud[j] = 1
+    gpuh = S.remaining[j] / 3600.0 * (S.req[j] / UNIT)
+    S.fc[FC_CLOUDGPUH] += gpuh
+    S.fc[FC_CLOUDCOST] += gpuh * S.price_pool[S.pool[j]]
+    S.fc[FC_CLOUDJOBS] += 1.0
+
+
+@njit(cache=True)
+def overflow_pass(S, p, t):
+    """Rule-based overflow: queued jobs that have waited >= the configured threshold are offloaded to the simulated cloud
+    while it has capacity. A fallback, not a measured behaviour; it does not use the policy's runtime hint."""
+    thr = S.fc[FC_OVFWAIT]
+    depth = S.sc[SC_DEPTH]
+    i = 0
+    while i < S.qc[p] and i < depth * 4:
+        j = S.queue[p, i]
+        if S.submit[j] < 0.0 or t - S.submit[j] >= thr:
+            n, mask = find_cloud(S, p, S.req[j])
+            if n >= 0:
+                q_remove(S, p, i)
+                start_on_cloud(S, j, n, mask, t)
+                continue
+        i += 1
 
 
 @njit(cache=True)
@@ -263,7 +332,8 @@ def start_job(S, j, n, mask, t):
         if (mask >> k) & 1:
             S.gfree[n, k] -= u
     recompute_node(S, n)
-    S.pool_busy[p] += req
+    if S.node_cloud[n] == 0:
+        S.pool_busy[p] += req
     S.job_node[j] = n
     S.job_mask[j] = mask
     S.status[j] = RUNNING
@@ -293,7 +363,8 @@ def release_job(S, j):
         if (mask >> k) & 1:
             S.gfree[n, k] += u
     recompute_node(S, n)
-    S.pool_busy[p] -= S.req[j]
+    if S.node_cloud[n] == 0:
+        S.pool_busy[p] -= S.req[j]
     pos = S.rpos[j]
     last = S.rl[p, S.rlc[p] - 1]
     S.rl[p, pos] = last
@@ -333,7 +404,7 @@ def try_preempt(S, p, j, t):
     cnt = 0
     for idx in range(S.rlc[p]):
         jj = S.rl[p, idx]
-        if S.prio[jj] == 1:
+        if S.prio[jj] == 1 and S.node_cloud[S.job_node[jj]] == 0:
             n = S.job_node[jj]
             u = unit_of(S.req[jj])
             for k in range(MAX_GPUS_PER_NODE):
@@ -458,6 +529,8 @@ def compute_reservation(S, p, head, t):
     for oi in range(nr):
         jj = ids[order[oi]]
         n = S.job_node[jj]
+        if S.node_cloud[n] == 1:
+            continue
         u = unit_of(S.req[jj])
         for k in range(MAX_GPUS_PER_NODE):
             if (S.job_mask[jj] >> k) & 1:
@@ -571,6 +644,8 @@ def schedule(S, p, t):
                 if try_preempt(S, p, j, t):
                     continue
             i += 1
+    if S.fc[FC_OVFWAIT] > 0.0:
+        overflow_pass(S, p, t)
 
 
 # ----------------------------------------------------------------------------- time advance + main loop
@@ -588,7 +663,7 @@ def snapshot(S, ts):
         S.snap_run[i, p] = S.rlc[p]
         mf = 0
         for n in range(S.pool_start[p], S.pool_start[p + 1]):
-            if S.node_full[n] > mf:
+            if S.node_cloud[n] == 0 and S.node_full[n] > mf:
                 mf = S.node_full[n]
         S.snap_maxfull[i, p] = mf
         for h in range(S.snap_qhead.shape[2]):
@@ -698,7 +773,7 @@ def estimate_array(w: Workload, mode: str, sigma: float = 1.0, seed: int = 0,
 def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = True, resume: bool = False,
                 est: np.ndarray | None = None, depth: int = 128, log_events: bool = False, early_stop: bool = False,
                 snapshot_dt: float | None = 3600.0, max_snapshots: int = 400000, rl_k: int = 8,
-                failures: list | None = None, qhead: int = 5) -> State:
+                failures: list | None = None, qhead: int = 5, cloud_price=None, overflow_wait_s: float = 0.0) -> State:
     N = len(w)
     P = cluster.n_pools
     M = len(cluster.node_pool)
@@ -711,7 +786,8 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
         gfree[cluster.node_ngpu > k, k] = UNIT
     node_full = cluster.node_ngpu.astype(np.int64).copy()
     node_maxfree = np.full(M, UNIT, dtype=np.int64)
-    pool_cap = np.bincount(cluster.node_pool, weights=cluster.node_ngpu * UNIT, minlength=P).astype(np.int64)
+    own = ~cluster.cloud_mask()
+    pool_cap = np.bincount(cluster.node_pool[own], weights=cluster.node_ngpu[own] * UNIT, minlength=P).astype(np.int64)   # own capacity only
 
     # queue ordering key (ascending). prio first for priority-aware policies.
     if policy == FIFO:
@@ -739,9 +815,10 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
     sc[SC_SNAP] = int(snap_on)
     sc[SC_DEPTH] = depth
     sc[SC_EARLY] = int(early_stop)
-    fc = np.zeros(4)
+    fc = np.zeros(8)
     fc[FC_SNAPDT] = snapshot_dt if snap_on else 1.0
     fc[FC_NEXTSNAP] = 0.0
+    fc[FC_OVFWAIT] = float(overflow_wait_s)
     fc[FC_NOW] = float(w.submit.min()) if N else 0.0
 
     z = lambda shape, dt=np.int64: np.zeros(shape, dtype=dt)
@@ -762,6 +839,8 @@ def build_state(cluster: Cluster, w: Workload, policy: int, *, preempt: bool = T
         ev_t=z(ev_cap, np.float64), ev_type=z(ev_cap), ev_job=z(ev_cap), ev_node=z(ev_cap), ev_mask=z(ev_cap),
         snap_t=z(n_snap, np.float64), snap_busy=z((n_snap, P)), snap_qhp=z((n_snap, P)), snap_qsp=z((n_snap, P)),
         snap_run=z((n_snap, P)), snap_maxfull=z((n_snap, P)),
+        node_cloud=cluster.cloud_mask().astype(np.int64), job_cloud=z(N),
+        price_pool=np.zeros(P) if cloud_price is None else np.asarray(cloud_price, dtype=np.float64),
         node_down=z(M), fail_t=np.array([f[0] for f in fl] + [0.0], dtype=np.float64),
         fail_node=np.array([f[1] for f in fl] + [0], dtype=np.int64), fail_kind=np.array([f[2] for f in fl] + [0], dtype=np.int64),
         snap_qhead=np.full((n_snap, P, qhead), -1, dtype=np.int64),

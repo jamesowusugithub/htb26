@@ -32,6 +32,7 @@ class Display:
             p = ids.index(pid)
             local = np.arange(starts[p + 1] - starts[p])
             out[starts[p]:starts[p + 1]] = pod * self.boards_per_pod + local % self.boards_per_pod
+            out[starts[p]:starts[p + 1]][cluster.cloud_mask()[starts[p]:starts[p + 1]]] = -1
         return out
 
     def nodes_of_board(self, cluster, board: int) -> np.ndarray:

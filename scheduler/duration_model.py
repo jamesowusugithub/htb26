@@ -1,5 +1,6 @@
 """Runtime hint model: predicts log job duration from what is known at submission.
 
+v3 adds submit-burst and duration-spread features (validation rank corr 0.667 -> 0.705; test 0.494 -> 0.532).
 v2 adds *job-history* features: for each job, the durations of recently FINISHED jobs with the same template
 (organisation, pool, GPU request, CPUs, workers) and of the same organisation. Jobs recur, so this roughly doubles
 the rank correlation (0.26 -> 0.51 on held-out days >= 130). Leakage control: a job's history uses only jobs whose
@@ -16,9 +17,10 @@ from .data import ROOT
 
 BASE = ["org", "pool", "prio", "gpus", "cpu", "workers", "hod", "dow"]
 HIST = ["key_last", "key_med5", "key_n", "org_med20", "org_mean20", "org_n"]
-FEATURES = BASE + HIST
+NEW = ["key_c10m", "key_c1h", "key_gap_s", "org_c1h", "key_min10", "key_max10", "key_std10", "op_med30", "op_q90_30", "op_frac_lt10m", "op_n"]
+FEATURES = BASE + HIST + NEW
 MODEL_DIR = ROOT / "models"
-VERSION = 2
+VERSION = 3
 
 
 @njit(cache=True)
@@ -57,6 +59,43 @@ def _history(sub, fin, dur, key, org, nkey, norg):
     return out
 
 
+@njit(cache=True)
+def _extra(sub, fin, dur, key, okey, nkey, nokey):
+    """Past-only features: same-template submit burstiness and spread of recent finished durations; org-pool history."""
+    order_f = np.argsort(fin, kind="stable")
+    R = 64; K = 10
+    ksub = np.zeros((nkey, R)); kn = np.zeros(nkey, np.int64)
+    osub = np.zeros((nokey, 256)); on = np.zeros(nokey, np.int64)
+    kd = np.zeros((nkey, K)); kc = np.zeros(nkey, np.int64)
+    od = np.zeros((nokey, 30)); oc = np.zeros(nokey, np.int64)
+    out = np.full((len(sub), 11), np.nan)
+    j = 0
+    for i in range(len(sub)):
+        while j < len(order_f) and fin[order_f[j]] <= sub[i]:
+            q = order_f[j]; a = key[q]; b = okey[q]
+            kd[a, kc[a] % K] = dur[q]; kc[a] += 1; od[b, oc[b] % 30] = dur[q]; oc[b] += 1; j += 1
+        a = key[i]; b = okey[i]; t = sub[i]
+        c10 = 0; c60 = 0; last = np.nan
+        for r in range(min(kn[a], R)):
+            s = ksub[a, (kn[a] - 1 - r) % R]
+            if r == 0: last = t - s
+            if t - s <= 600: c10 += 1
+            if t - s <= 3600: c60 += 1
+        o60 = 0
+        for r in range(min(on[b], 256)):
+            if t - osub[b, (on[b] - 1 - r) % 256] <= 3600: o60 += 1
+            else: break
+        out[i, 0] = c10; out[i, 1] = c60; out[i, 2] = last; out[i, 3] = o60
+        if kc[a] > 0:
+            m = min(kc[a], K); v = kd[a, :m]
+            out[i, 4] = np.log1p(np.min(v)); out[i, 5] = np.log1p(np.max(v)); out[i, 6] = np.std(np.log1p(v))
+        if oc[b] > 0:
+            m = min(oc[b], 30); v = od[b, :m]
+            out[i, 7] = np.log1p(np.median(v)); out[i, 8] = np.log1p(np.quantile(v, 0.9)); out[i, 9] = np.mean(v < 600); out[i, 10] = oc[b]
+        ksub[a, kn[a] % R] = t; kn[a] += 1; osub[b, on[b] % 256] = t; on[b] += 1
+    return out
+
+
 def feature_table(jobs: pd.DataFrame) -> pd.DataFrame:
     """jobs must be sorted by submit time (data.load_jobs does this)."""
     sub = jobs.submit_relative_s.to_numpy(float)
@@ -65,10 +104,12 @@ def feature_table(jobs: pd.DataFrame) -> pd.DataFrame:
     key = pd.factorize(pd.MultiIndex.from_arrays([org, jobs.pool.to_numpy(), jobs.req.to_numpy(),
                                                   jobs.cpu_request_vcpus.to_numpy(), jobs.worker_count.to_numpy()]))[0]
     H = _history(sub, sub + dur, dur, key, org, int(key.max()) + 1, int(org.max()) + 1)
+    okey = pd.factorize(pd.MultiIndex.from_arrays([org, jobs.pool.to_numpy()]))[0]
+    E = _extra(sub, sub + dur, dur, key, okey, int(key.max()) + 1, int(okey.max()) + 1)
     base = pd.DataFrame({"org": org, "pool": jobs.pool.to_numpy(), "prio": jobs.prio.to_numpy(), "gpus": jobs.req.to_numpy() / 100.0,
                          "cpu": jobs.cpu_request_vcpus.to_numpy(float), "workers": jobs.worker_count.to_numpy(float),
                          "hod": sub // 3600 % 24, "dow": sub // 86400 % 7}, index=jobs.job_id.to_numpy())
-    return pd.concat([base, pd.DataFrame(H, columns=HIST, index=base.index)], axis=1)
+    return pd.concat([base, pd.DataFrame(H, columns=HIST, index=base.index), pd.DataFrame(E, columns=NEW, index=base.index)], axis=1)
 
 
 class DurationHint:
@@ -83,7 +124,7 @@ class DurationHint:
         fin = jobs_full.submit_relative_s.to_numpy(float) + jobs_full.duration_s.to_numpy(float)
         done = fin <= self.train_cut_s                      # only jobs already finished at the cut
         y = np.log1p(jobs_full.duration_s.to_numpy(float))
-        self.model = HistGradientBoostingRegressor(max_iter=250, learning_rate=0.08, categorical_features=[0, 1, 2], random_state=0)
+        self.model = HistGradientBoostingRegressor(max_iter=300, learning_rate=0.06, categorical_features=[0, 1, 2], random_state=0)
         self.model.fit(ft.loc[done, FEATURES], y[done])
         self.pred_log = pd.Series(self.model.predict(ft[FEATURES]), index=ft.index)   # past-only features: safe for every job
         self.n_train = int(done.sum())
@@ -99,7 +140,7 @@ class DurationHint:
         joblib.dump(self, MODEL_DIR / name)
 
 
-def load_or_fit(jobs_full: pd.DataFrame, train_cut_days: float = 40.0, name: str = "duration_hint_v2.joblib") -> DurationHint:
+def load_or_fit(jobs_full: pd.DataFrame, train_cut_days: float = 40.0, name: str = "duration_hint_v3.joblib") -> DurationHint:
     p = MODEL_DIR / name
     if p.exists():
         m = joblib.load(p)

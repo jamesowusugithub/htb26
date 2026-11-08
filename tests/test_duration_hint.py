@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 from scheduler import data
-from scheduler.duration_model import feature_table, HIST
+from scheduler.duration_model import feature_table, HIST, NEW
 
 
 @pytest.fixture(scope="module")
@@ -12,8 +12,8 @@ def jobs():
 def test_history_features_never_see_the_future(jobs):
     """Features for the first N jobs must be identical whether or not later jobs exist in the table."""
     n = 40000
-    full = feature_table(jobs)[HIST].to_numpy()[:n]
-    part = feature_table(jobs.iloc[:n].reset_index(drop=True))[HIST].to_numpy()
+    full = feature_table(jobs)[HIST + NEW].to_numpy()[:n]
+    part = feature_table(jobs.iloc[:n].reset_index(drop=True))[HIST + NEW].to_numpy()
     assert np.array_equal(np.nan_to_num(full, nan=-1), np.nan_to_num(part, nan=-1))
 
 

@@ -28,6 +28,8 @@ def _pool_blocks(S, p):
     maxfree = 0
     maxgpu = 1
     for n in range(S.pool_start[p], S.pool_start[p + 1]):
+        if S.node_cloud[n] == 1:
+            continue
         if S.node_full[n] > maxfull:
             maxfull = S.node_full[n]
         if S.node_maxfree[n] > maxfree:
