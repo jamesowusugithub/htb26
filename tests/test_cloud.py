@@ -84,3 +84,16 @@ def test_scenario_with_cloud_trades_wait_for_cost_on_a_real_window():
     assert m1["cloud"]["jobs"] > 0 and m1["cloud"]["cost_usd"] > 0
     assert m1["hp"]["wait_mean_s"] < m0["hp"]["wait_mean_s"]                              # the fallback shortens waits ...
     assert on["_cluster"].capacity_gpus().sum() == off["_cluster"].capacity_gpus().sum()  # ... without changing owned capacity
+
+
+def test_overflow_respects_a_predicted_cost_budget_and_never_uses_true_durations():
+    c = add_cloud(cluster(1), 1, 8)
+    # job1 and job2 both wait; their TRUE durations are identical but the HINT (a prediction) differs: only the cheap-looking one may be offloaded
+    jobs = [(0, 1000, 1, 0), (10, 7200, 1, 0), (11, 7200, 1, 0), (200, 5, 1, 0)]
+    w = workload(jobs)
+    hint = np.array([1000.0, 600.0, 36000.0, 5.0])               # predicted runtimes in seconds
+    S = simulate(c, w, PRIO_FIFO, log_events=True, cloud_price=[3.0], overflow_wait_s=100.0, max_job_cost_usd=2.0, overflow_est=hint)
+    assert S.job_cloud[1] == 1                                    # predicted 600 s x 1 GPU x $3/h = $0.50 <= $2 budget
+    assert S.job_cloud[2] == 0                                    # predicted 10 h x $3 = $30 > budget: stays in the queue
+    expected = sum(w.dur[j] / 3600.0 * (w.req[j] / UNIT) * 3.0 for j in np.flatnonzero(S.job_cloud))
+    assert S.fc[FC_CLOUDCOST] == pytest.approx(expected)          # charged on what each job actually used, not on the prediction

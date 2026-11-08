@@ -242,6 +242,7 @@ def sim_kwargs(sc: Scenario, cluster: data.Cluster) -> dict:
     if sc.cloud:
         kw["cloud_price"] = pool_prices([p["id"] for p in cluster.pools], float(sc.cloud.get("price_multiplier", 1.0)))
         kw["overflow_wait_s"] = float(sc.cloud.get("overflow_wait_s", 0.0))
+        kw["max_job_cost_usd"] = float(sc.cloud.get("max_job_cost_usd", 0.0))
     return kw
 
 
@@ -272,8 +273,13 @@ def run_scenario(sc: Scenario, jobs: pd.DataFrame, calibrated: data.Cluster, pol
             hint = hint or load_or_fit(jobs, 40)
             est = hint.predict_seconds(w.job_id)
             est = np.where(np.isfinite(est), est, np.nanmedian(est))
+        kw = sim_kwargs(sc, cluster)
+        if sc.cloud:        # the cloud rule prices a job with the HINT (a prediction), never the true duration
+            from .duration_model import load_or_fit
+            hint = hint or load_or_fit(jobs, 40)
+            oe = hint.predict_seconds(w.job_id); kw["overflow_est"] = np.where(np.isfinite(oe), oe, np.nanmedian(oe))
         S = run_policy(cluster, w, spec, resume=sc.resume_preempted, log_events=log_events, est=est,
-                       **sim_kwargs(sc, cluster), **sim_kw)
+                       **kw, **sim_kw)
         m = summarize(S, w, cluster, util_hi=sc.days * 86400)
         out["policies"][name] = {"realistic": spec.realistic, "metrics": m}
         out["_states"][name] = S

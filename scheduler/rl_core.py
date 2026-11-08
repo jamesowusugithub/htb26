@@ -17,7 +17,7 @@ from .sim import (State, schedule, try_preempt, find_place, start_job, q_remove,
                   apply_failure_event, SC_FAILIDX, SC_NFAIL,
                   log_event, SC_HEAP, SC_NEXT, SC_DONE, SC_ERR, SC_FOCUS, SC_POLICY, SC_PREEMPT, SC_NRUN,
                   FC_NOW, FC_QINT, RUNNING, DONE, QUEUED, EV_ARRIVE, EV_FINISH, ERR_STUCK, PRIO_FIFO)
-from .sim import q_insert
+from .sim import q_insert, overflow_pass, FC_OVFWAIT
 
 HINT_SCALE = 8.0
 
@@ -57,6 +57,8 @@ def _events_pending(S):
 def build_decision(S, p, D):
     """Fill cand/obs/amask for pool p. Returns the number of startable candidates (after rule-based preemption)."""
     now = S.fc[FC_NOW]
+    if S.fc[FC_OVFWAIT] > 0.0:          # simulated takeaway: over-waiting jobs go to the cloud (a rule layered on the policy, not a learned action)
+        overflow_pass(S, p, now)
     # rule-based preemption: blocked HP head evicts spot (same rule as priority_fifo)
     while S.qc[p] > 0 and S.sc[SC_PREEMPT] == 1 and S.spotrun[p] > 0:
         j = S.queue[p, 0]
