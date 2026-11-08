@@ -1,0 +1,862 @@
+{
+  "source_doi": "10.6084/m9.figshare.31654879",
+  "archive_name": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare.zip",
+  "archive_sha256": "c0ccebea568612f5445b70c3baa7ce659935a949e5cc8f345a0af907739fa6f3",
+  "csv_members": [
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/B200/Batch_size_impact/Image_generation_B200_8GPU_Node_ModelSize128_ImageSize32_BatchSize128.csv",
+      "member_sha256": "408eac80b1acf411deb4cabab87b1f999c0e4ecf1478d422914800b75c288a00",
+      "bytes": 18312857,
+      "session_id": "408eac80b1acf411",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/B200/Batch_size_impact/Image_generation_B200_8GPU_Node_ModelSize128_ImageSize32_BatchSize256.csv",
+      "member_sha256": "6cf954584c02c554d022219c2038520e3dc6411de072550fcb90d38a80e1ead9",
+      "bytes": 18192128,
+      "session_id": "6cf954584c02c554",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/B200/Batch_size_impact/Image_generation_B200_8GPU_Node_ModelSize128_ImageSize32_BatchSize512.csv",
+      "member_sha256": "f46587705b20ec65a8e94ca262504441812275e4f59256f7ccb9c77cb39237b3",
+      "bytes": 18169126,
+      "session_id": "f46587705b20ec65",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/B200/Image_size_impact/Image_generation_B200_8GPU_Node_ModelSize128_ImageSize128_BatchSize128.csv",
+      "member_sha256": "010c9bd9e04d4fca6581fa0b9ba3aec0eeebd257261c28dc5407074fadf6206e",
+      "bytes": 18880452,
+      "session_id": "010c9bd9e04d4fca",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/B200/Image_size_impact/Image_generation_B200_8GPU_Node_ModelSize128_ImageSize32_BatchSize128.csv",
+      "member_sha256": "408eac80b1acf411deb4cabab87b1f999c0e4ecf1478d422914800b75c288a00",
+      "bytes": 18312857,
+      "session_id": "408eac80b1acf411",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/B200/Batch_size_impact/Image_generation_B200_8GPU_Node_ModelSize128_ImageSize32_BatchSize128.csv",
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/B200/Image_size_impact/Image_generation_B200_8GPU_Node_ModelSize128_ImageSize64_BatchSize128.csv",
+      "member_sha256": "255d1c7bc5f97f0330fa335bc6184cd6fbf5ff5fdbae004f677f615ca3a46165",
+      "bytes": 18216168,
+      "session_id": "255d1c7bc5f97f03",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/B200/Model_size_impact/Image_generation_B200_8GPU_Node_ModelSize128_ImageSize32_BatchSize128.csv",
+      "member_sha256": "408eac80b1acf411deb4cabab87b1f999c0e4ecf1478d422914800b75c288a00",
+      "bytes": 18312857,
+      "session_id": "408eac80b1acf411",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/B200/Batch_size_impact/Image_generation_B200_8GPU_Node_ModelSize128_ImageSize32_BatchSize128.csv",
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/B200/Model_size_impact/Image_generation_B200_8GPU_Node_ModelSize256_ImageSize32_BatchSize128.csv",
+      "member_sha256": "ade33ae0003599138bfa02011ed5df5b853f06c04c6335f3a8696cbf610ec132",
+      "bytes": 18233043,
+      "session_id": "ade33ae000359913",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/B200/Model_size_impact/Image_generation_B200_8GPU_Node_ModelSize512_ImageSize32_BatchSize128.csv",
+      "member_sha256": "7f791865b5122ccecae552207a475e54adc71b99f8eb2c20b44442e1bb66476f",
+      "bytes": 18271157,
+      "session_id": "7f791865b5122cce",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/H100/Batch_size_impact/Image_generation_H100_8GPU_Node_ModelSize128_ImageSize32_BatchSize128.csv",
+      "member_sha256": "f8f7f3674a6c8c15493ac5642d464a20720d4299d70bbe5f87c83ae89e557931",
+      "bytes": 19583758,
+      "session_id": "f8f7f3674a6c8c15",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/H100/Batch_size_impact/Image_generation_H100_8GPU_Node_ModelSize128_ImageSize32_BatchSize256.csv",
+      "member_sha256": "bf0b68f6712ed2f0ce5b8b76bbbfced97461042150056fbb65f3cf8447a2fdb8",
+      "bytes": 20951259,
+      "session_id": "bf0b68f6712ed2f0",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/H100/Batch_size_impact/Image_generation_H100_8GPU_Node_ModelSize128_ImageSize32_BatchSize512.csv",
+      "member_sha256": "66fd092cfc95757c88b9a2b95b981a4e948377ebbf296202a78d93fb508b03ca",
+      "bytes": 20123790,
+      "session_id": "66fd092cfc95757c",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/H100/Image_size_impact/Image_generation_H100_8GPU_Node_ModelSize128_ImageSize16_BatchSize128.csv",
+      "member_sha256": "acb6322fa64f95898ebf4f0f29b74f9868d779ce4f764b2ce227b674fb132612",
+      "bytes": 19182364,
+      "session_id": "acb6322fa64f9589",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/H100/Image_size_impact/Image_generation_H100_8GPU_Node_ModelSize128_ImageSize32_BatchSize128.csv",
+      "member_sha256": "f8f7f3674a6c8c15493ac5642d464a20720d4299d70bbe5f87c83ae89e557931",
+      "bytes": 19583758,
+      "session_id": "f8f7f3674a6c8c15",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/H100/Batch_size_impact/Image_generation_H100_8GPU_Node_ModelSize128_ImageSize32_BatchSize128.csv",
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/H100/Image_size_impact/Image_generation_H100_8GPU_Node_ModelSize128_ImageSize64_BatchSize128.csv",
+      "member_sha256": "28247ca2008cf332c943a61b5d0f4ce6a9c3825848ffb132b701c0fd0ad4b0d8",
+      "bytes": 19765730,
+      "session_id": "28247ca2008cf332",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/H100/Model_size_impact/Image_generation_H100_8GPU_Node_ModelSize128_ImageSize32_BatchSize128.csv",
+      "member_sha256": "f8f7f3674a6c8c15493ac5642d464a20720d4299d70bbe5f87c83ae89e557931",
+      "bytes": 19583758,
+      "session_id": "f8f7f3674a6c8c15",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/H100/Batch_size_impact/Image_generation_H100_8GPU_Node_ModelSize128_ImageSize32_BatchSize128.csv",
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/H100/Model_size_impact/Image_generation_H100_8GPU_Node_ModelSize256_ImageSize32_BatchSize128.csv",
+      "member_sha256": "1feae563dfb95b627b8991dee9c1a1c923285363f343c3e1e091b4ca180d314d",
+      "bytes": 19681341,
+      "session_id": "1feae563dfb95b62",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Image Generation Diffusion Models/H100/Model_size_impact/Image_generation_H100_8GPU_Node_ModelSize512_ImageSize32_BatchSize128.csv",
+      "member_sha256": "e2fbf4d4759552767f1fecaa7ba906cf75595a809d479bf1e7c6e246cd653205",
+      "bytes": 19796532,
+      "session_id": "e2fbf4d475955276",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Batch_size/LLM_B200_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "77e46ce1a25f76b682d8d9fcae6abbc3999929db9db4b8384d353ce38ce22127",
+      "bytes": 18330497,
+      "session_id": "77e46ce1a25f76b6",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Batch_size/LLM_B200_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize2.csv",
+      "member_sha256": "6b0157ef6839975581d26a77f5df3d740c702c0be07cc4d0db93c2eed8a14223",
+      "bytes": 18108166,
+      "session_id": "6b0157ef68399755",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Batch_size/LLM_B200_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize32.csv",
+      "member_sha256": "717fa9853ea43612b81cd3b6fc60cdc7410046183d3d70560f3e106490a706ce",
+      "bytes": 18521511,
+      "session_id": "717fa9853ea43612",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/DeepSpeed_parallel_sitting/LLM_B200_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z1_BatchSize16.csv",
+      "member_sha256": "9955d7e6fc3d69c521c411a5d10ecab5b68d6cc70b9f3107d493a642f08e74c6",
+      "bytes": 18315695,
+      "session_id": "9955d7e6fc3d69c5",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/DeepSpeed_parallel_sitting/LLM_B200_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z2_BatchSize16.csv",
+      "member_sha256": "3a40a97911997e7842413b7497a497cbcdaa8f4a58c5dce3605cdce0d6227602",
+      "bytes": 18300589,
+      "session_id": "3a40a97911997e78",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/DeepSpeed_parallel_sitting/LLM_B200_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "77e46ce1a25f76b682d8d9fcae6abbc3999929db9db4b8384d353ce38ce22127",
+      "bytes": 18330497,
+      "session_id": "77e46ce1a25f76b6",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Batch_size/LLM_B200_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Model_Size/LLM_B200_8GPU_Node_Lamma1B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "77ab55090b19a9518d1b2e5ef431284c032f804c1289efd05fe22f1c710c337e",
+      "bytes": 18441817,
+      "session_id": "77ab55090b19a951",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Model_Size/LLM_B200_8GPU_Node_Lamma3B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "d37cdfdd6611eb16835d6fe217c0d0feeeed5c357c52a8265bd798d4b166eb69",
+      "bytes": 18318773,
+      "session_id": "d37cdfdd6611eb16",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Model_Size/LLM_B200_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "77e46ce1a25f76b682d8d9fcae6abbc3999929db9db4b8384d353ce38ce22127",
+      "bytes": 18330497,
+      "session_id": "77e46ce1a25f76b6",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Batch_size/LLM_B200_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Sequance_length_cut/LLM_B200_8GPU_Node_Lamma8B_SeqLength1024_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "bb71d18337f6428eaad5b40f53d715eab5b8686aacb0c141947b776bdc163cc6",
+      "bytes": 18327508,
+      "session_id": "bb71d18337f6428e",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Sequance_length_cut/LLM_B200_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "77e46ce1a25f76b682d8d9fcae6abbc3999929db9db4b8384d353ce38ce22127",
+      "bytes": 18330497,
+      "session_id": "77e46ce1a25f76b6",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Batch_size/LLM_B200_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/B200/Sequance_length_cut/LLM_B200_8GPU_Node_Lamma8B_SeqLength4096_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "c87679f6b5d48b01fe5a935c24ee488dd53fa61890493011e1b0f87c65835c44",
+      "bytes": 18334931,
+      "session_id": "c87679f6b5d48b01",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Batch_size/LLM_H100_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "2da87dca1b1e93bc87b420374fdad4f14c189901643fa92cb885ee937d225082",
+      "bytes": 19902218,
+      "session_id": "2da87dca1b1e93bc",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Batch_size/LLM_H100_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize2.csv",
+      "member_sha256": "5f0e0d16455738225a05d93d57576b685414e1fd3aa51c0791b820c43200d833",
+      "bytes": 19795087,
+      "session_id": "5f0e0d1645573822",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Batch_size/LLM_H100_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize32.csv",
+      "member_sha256": "8a03097b6153403b619542035fb77b96fd977694df31e0553fff79f1fa3eccd9",
+      "bytes": 19918461,
+      "session_id": "8a03097b6153403b",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/DeepSpeed_parallel_sitting/LLM_H100_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z1_BatchSize16.csv",
+      "member_sha256": "b766d1447a6139d6a10754c6c28a2d9c6adabc9836d69eef17d5d1aec0e5e7cb",
+      "bytes": 19886360,
+      "session_id": "b766d1447a6139d6",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/DeepSpeed_parallel_sitting/LLM_H100_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z2_BatchSize16.csv",
+      "member_sha256": "d571da6eb66a6e913bf6541207de55fb7563480e8d943268b8b743b2ace04631",
+      "bytes": 19897852,
+      "session_id": "d571da6eb66a6e91",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/DeepSpeed_parallel_sitting/LLM_H100_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "2da87dca1b1e93bc87b420374fdad4f14c189901643fa92cb885ee937d225082",
+      "bytes": 19902218,
+      "session_id": "2da87dca1b1e93bc",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Batch_size/LLM_H100_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Model_Size/LLM_H100_8GPU_Node_Lamma1B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "9dc6aa3e77f6eec0e00614d9d17b9558bf91a348bdd8a84306b263b369ed9680",
+      "bytes": 19638855,
+      "session_id": "9dc6aa3e77f6eec0",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Model_Size/LLM_H100_8GPU_Node_Lamma3B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "97247f83f465285626a67d2663bfca6af067472e6e065a390a1b350e21ea8e31",
+      "bytes": 19831413,
+      "session_id": "97247f83f4652856",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Model_Size/LLM_H100_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "2da87dca1b1e93bc87b420374fdad4f14c189901643fa92cb885ee937d225082",
+      "bytes": 19902218,
+      "session_id": "2da87dca1b1e93bc",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Batch_size/LLM_H100_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Sequance_length_cut/LLM_H100_8GPU_Node_Lamma8B_SeqLength1024_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "2d354ce38c264786cacf69141848ca4f47ebad1c31e7d0e739a960f3b34931bf",
+      "bytes": 19901075,
+      "session_id": "2d354ce38c264786",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Sequance_length_cut/LLM_H100_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "2da87dca1b1e93bc87b420374fdad4f14c189901643fa92cb885ee937d225082",
+      "bytes": 19902218,
+      "session_id": "2da87dca1b1e93bc",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Batch_size/LLM_H100_8GPU_Node_Lamma8B_SeqLength2048_Deepspeedds_z3_BatchSize16.csv",
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Node_Dataset/Text Generation LLMs/H100/Sequance_length_cut/LLM_H100_8GPU_Node_Lamma8B_SeqLength4096_Deepspeedds_z3_BatchSize16.csv",
+      "member_sha256": "9b47a658d3b339a343db7f9307edc3b6db5f01930dd4b938ddb0926430ee2f9d",
+      "bytes": 19893317,
+      "session_id": "9b47a658d3b339a3",
+      "duplicate_of": null,
+      "observation_rows": 45000,
+      "raw_records_excluding_header_and_blank_lines": 45000
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Batch_size/Single_machine_NumLayer6_SeqLength96_LayerSize500_batchsize100.CSV",
+      "member_sha256": "2d523b35975412751682c9f855cb1803a40909c31ba558687394664fa3aef463",
+      "bytes": 17382445,
+      "session_id": "2d523b3597541275",
+      "duplicate_of": null,
+      "observation_rows": 10187,
+      "raw_records_excluding_header_and_blank_lines": 10189
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Batch_size/Single_machine_NumLayer6_SeqLength96_LayerSize500_batchsize150.CSV",
+      "member_sha256": "14a74311509f55fa1c5f7d385af5d3c750251e45d7dfc3cfbbd48530db39abb2",
+      "bytes": 17239317,
+      "session_id": "14a74311509f55fa",
+      "duplicate_of": null,
+      "observation_rows": 10101,
+      "raw_records_excluding_header_and_blank_lines": 10103
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Batch_size/Single_machine_NumLayer6_SeqLength96_LayerSize500_batchsize50.CSV",
+      "member_sha256": "55c38c873ff77feb1eaa95baeb724d633e4cc676f17efcafbf057137be32a366",
+      "bytes": 17168131,
+      "session_id": "55c38c873ff77feb",
+      "duplicate_of": null,
+      "observation_rows": 10034,
+      "raw_records_excluding_header_and_blank_lines": 10036
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Input secaunce Length/Single_machine_NumLayer6_SeqLength192_LayerSize500_batchsize100.CSV",
+      "member_sha256": "c4fd7f45a9a511fed51e862a671904077482515afdc2aeb219e8f9e62cf8d9c0",
+      "bytes": 16957845,
+      "session_id": "c4fd7f45a9a511fe",
+      "duplicate_of": null,
+      "observation_rows": 9924,
+      "raw_records_excluding_header_and_blank_lines": 9926
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Input secaunce Length/Single_machine_NumLayer6_SeqLength672_LayerSize500_batchsize100.CSV",
+      "member_sha256": "8ae104680cf0caa80e4cb28c6aae3b08374dc50f4656c93434efbdeb3649816d",
+      "bytes": 17330866,
+      "session_id": "8ae104680cf0caa8",
+      "duplicate_of": null,
+      "observation_rows": 10128,
+      "raw_records_excluding_header_and_blank_lines": 10130
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Input secaunce Length/Single_machine_NumLayer6_SeqLength96_LayerSize500_batchsize100.CSV",
+      "member_sha256": "2d523b35975412751682c9f855cb1803a40909c31ba558687394664fa3aef463",
+      "bytes": 17382445,
+      "session_id": "2d523b3597541275",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Batch_size/Single_machine_NumLayer6_SeqLength96_LayerSize500_batchsize100.CSV",
+      "observation_rows": 10187,
+      "raw_records_excluding_header_and_blank_lines": 10189
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Model Size/Single_machine_NumLayer6_SeqLength96_LayerSize1000_batchsize100.CSV",
+      "member_sha256": "62e4505d7904a8fe51f601587a858e28734ce9b29fa43e065c0b8333d8771d31",
+      "bytes": 17200644,
+      "session_id": "62e4505d7904a8fe",
+      "duplicate_of": null,
+      "observation_rows": 10070,
+      "raw_records_excluding_header_and_blank_lines": 10072
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Model Size/Single_machine_NumLayer6_SeqLength96_LayerSize1500_batchsize100.CSV",
+      "member_sha256": "c6449aeb96e706a9ae843ea203cb060b5cb66b7ffe73b61bf0d5f99cabb8f426",
+      "bytes": 17346519,
+      "session_id": "c6449aeb96e706a9",
+      "duplicate_of": null,
+      "observation_rows": 10143,
+      "raw_records_excluding_header_and_blank_lines": 10145
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Model Size/Single_machine_NumLayer6_SeqLength96_LayerSize500_batchsize100.CSV",
+      "member_sha256": "2d523b35975412751682c9f855cb1803a40909c31ba558687394664fa3aef463",
+      "bytes": 17382445,
+      "session_id": "2d523b3597541275",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Batch_size/Single_machine_NumLayer6_SeqLength96_LayerSize500_batchsize100.CSV",
+      "observation_rows": 10187,
+      "raw_records_excluding_header_and_blank_lines": 10189
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Number of Layers/Single_machine_NumLayer10_SeqLength96_LayerSize500_batchsize100.CSV",
+      "member_sha256": "fed8f03d853e925ebfbfefdf9ebbd6f76b8c0bf1aef1e0bdb81a73a657925e82",
+      "bytes": 17260503,
+      "session_id": "fed8f03d853e925e",
+      "duplicate_of": null,
+      "observation_rows": 10098,
+      "raw_records_excluding_header_and_blank_lines": 10100
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Number of Layers/Single_machine_NumLayer6_SeqLength96_LayerSize500_batchsize100.CSV",
+      "member_sha256": "2d523b35975412751682c9f855cb1803a40909c31ba558687394664fa3aef463",
+      "bytes": 17382445,
+      "session_id": "2d523b3597541275",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Batch_size/Single_machine_NumLayer6_SeqLength96_LayerSize500_batchsize100.CSV",
+      "observation_rows": 10187,
+      "raw_records_excluding_header_and_blank_lines": 10189
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Feature Forecasting/Number of Layers/Single_machine_NumLayer8_SeqLength96_LayerSize500_batchsize100.CSV",
+      "member_sha256": "93c229757c03fe4ff9b62e5fc3eb57eb84d1f012ee963359c3d58d5778071211",
+      "bytes": 17325956,
+      "session_id": "93c229757c03fe4f",
+      "duplicate_of": null,
+      "observation_rows": 10133,
+      "raw_records_excluding_header_and_blank_lines": 10135
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Captioning/BatchSize/Single_machine_EmbedDim256_HiddenUnit512_batchsize1024.CSV",
+      "member_sha256": "c039c2ab813da4560eebf9551562d05f93805ebe35616f13e95dd1aaad9563f7",
+      "bytes": 17343927,
+      "session_id": "c039c2ab813da456",
+      "duplicate_of": null,
+      "observation_rows": 10112,
+      "raw_records_excluding_header_and_blank_lines": 10114
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Captioning/BatchSize/Single_machine_EmbedDim256_HiddenUnit512_batchsize128.CSV",
+      "member_sha256": "6801f82b45cdba64041cfd830a593de503f454a96542385ce0d010cf87aee138",
+      "bytes": 17222240,
+      "session_id": "6801f82b45cdba64",
+      "duplicate_of": null,
+      "observation_rows": 10101,
+      "raw_records_excluding_header_and_blank_lines": 10103
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Captioning/BatchSize/Single_machine_EmbedDim256_HiddenUnit512_batchsize256.CSV",
+      "member_sha256": "4491ce98abd1cf81d9a7846cb4655c2177b2dceda8685024fc2b4941a98e3e31",
+      "bytes": 17290255,
+      "session_id": "4491ce98abd1cf81",
+      "duplicate_of": null,
+      "observation_rows": 10114,
+      "raw_records_excluding_header_and_blank_lines": 10116
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Captioning/Embedding Dim/Single_machine_EmbedDim1024_HiddenUnit512_batchsize256.CSV",
+      "member_sha256": "adae127160c2fed9bee5287c6cc8b990de694166b055d77c1e52f2c18a6d0980",
+      "bytes": 17154060,
+      "session_id": "adae127160c2fed9",
+      "duplicate_of": null,
+      "observation_rows": 10045,
+      "raw_records_excluding_header_and_blank_lines": 10047
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Captioning/Embedding Dim/Single_machine_EmbedDim256_HiddenUnit512_batchsize256.CSV",
+      "member_sha256": "4491ce98abd1cf81d9a7846cb4655c2177b2dceda8685024fc2b4941a98e3e31",
+      "bytes": 17290255,
+      "session_id": "4491ce98abd1cf81",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Captioning/BatchSize/Single_machine_EmbedDim256_HiddenUnit512_batchsize256.CSV",
+      "observation_rows": 10114,
+      "raw_records_excluding_header_and_blank_lines": 10116
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Captioning/Embedding Dim/Single_machine_EmbedDim512_HiddenUnit512_batchsize256.CSV",
+      "member_sha256": "a68cb99554867ecd33edd6a1b8042a51c2cd3ce1b9a191005547a8afe5c18efe",
+      "bytes": 17247595,
+      "session_id": "a68cb99554867ecd",
+      "duplicate_of": null,
+      "observation_rows": 10063,
+      "raw_records_excluding_header_and_blank_lines": 10065
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Captioning/numHiddenUnits Size/Single_machine_EmbedDim256_HiddenUnit1024_batchsize256.CSV",
+      "member_sha256": "2c73680ee7392ae09d401486bd4076866e513651c62d6b0dba28b83b8ca76040",
+      "bytes": 17226057,
+      "session_id": "2c73680ee7392ae0",
+      "duplicate_of": null,
+      "observation_rows": 10081,
+      "raw_records_excluding_header_and_blank_lines": 10083
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Captioning/numHiddenUnits Size/Single_machine_EmbedDim256_HiddenUnit2048_batchsize256.CSV",
+      "member_sha256": "cd37a26480121e3721851d1487a3ba7f5a9996e359afa5c55da3fe1e104f9c1f",
+      "bytes": 17336032,
+      "session_id": "cd37a26480121e37",
+      "duplicate_of": null,
+      "observation_rows": 10105,
+      "raw_records_excluding_header_and_blank_lines": 10107
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Captioning/numHiddenUnits Size/Single_machine_EmbedDim256_HiddenUnit512_batchsize256.CSV",
+      "member_sha256": "4491ce98abd1cf81d9a7846cb4655c2177b2dceda8685024fc2b4941a98e3e31",
+      "bytes": 17290255,
+      "session_id": "4491ce98abd1cf81",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Captioning/BatchSize/Single_machine_EmbedDim256_HiddenUnit512_batchsize256.CSV",
+      "observation_rows": 10114,
+      "raw_records_excluding_header_and_blank_lines": 10116
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Batch Size/Single_machine_OptimizerAdam_NumFilter8_ImageSize112_batchsize1500.CSV",
+      "member_sha256": "10c6443628a18c2fad2f9934577f06366e70f4fabbbdcbb59d223db635090423",
+      "bytes": 17323617,
+      "session_id": "10c6443628a18c2f",
+      "duplicate_of": null,
+      "observation_rows": 10156,
+      "raw_records_excluding_header_and_blank_lines": 10158
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Batch Size/Single_machine_OptimizerAdam_NumFilter8_ImageSize112_batchsize2250.CSV",
+      "member_sha256": "fd142fca563362afbe3a542c5bee163461c17199423bf9372385a53a6ca86bbc",
+      "bytes": 17306449,
+      "session_id": "fd142fca563362af",
+      "duplicate_of": null,
+      "observation_rows": 10147,
+      "raw_records_excluding_header_and_blank_lines": 10149
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Batch Size/Single_machine_OptimizerAdam_NumFilter8_ImageSize112_batchsize750.CSV",
+      "member_sha256": "0e8538972df1f646fe8e6b4310d4cf743132551f37dba0d5f5fa7a6c8d7f9b19",
+      "bytes": 17298238,
+      "session_id": "0e8538972df1f646",
+      "duplicate_of": null,
+      "observation_rows": 10135,
+      "raw_records_excluding_header_and_blank_lines": 10137
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Image Size/Single_machine_OptimizerAdam_NumFilter8_ImageSize112_batchsize1500.CSV",
+      "member_sha256": "10c6443628a18c2fad2f9934577f06366e70f4fabbbdcbb59d223db635090423",
+      "bytes": 17323617,
+      "session_id": "10c6443628a18c2f",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Batch Size/Single_machine_OptimizerAdam_NumFilter8_ImageSize112_batchsize1500.CSV",
+      "observation_rows": 10156,
+      "raw_records_excluding_header_and_blank_lines": 10158
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Image Size/Single_machine_OptimizerAdam_NumFilter8_ImageSize224_batchsize1500.CSV",
+      "member_sha256": "804d435bfaf083e104303a97616d88991ac18a705d836fbde11be665bb5f13e6",
+      "bytes": 14521866,
+      "session_id": "804d435bfaf083e1",
+      "duplicate_of": null,
+      "observation_rows": 10027,
+      "raw_records_excluding_header_and_blank_lines": 10029
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Image Size/Single_machine_OptimizerAdam_NumFilter8_ImageSize280_batchsize1500.CSV",
+      "member_sha256": "ad6821f3c93d325c845d8754c9a7b9975a3c87513f842463e544a4818946edf5",
+      "bytes": 17342525,
+      "session_id": "ad6821f3c93d325c",
+      "duplicate_of": null,
+      "observation_rows": 10124,
+      "raw_records_excluding_header_and_blank_lines": 10126
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Number of Filters/Single_machine_OptimizerAdam_NumFilter16_ImageSize112_batchsize1500.CSV",
+      "member_sha256": "195718f1495679c273a0a4e209e947e9a12e29705f1dcfddc16b7656d725b0be",
+      "bytes": 14611935,
+      "session_id": "195718f1495679c2",
+      "duplicate_of": null,
+      "observation_rows": 10120,
+      "raw_records_excluding_header_and_blank_lines": 10122
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Number of Filters/Single_machine_OptimizerAdam_NumFilter32_ImageSize112_batchsize1500.CSV",
+      "member_sha256": "cdf1fca8b3548d5750c7df982fcfd4413e32c5cb8dfcdd140d2713f86c3884ea",
+      "bytes": 17233523,
+      "session_id": "cdf1fca8b3548d57",
+      "duplicate_of": null,
+      "observation_rows": 10093,
+      "raw_records_excluding_header_and_blank_lines": 10095
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Number of Filters/Single_machine_OptimizerAdam_NumFilter8_ImageSize112_batchsize1500.CSV",
+      "member_sha256": "10c6443628a18c2fad2f9934577f06366e70f4fabbbdcbb59d223db635090423",
+      "bytes": 17323617,
+      "session_id": "10c6443628a18c2f",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Batch Size/Single_machine_OptimizerAdam_NumFilter8_ImageSize112_batchsize1500.CSV",
+      "observation_rows": 10156,
+      "raw_records_excluding_header_and_blank_lines": 10158
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/optimizer type/Single_machine_OptimizerAdam_NumFilter8_ImageSize112_batchsize1500.CSV",
+      "member_sha256": "10c6443628a18c2fad2f9934577f06366e70f4fabbbdcbb59d223db635090423",
+      "bytes": 17323617,
+      "session_id": "10c6443628a18c2f",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/Batch Size/Single_machine_OptimizerAdam_NumFilter8_ImageSize112_batchsize1500.CSV",
+      "observation_rows": 10156,
+      "raw_records_excluding_header_and_blank_lines": 10158
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/optimizer type/Single_machine_OptimizerRMSprop_NumFilter8_ImageSize112_batchsize1500.CSV",
+      "member_sha256": "07d0a3d5f166bc314be97fb2695b6fb005aff372b3d33918b3ef05882a10a854",
+      "bytes": 17203592,
+      "session_id": "07d0a3d5f166bc31",
+      "duplicate_of": null,
+      "observation_rows": 10029,
+      "raw_records_excluding_header_and_blank_lines": 10031
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Image Classifications/optimizer type/Single_machine_OptimizerSGD_NumFilter8_ImageSize112_batchsize1500.CSV",
+      "member_sha256": "c20165c633d92796171ff12fd61b904fdd7e00057b319644b6887624aae236a1",
+      "bytes": 17280647,
+      "session_id": "c20165c633d92796",
+      "duplicate_of": null,
+      "observation_rows": 10076,
+      "raw_records_excluding_header_and_blank_lines": 10078
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/Batch_size/Single_machine_InputTypeSequance_Sequancelength250_LayerSize256_batchsize150.CSV",
+      "member_sha256": "222710da4024f4e860479227939f7bd5943c880c4eddf47848c26b45d1da2634",
+      "bytes": 17047146,
+      "session_id": "222710da4024f4e8",
+      "duplicate_of": null,
+      "observation_rows": 10055,
+      "raw_records_excluding_header_and_blank_lines": 10057
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/Batch_size/Single_machine_InputTypeSequance_Sequancelength250_LayerSize256_batchsize250.CSV",
+      "member_sha256": "06df8668debaf677fa06b2a5fbad1645cba96218f2974791c14b4185e84d1646",
+      "bytes": 14365270,
+      "session_id": "06df8668debaf677",
+      "duplicate_of": null,
+      "observation_rows": 10111,
+      "raw_records_excluding_header_and_blank_lines": 10113
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/Batch_size/Single_machine_InputTypeSequance_Sequancelength250_LayerSize256_batchsize350.CSV",
+      "member_sha256": "504310c3c85cec916b2eb8a85dff678c8f9f60f766a7ec48426eff2491987b4e",
+      "bytes": 17014790,
+      "session_id": "504310c3c85cec91",
+      "duplicate_of": null,
+      "observation_rows": 10066,
+      "raw_records_excluding_header_and_blank_lines": 10068
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/InputLayer Type/Single_machine_InputFeature_Sequancelength1_LayerSize256_batchsize150.CSV",
+      "member_sha256": "24a3131a0fb3d13addea37f6f6530afec047c52c12504889c582bab5cce41d00",
+      "bytes": 16770666,
+      "session_id": "24a3131a0fb3d13a",
+      "duplicate_of": null,
+      "observation_rows": 9918,
+      "raw_records_excluding_header_and_blank_lines": 9920
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/InputLayer Type/Single_machine_InputTypeSequance_Sequancelength250_LayerSize256_batchsize150.CSV",
+      "member_sha256": "222710da4024f4e860479227939f7bd5943c880c4eddf47848c26b45d1da2634",
+      "bytes": 17047146,
+      "session_id": "222710da4024f4e8",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/Batch_size/Single_machine_InputTypeSequance_Sequancelength250_LayerSize256_batchsize150.CSV",
+      "observation_rows": 10055,
+      "raw_records_excluding_header_and_blank_lines": 10057
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/LayerSize/Single_machine_InputTypeSequance_Sequancelength250_LayerSize1024_batchsize150.CSV",
+      "member_sha256": "cdf81cf3a1312f530dec4ec438b2ca62a86e6dd92c1631fda8ae27c5d8d22f6f",
+      "bytes": 16898742,
+      "session_id": "cdf81cf3a1312f53",
+      "duplicate_of": null,
+      "observation_rows": 9963,
+      "raw_records_excluding_header_and_blank_lines": 9965
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/LayerSize/Single_machine_InputTypeSequance_Sequancelength250_LayerSize256_batchsize150.CSV",
+      "member_sha256": "222710da4024f4e860479227939f7bd5943c880c4eddf47848c26b45d1da2634",
+      "bytes": 17047146,
+      "session_id": "222710da4024f4e8",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/Batch_size/Single_machine_InputTypeSequance_Sequancelength250_LayerSize256_batchsize150.CSV",
+      "observation_rows": 10055,
+      "raw_records_excluding_header_and_blank_lines": 10057
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/LayerSize/Single_machine_InputTypeSequance_Sequancelength250_LayerSize512_batchsize150.CSV",
+      "member_sha256": "c43e74c742d39bf0bf8c0a8673e284919d9f79587d21aa211025d73dbe2be763",
+      "bytes": 17066683,
+      "session_id": "c43e74c742d39bf0",
+      "duplicate_of": null,
+      "observation_rows": 10071,
+      "raw_records_excluding_header_and_blank_lines": 10073
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/Sequance Length/Single_machine_InputTypeSequance_Sequancelength150_LayerSize256_batchsize150.CSV",
+      "member_sha256": "457c28887a89a1c008f371b95b17d5f7bb6ecfcab9a255343536e0fb6e28ce44",
+      "bytes": 16994069,
+      "session_id": "457c28887a89a1c0",
+      "duplicate_of": null,
+      "observation_rows": 10041,
+      "raw_records_excluding_header_and_blank_lines": 10043
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/Sequance Length/Single_machine_InputTypeSequance_Sequancelength250_LayerSize256_batchsize150.CSV",
+      "member_sha256": "222710da4024f4e860479227939f7bd5943c880c4eddf47848c26b45d1da2634",
+      "bytes": 17047146,
+      "session_id": "222710da4024f4e8",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/Batch_size/Single_machine_InputTypeSequance_Sequancelength250_LayerSize256_batchsize150.CSV",
+      "observation_rows": 10055,
+      "raw_records_excluding_header_and_blank_lines": 10057
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Reinforcment Learning/Sequance Length/Single_machine_InputTypeSequance_Sequancelength350_LayerSize256_batchsize150.CSV",
+      "member_sha256": "17b2b9259b4bf0ab1c143ca22bfd6b7be189d7df3ca66c54b632874de87149d7",
+      "bytes": 17186246,
+      "session_id": "17b2b9259b4bf0ab",
+      "duplicate_of": null,
+      "observation_rows": 10136,
+      "raw_records_excluding_header_and_blank_lines": 10138
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Text Generation/BatchSize/Single_machine_SeqLen100_EmbedDim100_batchsize128.CSV",
+      "member_sha256": "e3124c3636f22cba857e1c539deaba91283602dbe0319b9f299d32b35f8f604a",
+      "bytes": 17223569,
+      "session_id": "e3124c3636f22cba",
+      "duplicate_of": null,
+      "observation_rows": 10055,
+      "raw_records_excluding_header_and_blank_lines": 10057
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Text Generation/BatchSize/Single_machine_SeqLen100_EmbedDim100_batchsize32.CSV",
+      "member_sha256": "1e8609a9d3e61df64bb10eaf018db59acc7feac38f890e27695baf0df81a4b97",
+      "bytes": 17077563,
+      "session_id": "1e8609a9d3e61df6",
+      "duplicate_of": null,
+      "observation_rows": 10080,
+      "raw_records_excluding_header_and_blank_lines": 10082
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Text Generation/BatchSize/Single_machine_SeqLen100_EmbedDim100_batchsize512.CSV",
+      "member_sha256": "57964233f175c0bafc57bc1b7c944fd13ad99aea50b31ef4746a44e931fe44b1",
+      "bytes": 17240240,
+      "session_id": "57964233f175c0ba",
+      "duplicate_of": null,
+      "observation_rows": 10100,
+      "raw_records_excluding_header_and_blank_lines": 10102
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Text Generation/Embedding Dimension/Single_machine_SeqLen100_EmbedDim1000_batchsize128.CSV",
+      "member_sha256": "71178f736f0bc412769da8e9c0002ea24b584f4f7e59e05ff0c9b645a36b535f",
+      "bytes": 17150845,
+      "session_id": "71178f736f0bc412",
+      "duplicate_of": null,
+      "observation_rows": 10086,
+      "raw_records_excluding_header_and_blank_lines": 10088
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Text Generation/Embedding Dimension/Single_machine_SeqLen100_EmbedDim100_batchsize128.CSV",
+      "member_sha256": "e3124c3636f22cba857e1c539deaba91283602dbe0319b9f299d32b35f8f604a",
+      "bytes": 17223569,
+      "session_id": "e3124c3636f22cba",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Text Generation/BatchSize/Single_machine_SeqLen100_EmbedDim100_batchsize128.CSV",
+      "observation_rows": 10055,
+      "raw_records_excluding_header_and_blank_lines": 10057
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Text Generation/Embedding Dimension/Single_machine_SeqLen100_EmbedDim300_batchsize128.CSV",
+      "member_sha256": "1c9eec5a1101269ecabe432b2b3000eed3a45c3eef5e0d673b1a6584ff61be41",
+      "bytes": 17117585,
+      "session_id": "1c9eec5a1101269e",
+      "duplicate_of": null,
+      "observation_rows": 10071,
+      "raw_records_excluding_header_and_blank_lines": 10073
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Text Generation/Sequance Length/Single_machine_SeqLen100_EmbedDim100_batchsize128.CSV",
+      "member_sha256": "e3124c3636f22cba857e1c539deaba91283602dbe0319b9f299d32b35f8f604a",
+      "bytes": 17223569,
+      "session_id": "e3124c3636f22cba",
+      "duplicate_of": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Text Generation/BatchSize/Single_machine_SeqLen100_EmbedDim100_batchsize128.CSV",
+      "observation_rows": 10055,
+      "raw_records_excluding_header_and_blank_lines": 10057
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Text Generation/Sequance Length/Single_machine_SeqLen250_EmbedDim100_batchsize128.CSV",
+      "member_sha256": "3f8b6b898cb6e8518cda4fe5d9056e6a42ac1f3ba03629a7aa34f89693ff0855",
+      "bytes": 17113111,
+      "session_id": "3f8b6b898cb6e851",
+      "duplicate_of": null,
+      "observation_rows": 10063,
+      "raw_records_excluding_header_and_blank_lines": 10065
+    },
+    {
+      "archive_member": "High-resolution-AI-Data-Center-Training-Workloads-Dataset_FigShare/Single_Machine_Dataset/Text Generation/Sequance Length/Single_machine_SeqLen500_EmbedDim100_batchsize128.CSV",
+      "member_sha256": "dc8fc99e1b00960ff568c4063640ed3f6f0e203905d0229851998044fc23fa42",
+      "bytes": 17172070,
+      "session_id": "dc8fc99e1b00960f",
+      "duplicate_of": null,
+      "observation_rows": 10092,
+      "raw_records_excluding_header_and_blank_lines": 10094
+    }
+  ]
+}

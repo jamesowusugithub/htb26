@@ -1,0 +1,4257 @@
+{
+  "9adf76d6cfb0fab3": {
+    "encoding": "cp1252",
+    "columns": [
+      {
+        "position_zero_based": 0,
+        "raw_field": "c0000",
+        "source_header": "timestamp"
+      },
+      {
+        "position_zero_based": 1,
+        "raw_field": "c0001",
+        "source_header": "cpu_utilization_percent"
+      },
+      {
+        "position_zero_based": 2,
+        "raw_field": "c0002",
+        "source_header": "cpu_freq_MHz"
+      },
+      {
+        "position_zero_based": 3,
+        "raw_field": "c0003",
+        "source_header": "cpu_power_W"
+      },
+      {
+        "position_zero_based": 4,
+        "raw_field": "c0004",
+        "source_header": "cpu_temp_C"
+      },
+      {
+        "position_zero_based": 5,
+        "raw_field": "c0005",
+        "source_header": "gpu0_utilization_percent"
+      },
+      {
+        "position_zero_based": 6,
+        "raw_field": "c0006",
+        "source_header": "gpu0_mem_utilization"
+      },
+      {
+        "position_zero_based": 7,
+        "raw_field": "c0007",
+        "source_header": "gpu0_Power_TDP"
+      },
+      {
+        "position_zero_based": 8,
+        "raw_field": "c0008",
+        "source_header": "gpu0_mem_used_MB"
+      },
+      {
+        "position_zero_based": 9,
+        "raw_field": "c0009",
+        "source_header": "gpu0_mem_total_MB"
+      },
+      {
+        "position_zero_based": 10,
+        "raw_field": "c0010",
+        "source_header": "gpu0_power_W"
+      },
+      {
+        "position_zero_based": 11,
+        "raw_field": "c0011",
+        "source_header": "gpu0_temp_C"
+      },
+      {
+        "position_zero_based": 12,
+        "raw_field": "c0012",
+        "source_header": "gpu1_utilization_percent"
+      },
+      {
+        "position_zero_based": 13,
+        "raw_field": "c0013",
+        "source_header": "gpu1_mem_utilization"
+      },
+      {
+        "position_zero_based": 14,
+        "raw_field": "c0014",
+        "source_header": "gpu1_Power_TDP"
+      },
+      {
+        "position_zero_based": 15,
+        "raw_field": "c0015",
+        "source_header": "gpu1_mem_used_MB"
+      },
+      {
+        "position_zero_based": 16,
+        "raw_field": "c0016",
+        "source_header": "gpu1_mem_total_MB"
+      },
+      {
+        "position_zero_based": 17,
+        "raw_field": "c0017",
+        "source_header": "gpu1_power_W"
+      },
+      {
+        "position_zero_based": 18,
+        "raw_field": "c0018",
+        "source_header": "gpu1_temp_C"
+      },
+      {
+        "position_zero_based": 19,
+        "raw_field": "c0019",
+        "source_header": "gpu2_utilization_percent"
+      },
+      {
+        "position_zero_based": 20,
+        "raw_field": "c0020",
+        "source_header": "gpu2_mem_utilization"
+      },
+      {
+        "position_zero_based": 21,
+        "raw_field": "c0021",
+        "source_header": "gpu2_Power_TDP"
+      },
+      {
+        "position_zero_based": 22,
+        "raw_field": "c0022",
+        "source_header": "gpu2_mem_used_MB"
+      },
+      {
+        "position_zero_based": 23,
+        "raw_field": "c0023",
+        "source_header": "gpu2_mem_total_MB"
+      },
+      {
+        "position_zero_based": 24,
+        "raw_field": "c0024",
+        "source_header": "gpu2_power_W"
+      },
+      {
+        "position_zero_based": 25,
+        "raw_field": "c0025",
+        "source_header": "gpu2_temp_C"
+      },
+      {
+        "position_zero_based": 26,
+        "raw_field": "c0026",
+        "source_header": "gpu3_utilization_percent"
+      },
+      {
+        "position_zero_based": 27,
+        "raw_field": "c0027",
+        "source_header": "gpu3_mem_utilization"
+      },
+      {
+        "position_zero_based": 28,
+        "raw_field": "c0028",
+        "source_header": "gpu3_Power_TDP"
+      },
+      {
+        "position_zero_based": 29,
+        "raw_field": "c0029",
+        "source_header": "gpu3_mem_used_MB"
+      },
+      {
+        "position_zero_based": 30,
+        "raw_field": "c0030",
+        "source_header": "gpu3_mem_total_MB"
+      },
+      {
+        "position_zero_based": 31,
+        "raw_field": "c0031",
+        "source_header": "gpu3_power_W"
+      },
+      {
+        "position_zero_based": 32,
+        "raw_field": "c0032",
+        "source_header": "gpu3_temp_C"
+      },
+      {
+        "position_zero_based": 33,
+        "raw_field": "c0033",
+        "source_header": "gpu4_utilization_percent"
+      },
+      {
+        "position_zero_based": 34,
+        "raw_field": "c0034",
+        "source_header": "gpu4_mem_utilization"
+      },
+      {
+        "position_zero_based": 35,
+        "raw_field": "c0035",
+        "source_header": "gpu4_Power_TDP"
+      },
+      {
+        "position_zero_based": 36,
+        "raw_field": "c0036",
+        "source_header": "gpu4_mem_used_MB"
+      },
+      {
+        "position_zero_based": 37,
+        "raw_field": "c0037",
+        "source_header": "gpu4_mem_total_MB"
+      },
+      {
+        "position_zero_based": 38,
+        "raw_field": "c0038",
+        "source_header": "gpu4_power_W"
+      },
+      {
+        "position_zero_based": 39,
+        "raw_field": "c0039",
+        "source_header": "gpu4_temp_C"
+      },
+      {
+        "position_zero_based": 40,
+        "raw_field": "c0040",
+        "source_header": "gpu5_utilization_percent"
+      },
+      {
+        "position_zero_based": 41,
+        "raw_field": "c0041",
+        "source_header": "gpu5_mem_utilization"
+      },
+      {
+        "position_zero_based": 42,
+        "raw_field": "c0042",
+        "source_header": "gpu5_Power_TDP"
+      },
+      {
+        "position_zero_based": 43,
+        "raw_field": "c0043",
+        "source_header": "gpu5_mem_used_MB"
+      },
+      {
+        "position_zero_based": 44,
+        "raw_field": "c0044",
+        "source_header": "gpu5_mem_total_MB"
+      },
+      {
+        "position_zero_based": 45,
+        "raw_field": "c0045",
+        "source_header": "gpu5_power_W"
+      },
+      {
+        "position_zero_based": 46,
+        "raw_field": "c0046",
+        "source_header": "gpu5_temp_C"
+      },
+      {
+        "position_zero_based": 47,
+        "raw_field": "c0047",
+        "source_header": "gpu6_utilization_percent"
+      },
+      {
+        "position_zero_based": 48,
+        "raw_field": "c0048",
+        "source_header": "gpu6_mem_utilization"
+      },
+      {
+        "position_zero_based": 49,
+        "raw_field": "c0049",
+        "source_header": "gpu6_Power_TDP"
+      },
+      {
+        "position_zero_based": 50,
+        "raw_field": "c0050",
+        "source_header": "gpu6_mem_used_MB"
+      },
+      {
+        "position_zero_based": 51,
+        "raw_field": "c0051",
+        "source_header": "gpu6_mem_total_MB"
+      },
+      {
+        "position_zero_based": 52,
+        "raw_field": "c0052",
+        "source_header": "gpu6_power_W"
+      },
+      {
+        "position_zero_based": 53,
+        "raw_field": "c0053",
+        "source_header": "gpu6_temp_C"
+      },
+      {
+        "position_zero_based": 54,
+        "raw_field": "c0054",
+        "source_header": "gpu7_utilization_percent"
+      },
+      {
+        "position_zero_based": 55,
+        "raw_field": "c0055",
+        "source_header": "gpu7_mem_utilization"
+      },
+      {
+        "position_zero_based": 56,
+        "raw_field": "c0056",
+        "source_header": "gpu7_Power_TDP"
+      },
+      {
+        "position_zero_based": 57,
+        "raw_field": "c0057",
+        "source_header": "gpu7_mem_used_MB"
+      },
+      {
+        "position_zero_based": 58,
+        "raw_field": "c0058",
+        "source_header": "gpu7_mem_total_MB"
+      },
+      {
+        "position_zero_based": 59,
+        "raw_field": "c0059",
+        "source_header": "gpu7_power_W"
+      },
+      {
+        "position_zero_based": 60,
+        "raw_field": "c0060",
+        "source_header": "gpu7_temp_C"
+      }
+    ]
+  },
+  "cadafb651e001c72": {
+    "encoding": "cp1252",
+    "columns": [
+      {
+        "position_zero_based": 0,
+        "raw_field": "c0000",
+        "source_header": "Date"
+      },
+      {
+        "position_zero_based": 1,
+        "raw_field": "c0001",
+        "source_header": "Time"
+      },
+      {
+        "position_zero_based": 2,
+        "raw_field": "c0002",
+        "source_header": "Virtual Memory Committed [MB]"
+      },
+      {
+        "position_zero_based": 3,
+        "raw_field": "c0003",
+        "source_header": "Virtual Memory Available [MB]"
+      },
+      {
+        "position_zero_based": 4,
+        "raw_field": "c0004",
+        "source_header": "Virtual Memory Load [%]"
+      },
+      {
+        "position_zero_based": 5,
+        "raw_field": "c0005",
+        "source_header": "Physical Memory Used [MB]"
+      },
+      {
+        "position_zero_based": 6,
+        "raw_field": "c0006",
+        "source_header": "Physical Memory Available [MB]"
+      },
+      {
+        "position_zero_based": 7,
+        "raw_field": "c0007",
+        "source_header": "Physical Memory Load [%]"
+      },
+      {
+        "position_zero_based": 8,
+        "raw_field": "c0008",
+        "source_header": "Page File Usage [%]"
+      },
+      {
+        "position_zero_based": 9,
+        "raw_field": "c0009",
+        "source_header": "Core VIDs (avg) [V]"
+      },
+      {
+        "position_zero_based": 10,
+        "raw_field": "c0010",
+        "source_header": "P-core 0 VID [V]"
+      },
+      {
+        "position_zero_based": 11,
+        "raw_field": "c0011",
+        "source_header": "P-core 1 VID [V]"
+      },
+      {
+        "position_zero_based": 12,
+        "raw_field": "c0012",
+        "source_header": "P-core 2 VID [V]"
+      },
+      {
+        "position_zero_based": 13,
+        "raw_field": "c0013",
+        "source_header": "P-core 3 VID [V]"
+      },
+      {
+        "position_zero_based": 14,
+        "raw_field": "c0014",
+        "source_header": "P-core 4 VID [V]"
+      },
+      {
+        "position_zero_based": 15,
+        "raw_field": "c0015",
+        "source_header": "P-core 5 VID [V]"
+      },
+      {
+        "position_zero_based": 16,
+        "raw_field": "c0016",
+        "source_header": "P-core 6 VID [V]"
+      },
+      {
+        "position_zero_based": 17,
+        "raw_field": "c0017",
+        "source_header": "P-core 7 VID [V]"
+      },
+      {
+        "position_zero_based": 18,
+        "raw_field": "c0018",
+        "source_header": "E-core 8 VID [V]"
+      },
+      {
+        "position_zero_based": 19,
+        "raw_field": "c0019",
+        "source_header": "E-core 9 VID [V]"
+      },
+      {
+        "position_zero_based": 20,
+        "raw_field": "c0020",
+        "source_header": "E-core 10 VID [V]"
+      },
+      {
+        "position_zero_based": 21,
+        "raw_field": "c0021",
+        "source_header": "E-core 11 VID [V]"
+      },
+      {
+        "position_zero_based": 22,
+        "raw_field": "c0022",
+        "source_header": "SA VID [V]"
+      },
+      {
+        "position_zero_based": 23,
+        "raw_field": "c0023",
+        "source_header": "Core Usage (avg) [%]"
+      },
+      {
+        "position_zero_based": 24,
+        "raw_field": "c0024",
+        "source_header": "P-core 0 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 25,
+        "raw_field": "c0025",
+        "source_header": "P-core 0 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 26,
+        "raw_field": "c0026",
+        "source_header": "P-core 1 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 27,
+        "raw_field": "c0027",
+        "source_header": "P-core 1 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 28,
+        "raw_field": "c0028",
+        "source_header": "P-core 2 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 29,
+        "raw_field": "c0029",
+        "source_header": "P-core 2 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 30,
+        "raw_field": "c0030",
+        "source_header": "P-core 3 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 31,
+        "raw_field": "c0031",
+        "source_header": "P-core 3 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 32,
+        "raw_field": "c0032",
+        "source_header": "P-core 4 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 33,
+        "raw_field": "c0033",
+        "source_header": "P-core 4 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 34,
+        "raw_field": "c0034",
+        "source_header": "P-core 5 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 35,
+        "raw_field": "c0035",
+        "source_header": "P-core 5 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 36,
+        "raw_field": "c0036",
+        "source_header": "P-core 6 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 37,
+        "raw_field": "c0037",
+        "source_header": "P-core 6 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 38,
+        "raw_field": "c0038",
+        "source_header": "P-core 7 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 39,
+        "raw_field": "c0039",
+        "source_header": "P-core 7 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 40,
+        "raw_field": "c0040",
+        "source_header": "E-core 8 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 41,
+        "raw_field": "c0041",
+        "source_header": "E-core 9 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 42,
+        "raw_field": "c0042",
+        "source_header": "E-core 10 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 43,
+        "raw_field": "c0043",
+        "source_header": "E-core 11 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 44,
+        "raw_field": "c0044",
+        "source_header": "Max CPU/Thread Usage [%]"
+      },
+      {
+        "position_zero_based": 45,
+        "raw_field": "c0045",
+        "source_header": "Total CPU Usage [%]"
+      },
+      {
+        "position_zero_based": 46,
+        "raw_field": "c0046",
+        "source_header": "On-Demand Clock Modulation [%]"
+      },
+      {
+        "position_zero_based": 47,
+        "raw_field": "c0047",
+        "source_header": "Core Utility (avg) [%]"
+      },
+      {
+        "position_zero_based": 48,
+        "raw_field": "c0048",
+        "source_header": "P-core 0 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 49,
+        "raw_field": "c0049",
+        "source_header": "P-core 0 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 50,
+        "raw_field": "c0050",
+        "source_header": "P-core 1 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 51,
+        "raw_field": "c0051",
+        "source_header": "P-core 1 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 52,
+        "raw_field": "c0052",
+        "source_header": "P-core 2 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 53,
+        "raw_field": "c0053",
+        "source_header": "P-core 2 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 54,
+        "raw_field": "c0054",
+        "source_header": "P-core 3 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 55,
+        "raw_field": "c0055",
+        "source_header": "P-core 3 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 56,
+        "raw_field": "c0056",
+        "source_header": "P-core 4 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 57,
+        "raw_field": "c0057",
+        "source_header": "P-core 4 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 58,
+        "raw_field": "c0058",
+        "source_header": "P-core 5 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 59,
+        "raw_field": "c0059",
+        "source_header": "P-core 5 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 60,
+        "raw_field": "c0060",
+        "source_header": "P-core 6 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 61,
+        "raw_field": "c0061",
+        "source_header": "P-core 6 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 62,
+        "raw_field": "c0062",
+        "source_header": "P-core 7 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 63,
+        "raw_field": "c0063",
+        "source_header": "P-core 7 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 64,
+        "raw_field": "c0064",
+        "source_header": "E-core 8 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 65,
+        "raw_field": "c0065",
+        "source_header": "E-core 9 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 66,
+        "raw_field": "c0066",
+        "source_header": "E-core 10 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 67,
+        "raw_field": "c0067",
+        "source_header": "E-core 11 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 68,
+        "raw_field": "c0068",
+        "source_header": "Total CPU Utility [%]"
+      },
+      {
+        "position_zero_based": 69,
+        "raw_field": "c0069",
+        "source_header": "Core Ratios (avg) [x]"
+      },
+      {
+        "position_zero_based": 70,
+        "raw_field": "c0070",
+        "source_header": "P-core 0 Ratio [x]"
+      },
+      {
+        "position_zero_based": 71,
+        "raw_field": "c0071",
+        "source_header": "P-core 1 Ratio [x]"
+      },
+      {
+        "position_zero_based": 72,
+        "raw_field": "c0072",
+        "source_header": "P-core 2 Ratio [x]"
+      },
+      {
+        "position_zero_based": 73,
+        "raw_field": "c0073",
+        "source_header": "P-core 3 Ratio [x]"
+      },
+      {
+        "position_zero_based": 74,
+        "raw_field": "c0074",
+        "source_header": "P-core 4 Ratio [x]"
+      },
+      {
+        "position_zero_based": 75,
+        "raw_field": "c0075",
+        "source_header": "P-core 5 Ratio [x]"
+      },
+      {
+        "position_zero_based": 76,
+        "raw_field": "c0076",
+        "source_header": "P-core 6 Ratio [x]"
+      },
+      {
+        "position_zero_based": 77,
+        "raw_field": "c0077",
+        "source_header": "P-core 7 Ratio [x]"
+      },
+      {
+        "position_zero_based": 78,
+        "raw_field": "c0078",
+        "source_header": "E-core 8 Ratio [x]"
+      },
+      {
+        "position_zero_based": 79,
+        "raw_field": "c0079",
+        "source_header": "E-core 9 Ratio [x]"
+      },
+      {
+        "position_zero_based": 80,
+        "raw_field": "c0080",
+        "source_header": "E-core 10 Ratio [x]"
+      },
+      {
+        "position_zero_based": 81,
+        "raw_field": "c0081",
+        "source_header": "E-core 11 Ratio [x]"
+      },
+      {
+        "position_zero_based": 82,
+        "raw_field": "c0082",
+        "source_header": "Uncore Ratio [x]"
+      },
+      {
+        "position_zero_based": 83,
+        "raw_field": "c0083",
+        "source_header": "Core Temperatures (avg) [°C]"
+      },
+      {
+        "position_zero_based": 84,
+        "raw_field": "c0084",
+        "source_header": "P-core 0 [°C]"
+      },
+      {
+        "position_zero_based": 85,
+        "raw_field": "c0085",
+        "source_header": "P-core 1 [°C]"
+      },
+      {
+        "position_zero_based": 86,
+        "raw_field": "c0086",
+        "source_header": "P-core 2 [°C]"
+      },
+      {
+        "position_zero_based": 87,
+        "raw_field": "c0087",
+        "source_header": "P-core 3 [°C]"
+      },
+      {
+        "position_zero_based": 88,
+        "raw_field": "c0088",
+        "source_header": "P-core 4 [°C]"
+      },
+      {
+        "position_zero_based": 89,
+        "raw_field": "c0089",
+        "source_header": "P-core 5 [°C]"
+      },
+      {
+        "position_zero_based": 90,
+        "raw_field": "c0090",
+        "source_header": "P-core 6 [°C]"
+      },
+      {
+        "position_zero_based": 91,
+        "raw_field": "c0091",
+        "source_header": "P-core 7 [°C]"
+      },
+      {
+        "position_zero_based": 92,
+        "raw_field": "c0092",
+        "source_header": "E-core 8 [°C]"
+      },
+      {
+        "position_zero_based": 93,
+        "raw_field": "c0093",
+        "source_header": "E-core 9 [°C]"
+      },
+      {
+        "position_zero_based": 94,
+        "raw_field": "c0094",
+        "source_header": "E-core 10 [°C]"
+      },
+      {
+        "position_zero_based": 95,
+        "raw_field": "c0095",
+        "source_header": "E-core 11 [°C]"
+      },
+      {
+        "position_zero_based": 96,
+        "raw_field": "c0096",
+        "source_header": "Core Distance to TjMAX (avg) [°C]"
+      },
+      {
+        "position_zero_based": 97,
+        "raw_field": "c0097",
+        "source_header": "P-core 0 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 98,
+        "raw_field": "c0098",
+        "source_header": "P-core 1 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 99,
+        "raw_field": "c0099",
+        "source_header": "P-core 2 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 100,
+        "raw_field": "c0100",
+        "source_header": "P-core 3 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 101,
+        "raw_field": "c0101",
+        "source_header": "P-core 4 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 102,
+        "raw_field": "c0102",
+        "source_header": "P-core 5 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 103,
+        "raw_field": "c0103",
+        "source_header": "P-core 6 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 104,
+        "raw_field": "c0104",
+        "source_header": "P-core 7 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 105,
+        "raw_field": "c0105",
+        "source_header": "E-core 8 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 106,
+        "raw_field": "c0106",
+        "source_header": "E-core 9 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 107,
+        "raw_field": "c0107",
+        "source_header": "E-core 10 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 108,
+        "raw_field": "c0108",
+        "source_header": "E-core 11 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 109,
+        "raw_field": "c0109",
+        "source_header": "CPU Package [°C]"
+      },
+      {
+        "position_zero_based": 110,
+        "raw_field": "c0110",
+        "source_header": "Core Max [°C]"
+      },
+      {
+        "position_zero_based": 111,
+        "raw_field": "c0111",
+        "source_header": "Core Thermal Throttling (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 112,
+        "raw_field": "c0112",
+        "source_header": "P-core 0 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 113,
+        "raw_field": "c0113",
+        "source_header": "P-core 1 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 114,
+        "raw_field": "c0114",
+        "source_header": "P-core 2 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 115,
+        "raw_field": "c0115",
+        "source_header": "P-core 3 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 116,
+        "raw_field": "c0116",
+        "source_header": "P-core 4 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 117,
+        "raw_field": "c0117",
+        "source_header": "P-core 5 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 118,
+        "raw_field": "c0118",
+        "source_header": "P-core 6 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 119,
+        "raw_field": "c0119",
+        "source_header": "P-core 7 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 120,
+        "raw_field": "c0120",
+        "source_header": "E-core 8 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 121,
+        "raw_field": "c0121",
+        "source_header": "E-core 9 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 122,
+        "raw_field": "c0122",
+        "source_header": "E-core 10 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 123,
+        "raw_field": "c0123",
+        "source_header": "E-core 11 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 124,
+        "raw_field": "c0124",
+        "source_header": "Core Critical Temperature (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 125,
+        "raw_field": "c0125",
+        "source_header": "P-core 0 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 126,
+        "raw_field": "c0126",
+        "source_header": "P-core 1 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 127,
+        "raw_field": "c0127",
+        "source_header": "P-core 2 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 128,
+        "raw_field": "c0128",
+        "source_header": "P-core 3 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 129,
+        "raw_field": "c0129",
+        "source_header": "P-core 4 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 130,
+        "raw_field": "c0130",
+        "source_header": "P-core 5 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 131,
+        "raw_field": "c0131",
+        "source_header": "P-core 6 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 132,
+        "raw_field": "c0132",
+        "source_header": "P-core 7 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 133,
+        "raw_field": "c0133",
+        "source_header": "E-core 8 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 134,
+        "raw_field": "c0134",
+        "source_header": "E-core 9 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 135,
+        "raw_field": "c0135",
+        "source_header": "E-core 10 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 136,
+        "raw_field": "c0136",
+        "source_header": "E-core 11 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 137,
+        "raw_field": "c0137",
+        "source_header": "Core Power Limit Exceeded (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 138,
+        "raw_field": "c0138",
+        "source_header": "P-core 0 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 139,
+        "raw_field": "c0139",
+        "source_header": "P-core 1 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 140,
+        "raw_field": "c0140",
+        "source_header": "P-core 2 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 141,
+        "raw_field": "c0141",
+        "source_header": "P-core 3 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 142,
+        "raw_field": "c0142",
+        "source_header": "P-core 4 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 143,
+        "raw_field": "c0143",
+        "source_header": "P-core 5 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 144,
+        "raw_field": "c0144",
+        "source_header": "P-core 6 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 145,
+        "raw_field": "c0145",
+        "source_header": "P-core 7 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 146,
+        "raw_field": "c0146",
+        "source_header": "E-core 8 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 147,
+        "raw_field": "c0147",
+        "source_header": "E-core 9 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 148,
+        "raw_field": "c0148",
+        "source_header": "E-core 10 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 149,
+        "raw_field": "c0149",
+        "source_header": "E-core 11 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 150,
+        "raw_field": "c0150",
+        "source_header": "Package/Ring Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 151,
+        "raw_field": "c0151",
+        "source_header": "Package/Ring Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 152,
+        "raw_field": "c0152",
+        "source_header": "Package/Ring Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 153,
+        "raw_field": "c0153",
+        "source_header": "CPU Package [°C]"
+      },
+      {
+        "position_zero_based": 154,
+        "raw_field": "c0154",
+        "source_header": "CPU IA Cores [°C]"
+      },
+      {
+        "position_zero_based": 155,
+        "raw_field": "c0155",
+        "source_header": "CPU GT Cores (Graphics) [°C]"
+      },
+      {
+        "position_zero_based": 156,
+        "raw_field": "c0156",
+        "source_header": "VR VCC Temperature (SVID) [°C]"
+      },
+      {
+        "position_zero_based": 157,
+        "raw_field": "c0157",
+        "source_header": "iGPU VID [V]"
+      },
+      {
+        "position_zero_based": 158,
+        "raw_field": "c0158",
+        "source_header": "Voltage Offsets (avg) [V]"
+      },
+      {
+        "position_zero_based": 159,
+        "raw_field": "c0159",
+        "source_header": "IA Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 160,
+        "raw_field": "c0160",
+        "source_header": "GT Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 161,
+        "raw_field": "c0161",
+        "source_header": "CLR (CBo/LLC/Ring) Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 162,
+        "raw_field": "c0162",
+        "source_header": "GT Media Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 163,
+        "raw_field": "c0163",
+        "source_header": "SA Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 164,
+        "raw_field": "c0164",
+        "source_header": "L2 E-core Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 165,
+        "raw_field": "c0165",
+        "source_header": "VDDQ TX Voltage [V]"
+      },
+      {
+        "position_zero_based": 166,
+        "raw_field": "c0166",
+        "source_header": "VR VCC Current (SVID IOUT) [A]"
+      },
+      {
+        "position_zero_based": 167,
+        "raw_field": "c0167",
+        "source_header": "CPU Package Power [W]"
+      },
+      {
+        "position_zero_based": 168,
+        "raw_field": "c0168",
+        "source_header": "IA Cores Power [W]"
+      },
+      {
+        "position_zero_based": 169,
+        "raw_field": "c0169",
+        "source_header": "GT Cores Power [W]"
+      },
+      {
+        "position_zero_based": 170,
+        "raw_field": "c0170",
+        "source_header": "System Agent Power [W]"
+      },
+      {
+        "position_zero_based": 171,
+        "raw_field": "c0171",
+        "source_header": "Rest-of-Chip Power [W]"
+      },
+      {
+        "position_zero_based": 172,
+        "raw_field": "c0172",
+        "source_header": "PL1 Power Limit (Static) [W]"
+      },
+      {
+        "position_zero_based": 173,
+        "raw_field": "c0173",
+        "source_header": "PL1 Power Limit (Dynamic) [W]"
+      },
+      {
+        "position_zero_based": 174,
+        "raw_field": "c0174",
+        "source_header": "PL2 Power Limit (Static) [W]"
+      },
+      {
+        "position_zero_based": 175,
+        "raw_field": "c0175",
+        "source_header": "PL2 Power Limit (Dynamic) [W]"
+      },
+      {
+        "position_zero_based": 176,
+        "raw_field": "c0176",
+        "source_header": "VR VCC Power (SVID POUT) [W]"
+      },
+      {
+        "position_zero_based": 177,
+        "raw_field": "c0177",
+        "source_header": "GPU D3D Usage [%]"
+      },
+      {
+        "position_zero_based": 178,
+        "raw_field": "c0178",
+        "source_header": "GPU D3D Utilizations (avg) [%]"
+      },
+      {
+        "position_zero_based": 179,
+        "raw_field": "c0179",
+        "source_header": "GPU Video Decode 0 Usage [%]"
+      },
+      {
+        "position_zero_based": 180,
+        "raw_field": "c0180",
+        "source_header": "GPU Video Decode 1 Usage [%]"
+      },
+      {
+        "position_zero_based": 181,
+        "raw_field": "c0181",
+        "source_header": "GPU Video Processing 0 Usage [%]"
+      },
+      {
+        "position_zero_based": 182,
+        "raw_field": "c0182",
+        "source_header": "GPU D3D Memory Dynamic [MB]"
+      },
+      {
+        "position_zero_based": 183,
+        "raw_field": "c0183",
+        "source_header": "Package C2 Residency [%]"
+      },
+      {
+        "position_zero_based": 184,
+        "raw_field": "c0184",
+        "source_header": "Package C3 Residency [%]"
+      },
+      {
+        "position_zero_based": 185,
+        "raw_field": "c0185",
+        "source_header": "Package C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 186,
+        "raw_field": "c0186",
+        "source_header": "Package C8 Residency [%]"
+      },
+      {
+        "position_zero_based": 187,
+        "raw_field": "c0187",
+        "source_header": "Core C0 Residency (avg) [%]"
+      },
+      {
+        "position_zero_based": 188,
+        "raw_field": "c0188",
+        "source_header": "P-core 0 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 189,
+        "raw_field": "c0189",
+        "source_header": "P-core 0 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 190,
+        "raw_field": "c0190",
+        "source_header": "P-core 1 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 191,
+        "raw_field": "c0191",
+        "source_header": "P-core 1 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 192,
+        "raw_field": "c0192",
+        "source_header": "P-core 2 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 193,
+        "raw_field": "c0193",
+        "source_header": "P-core 2 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 194,
+        "raw_field": "c0194",
+        "source_header": "P-core 3 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 195,
+        "raw_field": "c0195",
+        "source_header": "P-core 3 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 196,
+        "raw_field": "c0196",
+        "source_header": "P-core 4 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 197,
+        "raw_field": "c0197",
+        "source_header": "P-core 4 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 198,
+        "raw_field": "c0198",
+        "source_header": "P-core 5 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 199,
+        "raw_field": "c0199",
+        "source_header": "P-core 5 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 200,
+        "raw_field": "c0200",
+        "source_header": "P-core 6 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 201,
+        "raw_field": "c0201",
+        "source_header": "P-core 6 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 202,
+        "raw_field": "c0202",
+        "source_header": "P-core 7 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 203,
+        "raw_field": "c0203",
+        "source_header": "P-core 7 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 204,
+        "raw_field": "c0204",
+        "source_header": "E-core 8 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 205,
+        "raw_field": "c0205",
+        "source_header": "E-core 9 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 206,
+        "raw_field": "c0206",
+        "source_header": "E-core 10 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 207,
+        "raw_field": "c0207",
+        "source_header": "E-core 11 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 208,
+        "raw_field": "c0208",
+        "source_header": "Core C1 Residency (avg) [%]"
+      },
+      {
+        "position_zero_based": 209,
+        "raw_field": "c0209",
+        "source_header": "P-core 0 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 210,
+        "raw_field": "c0210",
+        "source_header": "P-core 1 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 211,
+        "raw_field": "c0211",
+        "source_header": "P-core 2 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 212,
+        "raw_field": "c0212",
+        "source_header": "P-core 3 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 213,
+        "raw_field": "c0213",
+        "source_header": "P-core 4 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 214,
+        "raw_field": "c0214",
+        "source_header": "P-core 5 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 215,
+        "raw_field": "c0215",
+        "source_header": "P-core 6 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 216,
+        "raw_field": "c0216",
+        "source_header": "P-core 7 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 217,
+        "raw_field": "c0217",
+        "source_header": "E-core 8 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 218,
+        "raw_field": "c0218",
+        "source_header": "E-core 9 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 219,
+        "raw_field": "c0219",
+        "source_header": "E-core 10 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 220,
+        "raw_field": "c0220",
+        "source_header": "E-core 11 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 221,
+        "raw_field": "c0221",
+        "source_header": "Core C6 Residency (avg) [%]"
+      },
+      {
+        "position_zero_based": 222,
+        "raw_field": "c0222",
+        "source_header": "P-core 0 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 223,
+        "raw_field": "c0223",
+        "source_header": "P-core 1 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 224,
+        "raw_field": "c0224",
+        "source_header": "P-core 2 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 225,
+        "raw_field": "c0225",
+        "source_header": "P-core 3 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 226,
+        "raw_field": "c0226",
+        "source_header": "P-core 4 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 227,
+        "raw_field": "c0227",
+        "source_header": "P-core 5 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 228,
+        "raw_field": "c0228",
+        "source_header": "P-core 6 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 229,
+        "raw_field": "c0229",
+        "source_header": "P-core 7 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 230,
+        "raw_field": "c0230",
+        "source_header": "E-core 8 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 231,
+        "raw_field": "c0231",
+        "source_header": "E-core 9 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 232,
+        "raw_field": "c0232",
+        "source_header": "E-core 10 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 233,
+        "raw_field": "c0233",
+        "source_header": "E-core 11 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 234,
+        "raw_field": "c0234",
+        "source_header": "Core C7 Residency (avg) [%]"
+      },
+      {
+        "position_zero_based": 235,
+        "raw_field": "c0235",
+        "source_header": "P-core 0 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 236,
+        "raw_field": "c0236",
+        "source_header": "P-core 1 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 237,
+        "raw_field": "c0237",
+        "source_header": "P-core 2 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 238,
+        "raw_field": "c0238",
+        "source_header": "P-core 3 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 239,
+        "raw_field": "c0239",
+        "source_header": "P-core 4 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 240,
+        "raw_field": "c0240",
+        "source_header": "P-core 5 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 241,
+        "raw_field": "c0241",
+        "source_header": "P-core 6 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 242,
+        "raw_field": "c0242",
+        "source_header": "P-core 7 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 243,
+        "raw_field": "c0243",
+        "source_header": "Memory Clock Ratio [x]"
+      },
+      {
+        "position_zero_based": 244,
+        "raw_field": "c0244",
+        "source_header": "Tcas [T]"
+      },
+      {
+        "position_zero_based": 245,
+        "raw_field": "c0245",
+        "source_header": "Trcd [T]"
+      },
+      {
+        "position_zero_based": 246,
+        "raw_field": "c0246",
+        "source_header": "Trp [T]"
+      },
+      {
+        "position_zero_based": 247,
+        "raw_field": "c0247",
+        "source_header": "Tras [T]"
+      },
+      {
+        "position_zero_based": 248,
+        "raw_field": "c0248",
+        "source_header": "Trc [T]"
+      },
+      {
+        "position_zero_based": 249,
+        "raw_field": "c0249",
+        "source_header": "Trfc [T]"
+      },
+      {
+        "position_zero_based": 250,
+        "raw_field": "c0250",
+        "source_header": "Command Rate [T]"
+      },
+      {
+        "position_zero_based": 251,
+        "raw_field": "c0251",
+        "source_header": "Gear Mode []"
+      },
+      {
+        "position_zero_based": 252,
+        "raw_field": "c0252",
+        "source_header": "IA Limit Reasons (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 253,
+        "raw_field": "c0253",
+        "source_header": "IA: PROCHOT [Yes/No]"
+      },
+      {
+        "position_zero_based": 254,
+        "raw_field": "c0254",
+        "source_header": "IA: Thermal Event [Yes/No]"
+      },
+      {
+        "position_zero_based": 255,
+        "raw_field": "c0255",
+        "source_header": "IA: Residency State Regulation [Yes/No]"
+      },
+      {
+        "position_zero_based": 256,
+        "raw_field": "c0256",
+        "source_header": "IA: Running Average Thermal Limit [Yes/No]"
+      },
+      {
+        "position_zero_based": 257,
+        "raw_field": "c0257",
+        "source_header": "IA: VR Thermal Alert [Yes/No]"
+      },
+      {
+        "position_zero_based": 258,
+        "raw_field": "c0258",
+        "source_header": "IA: VR TDC [Yes/No]"
+      },
+      {
+        "position_zero_based": 259,
+        "raw_field": "c0259",
+        "source_header": "IA: Electrical Design Point/Other (ICCmax,PL4,SVID,DDR RAPL) [Yes/No]"
+      },
+      {
+        "position_zero_based": 260,
+        "raw_field": "c0260",
+        "source_header": "IA: Package-Level RAPL/PBM PL1 [Yes/No]"
+      },
+      {
+        "position_zero_based": 261,
+        "raw_field": "c0261",
+        "source_header": "IA: Package-Level RAPL/PBM PL2,PL3 [Yes/No]"
+      },
+      {
+        "position_zero_based": 262,
+        "raw_field": "c0262",
+        "source_header": "IA: Max Turbo Limit [Yes/No]"
+      },
+      {
+        "position_zero_based": 263,
+        "raw_field": "c0263",
+        "source_header": "IA: Turbo Attenuation (MCT) [Yes/No]"
+      },
+      {
+        "position_zero_based": 264,
+        "raw_field": "c0264",
+        "source_header": "IA: Thermal Velocity Boost [Yes/No]"
+      },
+      {
+        "position_zero_based": 265,
+        "raw_field": "c0265",
+        "source_header": "GT Limit Reasons (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 266,
+        "raw_field": "c0266",
+        "source_header": "GT: PROCHOT [Yes/No]"
+      },
+      {
+        "position_zero_based": 267,
+        "raw_field": "c0267",
+        "source_header": "GT: Thermal Event [Yes/No]"
+      },
+      {
+        "position_zero_based": 268,
+        "raw_field": "c0268",
+        "source_header": "GT: DDR RAPL [Yes/No]"
+      },
+      {
+        "position_zero_based": 269,
+        "raw_field": "c0269",
+        "source_header": "GT: Residency State Regulation [Yes/No]"
+      },
+      {
+        "position_zero_based": 270,
+        "raw_field": "c0270",
+        "source_header": "GT: Running Average Thermal Limit [Yes/No]"
+      },
+      {
+        "position_zero_based": 271,
+        "raw_field": "c0271",
+        "source_header": "GT: VR Thermal Alert [Yes/No]"
+      },
+      {
+        "position_zero_based": 272,
+        "raw_field": "c0272",
+        "source_header": "GT: VR TDC [Yes/No]"
+      },
+      {
+        "position_zero_based": 273,
+        "raw_field": "c0273",
+        "source_header": "GT: Max VR Voltage, ICCmax, PL4 [Yes/No]"
+      },
+      {
+        "position_zero_based": 274,
+        "raw_field": "c0274",
+        "source_header": "GT: Domain-Level PBM PLGT [Yes/No]"
+      },
+      {
+        "position_zero_based": 275,
+        "raw_field": "c0275",
+        "source_header": "GT: Package-Level RAPL/PBM PL1 [Yes/No]"
+      },
+      {
+        "position_zero_based": 276,
+        "raw_field": "c0276",
+        "source_header": "GT: Package-Level RAPL/PBM PL2,PL3 [Yes/No]"
+      },
+      {
+        "position_zero_based": 277,
+        "raw_field": "c0277",
+        "source_header": "GT: Inefficient Operation [Yes/No]"
+      },
+      {
+        "position_zero_based": 278,
+        "raw_field": "c0278",
+        "source_header": "GT: Fuses limit [Yes/No]"
+      },
+      {
+        "position_zero_based": 279,
+        "raw_field": "c0279",
+        "source_header": "Ring Limit Reasons (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 280,
+        "raw_field": "c0280",
+        "source_header": "RING: PROCHOT [Yes/No]"
+      },
+      {
+        "position_zero_based": 281,
+        "raw_field": "c0281",
+        "source_header": "RING: Thermal Event [Yes/No]"
+      },
+      {
+        "position_zero_based": 282,
+        "raw_field": "c0282",
+        "source_header": "RING: DDR RAPL [Yes/No]"
+      },
+      {
+        "position_zero_based": 283,
+        "raw_field": "c0283",
+        "source_header": "RING: Residency State Regulation [Yes/No]"
+      },
+      {
+        "position_zero_based": 284,
+        "raw_field": "c0284",
+        "source_header": "RING: Running Average Thermal Limit [Yes/No]"
+      },
+      {
+        "position_zero_based": 285,
+        "raw_field": "c0285",
+        "source_header": "RING: VR Thermal Alert [Yes/No]"
+      },
+      {
+        "position_zero_based": 286,
+        "raw_field": "c0286",
+        "source_header": "RING: VR TDC [Yes/No]"
+      },
+      {
+        "position_zero_based": 287,
+        "raw_field": "c0287",
+        "source_header": "RING: Max VR Voltage, ICCmax, PL4 [Yes/No]"
+      },
+      {
+        "position_zero_based": 288,
+        "raw_field": "c0288",
+        "source_header": "RING: Package-Level RAPL/PBM PL1 [Yes/No]"
+      },
+      {
+        "position_zero_based": 289,
+        "raw_field": "c0289",
+        "source_header": "RING: Package-Level RAPL/PBM PL2,PL3 [Yes/No]"
+      },
+      {
+        "position_zero_based": 290,
+        "raw_field": "c0290",
+        "source_header": "PCH Temperature [°C]"
+      },
+      {
+        "position_zero_based": 291,
+        "raw_field": "c0291",
+        "source_header": "SPD Hub Temperature [°C]"
+      },
+      {
+        "position_zero_based": 292,
+        "raw_field": "c0292",
+        "source_header": "VDD (SWA) Voltage [V]"
+      },
+      {
+        "position_zero_based": 293,
+        "raw_field": "c0293",
+        "source_header": "VDDQ (SWB) Voltage [V]"
+      },
+      {
+        "position_zero_based": 294,
+        "raw_field": "c0294",
+        "source_header": "VPP (SWC) Voltage [V]"
+      },
+      {
+        "position_zero_based": 295,
+        "raw_field": "c0295",
+        "source_header": "1.8V VOUT Voltage [V]"
+      },
+      {
+        "position_zero_based": 296,
+        "raw_field": "c0296",
+        "source_header": "1.0V VOUT Voltage [V]"
+      },
+      {
+        "position_zero_based": 297,
+        "raw_field": "c0297",
+        "source_header": "VIN Voltage [V]"
+      },
+      {
+        "position_zero_based": 298,
+        "raw_field": "c0298",
+        "source_header": "PMIC High Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 299,
+        "raw_field": "c0299",
+        "source_header": "PMIC Over Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 300,
+        "raw_field": "c0300",
+        "source_header": "PMIC Under Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 301,
+        "raw_field": "c0301",
+        "source_header": "SPD Hub Temperature [°C]"
+      },
+      {
+        "position_zero_based": 302,
+        "raw_field": "c0302",
+        "source_header": "VDD (SWA) Voltage [V]"
+      },
+      {
+        "position_zero_based": 303,
+        "raw_field": "c0303",
+        "source_header": "VDDQ (SWB) Voltage [V]"
+      },
+      {
+        "position_zero_based": 304,
+        "raw_field": "c0304",
+        "source_header": "VPP (SWC) Voltage [V]"
+      },
+      {
+        "position_zero_based": 305,
+        "raw_field": "c0305",
+        "source_header": "1.8V VOUT Voltage [V]"
+      },
+      {
+        "position_zero_based": 306,
+        "raw_field": "c0306",
+        "source_header": "1.0V VOUT Voltage [V]"
+      },
+      {
+        "position_zero_based": 307,
+        "raw_field": "c0307",
+        "source_header": "VIN Voltage [V]"
+      },
+      {
+        "position_zero_based": 308,
+        "raw_field": "c0308",
+        "source_header": "PMIC High Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 309,
+        "raw_field": "c0309",
+        "source_header": "PMIC Over Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 310,
+        "raw_field": "c0310",
+        "source_header": "PMIC Under Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 311,
+        "raw_field": "c0311",
+        "source_header": "Drive Temperature [°C]"
+      },
+      {
+        "position_zero_based": 312,
+        "raw_field": "c0312",
+        "source_header": "Drive Temperature 2 [°C]"
+      },
+      {
+        "position_zero_based": 313,
+        "raw_field": "c0313",
+        "source_header": "Drive Remaining Life [%]"
+      },
+      {
+        "position_zero_based": 314,
+        "raw_field": "c0314",
+        "source_header": "Drive Available Spare [%]"
+      },
+      {
+        "position_zero_based": 315,
+        "raw_field": "c0315",
+        "source_header": "Drive Failure [Yes/No]"
+      },
+      {
+        "position_zero_based": 316,
+        "raw_field": "c0316",
+        "source_header": "Drive Warning [Yes/No]"
+      },
+      {
+        "position_zero_based": 317,
+        "raw_field": "c0317",
+        "source_header": "Total Host Writes [GB]"
+      },
+      {
+        "position_zero_based": 318,
+        "raw_field": "c0318",
+        "source_header": "Total Host Reads [GB]"
+      },
+      {
+        "position_zero_based": 319,
+        "raw_field": "c0319",
+        "source_header": "Read Activity [%]"
+      },
+      {
+        "position_zero_based": 320,
+        "raw_field": "c0320",
+        "source_header": "Write Activity [%]"
+      },
+      {
+        "position_zero_based": 321,
+        "raw_field": "c0321",
+        "source_header": "Total Activity [%]"
+      },
+      {
+        "position_zero_based": 322,
+        "raw_field": "c0322",
+        "source_header": "Read Rate [MB/s]"
+      },
+      {
+        "position_zero_based": 323,
+        "raw_field": "c0323",
+        "source_header": "Write Rate [MB/s]"
+      },
+      {
+        "position_zero_based": 324,
+        "raw_field": "c0324",
+        "source_header": "Read Total [MB]"
+      },
+      {
+        "position_zero_based": 325,
+        "raw_field": "c0325",
+        "source_header": "Write Total [MB]"
+      },
+      {
+        "position_zero_based": 326,
+        "raw_field": "c0326",
+        "source_header": "GPU Temperature [°C]"
+      },
+      {
+        "position_zero_based": 327,
+        "raw_field": "c0327",
+        "source_header": "GPU Hot Spot Temperature [°C]"
+      },
+      {
+        "position_zero_based": 328,
+        "raw_field": "c0328",
+        "source_header": "GPU Thermal Limit [°C]"
+      },
+      {
+        "position_zero_based": 329,
+        "raw_field": "c0329",
+        "source_header": "GPU Core Voltage [V]"
+      },
+      {
+        "position_zero_based": 330,
+        "raw_field": "c0330",
+        "source_header": "GPU Rail Voltages (avg) [V]"
+      },
+      {
+        "position_zero_based": 331,
+        "raw_field": "c0331",
+        "source_header": "GPU PCIe +12V Input Voltage [V]"
+      },
+      {
+        "position_zero_based": 332,
+        "raw_field": "c0332",
+        "source_header": "GPU 8-pin #1 Input Voltage [V]"
+      },
+      {
+        "position_zero_based": 333,
+        "raw_field": "c0333",
+        "source_header": "GPU Misc0 Input Voltage [V]"
+      },
+      {
+        "position_zero_based": 334,
+        "raw_field": "c0334",
+        "source_header": "GPU Fan1 [RPM]"
+      },
+      {
+        "position_zero_based": 335,
+        "raw_field": "c0335",
+        "source_header": "GPU Fan2 [RPM]"
+      },
+      {
+        "position_zero_based": 336,
+        "raw_field": "c0336",
+        "source_header": "GPU Power [W]"
+      },
+      {
+        "position_zero_based": 337,
+        "raw_field": "c0337",
+        "source_header": "GPU Rail Powers (avg) [W]"
+      },
+      {
+        "position_zero_based": 338,
+        "raw_field": "c0338",
+        "source_header": "GPU Core (NVVDD) Input Power (sum) [W]"
+      },
+      {
+        "position_zero_based": 339,
+        "raw_field": "c0339",
+        "source_header": "GPU PCIe +12V Input Power [W]"
+      },
+      {
+        "position_zero_based": 340,
+        "raw_field": "c0340",
+        "source_header": "GPU 8-pin #1 Input Power [W]"
+      },
+      {
+        "position_zero_based": 341,
+        "raw_field": "c0341",
+        "source_header": "GPU Misc0 Input Power [W]"
+      },
+      {
+        "position_zero_based": 342,
+        "raw_field": "c0342",
+        "source_header": "GPU Core (NVVDD2) Input Power (sum) [W]"
+      },
+      {
+        "position_zero_based": 343,
+        "raw_field": "c0343",
+        "source_header": "GPU Input PP Source Power (sum) [W]"
+      },
+      {
+        "position_zero_based": 344,
+        "raw_field": "c0344",
+        "source_header": "GPU Core (NVVDD) Output Power [W]"
+      },
+      {
+        "position_zero_based": 345,
+        "raw_field": "c0345",
+        "source_header": "GPU Core (NVVDD) Output Power [W]"
+      },
+      {
+        "position_zero_based": 346,
+        "raw_field": "c0346",
+        "source_header": "GPU Core Load [%]"
+      },
+      {
+        "position_zero_based": 347,
+        "raw_field": "c0347",
+        "source_header": "GPU Memory Controller Load [%]"
+      },
+      {
+        "position_zero_based": 348,
+        "raw_field": "c0348",
+        "source_header": "GPU Video Engine Load [%]"
+      },
+      {
+        "position_zero_based": 349,
+        "raw_field": "c0349",
+        "source_header": "GPU Bus Load [%]"
+      },
+      {
+        "position_zero_based": 350,
+        "raw_field": "c0350",
+        "source_header": "GPU Memory Usage [%]"
+      },
+      {
+        "position_zero_based": 351,
+        "raw_field": "c0351",
+        "source_header": "GPU D3D Usages (avg) [%]"
+      },
+      {
+        "position_zero_based": 352,
+        "raw_field": "c0352",
+        "source_header": "GPU D3D Usage [%]"
+      },
+      {
+        "position_zero_based": 353,
+        "raw_field": "c0353",
+        "source_header": "GPU Video Decode 0 Usage [%]"
+      },
+      {
+        "position_zero_based": 354,
+        "raw_field": "c0354",
+        "source_header": "GPU Video Encode 0 Usage [%]"
+      },
+      {
+        "position_zero_based": 355,
+        "raw_field": "c0355",
+        "source_header": "GPU Video Encode 1 Usage [%]"
+      },
+      {
+        "position_zero_based": 356,
+        "raw_field": "c0356",
+        "source_header": "GPU Computing (Compute_0) Usage [%]"
+      },
+      {
+        "position_zero_based": 357,
+        "raw_field": "c0357",
+        "source_header": "GPU Computing (Cuda) Usage [%]"
+      },
+      {
+        "position_zero_based": 358,
+        "raw_field": "c0358",
+        "source_header": "GPU Computing (Compute_1) Usage [%]"
+      },
+      {
+        "position_zero_based": 359,
+        "raw_field": "c0359",
+        "source_header": "GPU VR Usage [%]"
+      },
+      {
+        "position_zero_based": 360,
+        "raw_field": "c0360",
+        "source_header": "GPU Graphics Usage [%]"
+      },
+      {
+        "position_zero_based": 361,
+        "raw_field": "c0361",
+        "source_header": "GPU Fan1 [%]"
+      },
+      {
+        "position_zero_based": 362,
+        "raw_field": "c0362",
+        "source_header": "GPU Fan2 [%]"
+      },
+      {
+        "position_zero_based": 363,
+        "raw_field": "c0363",
+        "source_header": "GPU Performance Limiters (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 364,
+        "raw_field": "c0364",
+        "source_header": "Performance Limit - Power [Yes/No]"
+      },
+      {
+        "position_zero_based": 365,
+        "raw_field": "c0365",
+        "source_header": "Performance Limit - Thermal [Yes/No]"
+      },
+      {
+        "position_zero_based": 366,
+        "raw_field": "c0366",
+        "source_header": "Performance Limit - Reliability Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 367,
+        "raw_field": "c0367",
+        "source_header": "Performance Limit - Max Operating Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 368,
+        "raw_field": "c0368",
+        "source_header": "Performance Limit - Utilization [Yes/No]"
+      },
+      {
+        "position_zero_based": 369,
+        "raw_field": "c0369",
+        "source_header": "Performance Limit - SLI GPUBoost Sync [Yes/No]"
+      },
+      {
+        "position_zero_based": 370,
+        "raw_field": "c0370",
+        "source_header": "Total GPU Power [% of TDP] [%]"
+      },
+      {
+        "position_zero_based": 371,
+        "raw_field": "c0371",
+        "source_header": "Total GPU Power (normalized) [% of TDP] [%]"
+      },
+      {
+        "position_zero_based": 372,
+        "raw_field": "c0372",
+        "source_header": "GPU Memory Available [MB]"
+      },
+      {
+        "position_zero_based": 373,
+        "raw_field": "c0373",
+        "source_header": "GPU Memory Allocated [MB]"
+      },
+      {
+        "position_zero_based": 374,
+        "raw_field": "c0374",
+        "source_header": "GPU D3D Memory Dedicated [MB]"
+      },
+      {
+        "position_zero_based": 375,
+        "raw_field": "c0375",
+        "source_header": "GPU D3D Memory Dynamic [MB]"
+      },
+      {
+        "position_zero_based": 376,
+        "raw_field": "c0376",
+        "source_header": "PCIe Link Speed [GT/s]"
+      },
+      {
+        "position_zero_based": 377,
+        "raw_field": "c0377",
+        "source_header": "Framerate Presented (avg) [FPS]"
+      },
+      {
+        "position_zero_based": 378,
+        "raw_field": "c0378",
+        "source_header": "Framerate Presented (99%) [FPS]"
+      },
+      {
+        "position_zero_based": 379,
+        "raw_field": "c0379",
+        "source_header": "Framerate Presented (1%) [FPS]"
+      },
+      {
+        "position_zero_based": 380,
+        "raw_field": "c0380",
+        "source_header": "Framerate Displayed (avg) [FPS]"
+      },
+      {
+        "position_zero_based": 381,
+        "raw_field": "c0381",
+        "source_header": "Frame Time Presented (avg) [ms]"
+      },
+      {
+        "position_zero_based": 382,
+        "raw_field": "c0382",
+        "source_header": "Frame Time Presented (99%) [ms]"
+      },
+      {
+        "position_zero_based": 383,
+        "raw_field": "c0383",
+        "source_header": "Frame Time Presented (1%) [ms]"
+      },
+      {
+        "position_zero_based": 384,
+        "raw_field": "c0384",
+        "source_header": "GPU Busy (avg) [ms]"
+      },
+      {
+        "position_zero_based": 385,
+        "raw_field": "c0385",
+        "source_header": "GPU Wait (avg) [ms]"
+      },
+      {
+        "position_zero_based": 386,
+        "raw_field": "c0386",
+        "source_header": "CPU Busy (avg) [ms]"
+      },
+      {
+        "position_zero_based": 387,
+        "raw_field": "c0387",
+        "source_header": "CPU Wait (avg) [ms]"
+      },
+      {
+        "position_zero_based": 388,
+        "raw_field": "c0388",
+        "source_header": "Total DL [MB]"
+      },
+      {
+        "position_zero_based": 389,
+        "raw_field": "c0389",
+        "source_header": "Total UP [MB]"
+      },
+      {
+        "position_zero_based": 390,
+        "raw_field": "c0390",
+        "source_header": "Current DL rate [KB/s]"
+      },
+      {
+        "position_zero_based": 391,
+        "raw_field": "c0391",
+        "source_header": "Current UP rate [KB/s]"
+      },
+      {
+        "position_zero_based": 392,
+        "raw_field": "c0392",
+        "source_header": "Total Errors []"
+      },
+      {
+        "position_zero_based": 393,
+        "raw_field": "c0393",
+        "source_header": ""
+      }
+    ]
+  },
+  "82a3739a802d319a": {
+    "encoding": "cp1252",
+    "columns": [
+      {
+        "position_zero_based": 0,
+        "raw_field": "c0000",
+        "source_header": "Date"
+      },
+      {
+        "position_zero_based": 1,
+        "raw_field": "c0001",
+        "source_header": "Time"
+      },
+      {
+        "position_zero_based": 2,
+        "raw_field": "c0002",
+        "source_header": "Virtual Memory Committed [MB]"
+      },
+      {
+        "position_zero_based": 3,
+        "raw_field": "c0003",
+        "source_header": "Virtual Memory Available [MB]"
+      },
+      {
+        "position_zero_based": 4,
+        "raw_field": "c0004",
+        "source_header": "Virtual Memory Load [%]"
+      },
+      {
+        "position_zero_based": 5,
+        "raw_field": "c0005",
+        "source_header": "Physical Memory Used [MB]"
+      },
+      {
+        "position_zero_based": 6,
+        "raw_field": "c0006",
+        "source_header": "Physical Memory Available [MB]"
+      },
+      {
+        "position_zero_based": 7,
+        "raw_field": "c0007",
+        "source_header": "Physical Memory Load [%]"
+      },
+      {
+        "position_zero_based": 8,
+        "raw_field": "c0008",
+        "source_header": "Page File Usage [%]"
+      },
+      {
+        "position_zero_based": 9,
+        "raw_field": "c0009",
+        "source_header": "Core VIDs (avg) [V]"
+      },
+      {
+        "position_zero_based": 10,
+        "raw_field": "c0010",
+        "source_header": "P-core 0 VID [V]"
+      },
+      {
+        "position_zero_based": 11,
+        "raw_field": "c0011",
+        "source_header": "P-core 1 VID [V]"
+      },
+      {
+        "position_zero_based": 12,
+        "raw_field": "c0012",
+        "source_header": "P-core 2 VID [V]"
+      },
+      {
+        "position_zero_based": 13,
+        "raw_field": "c0013",
+        "source_header": "P-core 3 VID [V]"
+      },
+      {
+        "position_zero_based": 14,
+        "raw_field": "c0014",
+        "source_header": "P-core 4 VID [V]"
+      },
+      {
+        "position_zero_based": 15,
+        "raw_field": "c0015",
+        "source_header": "P-core 5 VID [V]"
+      },
+      {
+        "position_zero_based": 16,
+        "raw_field": "c0016",
+        "source_header": "P-core 6 VID [V]"
+      },
+      {
+        "position_zero_based": 17,
+        "raw_field": "c0017",
+        "source_header": "P-core 7 VID [V]"
+      },
+      {
+        "position_zero_based": 18,
+        "raw_field": "c0018",
+        "source_header": "E-core 8 VID [V]"
+      },
+      {
+        "position_zero_based": 19,
+        "raw_field": "c0019",
+        "source_header": "E-core 9 VID [V]"
+      },
+      {
+        "position_zero_based": 20,
+        "raw_field": "c0020",
+        "source_header": "E-core 10 VID [V]"
+      },
+      {
+        "position_zero_based": 21,
+        "raw_field": "c0021",
+        "source_header": "E-core 11 VID [V]"
+      },
+      {
+        "position_zero_based": 22,
+        "raw_field": "c0022",
+        "source_header": "SA VID [V]"
+      },
+      {
+        "position_zero_based": 23,
+        "raw_field": "c0023",
+        "source_header": "Core Usage (avg) [%]"
+      },
+      {
+        "position_zero_based": 24,
+        "raw_field": "c0024",
+        "source_header": "P-core 0 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 25,
+        "raw_field": "c0025",
+        "source_header": "P-core 0 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 26,
+        "raw_field": "c0026",
+        "source_header": "P-core 1 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 27,
+        "raw_field": "c0027",
+        "source_header": "P-core 1 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 28,
+        "raw_field": "c0028",
+        "source_header": "P-core 2 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 29,
+        "raw_field": "c0029",
+        "source_header": "P-core 2 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 30,
+        "raw_field": "c0030",
+        "source_header": "P-core 3 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 31,
+        "raw_field": "c0031",
+        "source_header": "P-core 3 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 32,
+        "raw_field": "c0032",
+        "source_header": "P-core 4 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 33,
+        "raw_field": "c0033",
+        "source_header": "P-core 4 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 34,
+        "raw_field": "c0034",
+        "source_header": "P-core 5 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 35,
+        "raw_field": "c0035",
+        "source_header": "P-core 5 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 36,
+        "raw_field": "c0036",
+        "source_header": "P-core 6 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 37,
+        "raw_field": "c0037",
+        "source_header": "P-core 6 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 38,
+        "raw_field": "c0038",
+        "source_header": "P-core 7 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 39,
+        "raw_field": "c0039",
+        "source_header": "P-core 7 T1 Usage [%]"
+      },
+      {
+        "position_zero_based": 40,
+        "raw_field": "c0040",
+        "source_header": "E-core 8 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 41,
+        "raw_field": "c0041",
+        "source_header": "E-core 9 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 42,
+        "raw_field": "c0042",
+        "source_header": "E-core 10 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 43,
+        "raw_field": "c0043",
+        "source_header": "E-core 11 T0 Usage [%]"
+      },
+      {
+        "position_zero_based": 44,
+        "raw_field": "c0044",
+        "source_header": "Max CPU/Thread Usage [%]"
+      },
+      {
+        "position_zero_based": 45,
+        "raw_field": "c0045",
+        "source_header": "Total CPU Usage [%]"
+      },
+      {
+        "position_zero_based": 46,
+        "raw_field": "c0046",
+        "source_header": "On-Demand Clock Modulation [%]"
+      },
+      {
+        "position_zero_based": 47,
+        "raw_field": "c0047",
+        "source_header": "Core Utility (avg) [%]"
+      },
+      {
+        "position_zero_based": 48,
+        "raw_field": "c0048",
+        "source_header": "P-core 0 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 49,
+        "raw_field": "c0049",
+        "source_header": "P-core 0 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 50,
+        "raw_field": "c0050",
+        "source_header": "P-core 1 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 51,
+        "raw_field": "c0051",
+        "source_header": "P-core 1 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 52,
+        "raw_field": "c0052",
+        "source_header": "P-core 2 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 53,
+        "raw_field": "c0053",
+        "source_header": "P-core 2 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 54,
+        "raw_field": "c0054",
+        "source_header": "P-core 3 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 55,
+        "raw_field": "c0055",
+        "source_header": "P-core 3 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 56,
+        "raw_field": "c0056",
+        "source_header": "P-core 4 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 57,
+        "raw_field": "c0057",
+        "source_header": "P-core 4 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 58,
+        "raw_field": "c0058",
+        "source_header": "P-core 5 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 59,
+        "raw_field": "c0059",
+        "source_header": "P-core 5 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 60,
+        "raw_field": "c0060",
+        "source_header": "P-core 6 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 61,
+        "raw_field": "c0061",
+        "source_header": "P-core 6 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 62,
+        "raw_field": "c0062",
+        "source_header": "P-core 7 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 63,
+        "raw_field": "c0063",
+        "source_header": "P-core 7 T1 Utility [%]"
+      },
+      {
+        "position_zero_based": 64,
+        "raw_field": "c0064",
+        "source_header": "E-core 8 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 65,
+        "raw_field": "c0065",
+        "source_header": "E-core 9 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 66,
+        "raw_field": "c0066",
+        "source_header": "E-core 10 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 67,
+        "raw_field": "c0067",
+        "source_header": "E-core 11 T0 Utility [%]"
+      },
+      {
+        "position_zero_based": 68,
+        "raw_field": "c0068",
+        "source_header": "Total CPU Utility [%]"
+      },
+      {
+        "position_zero_based": 69,
+        "raw_field": "c0069",
+        "source_header": "Core Ratios (avg) [x]"
+      },
+      {
+        "position_zero_based": 70,
+        "raw_field": "c0070",
+        "source_header": "P-core 0 Ratio [x]"
+      },
+      {
+        "position_zero_based": 71,
+        "raw_field": "c0071",
+        "source_header": "P-core 1 Ratio [x]"
+      },
+      {
+        "position_zero_based": 72,
+        "raw_field": "c0072",
+        "source_header": "P-core 2 Ratio [x]"
+      },
+      {
+        "position_zero_based": 73,
+        "raw_field": "c0073",
+        "source_header": "P-core 3 Ratio [x]"
+      },
+      {
+        "position_zero_based": 74,
+        "raw_field": "c0074",
+        "source_header": "P-core 4 Ratio [x]"
+      },
+      {
+        "position_zero_based": 75,
+        "raw_field": "c0075",
+        "source_header": "P-core 5 Ratio [x]"
+      },
+      {
+        "position_zero_based": 76,
+        "raw_field": "c0076",
+        "source_header": "P-core 6 Ratio [x]"
+      },
+      {
+        "position_zero_based": 77,
+        "raw_field": "c0077",
+        "source_header": "P-core 7 Ratio [x]"
+      },
+      {
+        "position_zero_based": 78,
+        "raw_field": "c0078",
+        "source_header": "E-core 8 Ratio [x]"
+      },
+      {
+        "position_zero_based": 79,
+        "raw_field": "c0079",
+        "source_header": "E-core 9 Ratio [x]"
+      },
+      {
+        "position_zero_based": 80,
+        "raw_field": "c0080",
+        "source_header": "E-core 10 Ratio [x]"
+      },
+      {
+        "position_zero_based": 81,
+        "raw_field": "c0081",
+        "source_header": "E-core 11 Ratio [x]"
+      },
+      {
+        "position_zero_based": 82,
+        "raw_field": "c0082",
+        "source_header": "Uncore Ratio [x]"
+      },
+      {
+        "position_zero_based": 83,
+        "raw_field": "c0083",
+        "source_header": "Core Temperatures (avg) [°C]"
+      },
+      {
+        "position_zero_based": 84,
+        "raw_field": "c0084",
+        "source_header": "P-core 0 [°C]"
+      },
+      {
+        "position_zero_based": 85,
+        "raw_field": "c0085",
+        "source_header": "P-core 1 [°C]"
+      },
+      {
+        "position_zero_based": 86,
+        "raw_field": "c0086",
+        "source_header": "P-core 2 [°C]"
+      },
+      {
+        "position_zero_based": 87,
+        "raw_field": "c0087",
+        "source_header": "P-core 3 [°C]"
+      },
+      {
+        "position_zero_based": 88,
+        "raw_field": "c0088",
+        "source_header": "P-core 4 [°C]"
+      },
+      {
+        "position_zero_based": 89,
+        "raw_field": "c0089",
+        "source_header": "P-core 5 [°C]"
+      },
+      {
+        "position_zero_based": 90,
+        "raw_field": "c0090",
+        "source_header": "P-core 6 [°C]"
+      },
+      {
+        "position_zero_based": 91,
+        "raw_field": "c0091",
+        "source_header": "P-core 7 [°C]"
+      },
+      {
+        "position_zero_based": 92,
+        "raw_field": "c0092",
+        "source_header": "E-core 8 [°C]"
+      },
+      {
+        "position_zero_based": 93,
+        "raw_field": "c0093",
+        "source_header": "E-core 9 [°C]"
+      },
+      {
+        "position_zero_based": 94,
+        "raw_field": "c0094",
+        "source_header": "E-core 10 [°C]"
+      },
+      {
+        "position_zero_based": 95,
+        "raw_field": "c0095",
+        "source_header": "E-core 11 [°C]"
+      },
+      {
+        "position_zero_based": 96,
+        "raw_field": "c0096",
+        "source_header": "Core Distance to TjMAX (avg) [°C]"
+      },
+      {
+        "position_zero_based": 97,
+        "raw_field": "c0097",
+        "source_header": "P-core 0 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 98,
+        "raw_field": "c0098",
+        "source_header": "P-core 1 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 99,
+        "raw_field": "c0099",
+        "source_header": "P-core 2 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 100,
+        "raw_field": "c0100",
+        "source_header": "P-core 3 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 101,
+        "raw_field": "c0101",
+        "source_header": "P-core 4 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 102,
+        "raw_field": "c0102",
+        "source_header": "P-core 5 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 103,
+        "raw_field": "c0103",
+        "source_header": "P-core 6 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 104,
+        "raw_field": "c0104",
+        "source_header": "P-core 7 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 105,
+        "raw_field": "c0105",
+        "source_header": "E-core 8 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 106,
+        "raw_field": "c0106",
+        "source_header": "E-core 9 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 107,
+        "raw_field": "c0107",
+        "source_header": "E-core 10 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 108,
+        "raw_field": "c0108",
+        "source_header": "E-core 11 Distance to TjMAX [°C]"
+      },
+      {
+        "position_zero_based": 109,
+        "raw_field": "c0109",
+        "source_header": "CPU Package [°C]"
+      },
+      {
+        "position_zero_based": 110,
+        "raw_field": "c0110",
+        "source_header": "Core Max [°C]"
+      },
+      {
+        "position_zero_based": 111,
+        "raw_field": "c0111",
+        "source_header": "Core Thermal Throttling (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 112,
+        "raw_field": "c0112",
+        "source_header": "P-core 0 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 113,
+        "raw_field": "c0113",
+        "source_header": "P-core 1 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 114,
+        "raw_field": "c0114",
+        "source_header": "P-core 2 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 115,
+        "raw_field": "c0115",
+        "source_header": "P-core 3 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 116,
+        "raw_field": "c0116",
+        "source_header": "P-core 4 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 117,
+        "raw_field": "c0117",
+        "source_header": "P-core 5 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 118,
+        "raw_field": "c0118",
+        "source_header": "P-core 6 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 119,
+        "raw_field": "c0119",
+        "source_header": "P-core 7 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 120,
+        "raw_field": "c0120",
+        "source_header": "E-core 8 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 121,
+        "raw_field": "c0121",
+        "source_header": "E-core 9 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 122,
+        "raw_field": "c0122",
+        "source_header": "E-core 10 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 123,
+        "raw_field": "c0123",
+        "source_header": "E-core 11 Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 124,
+        "raw_field": "c0124",
+        "source_header": "Core Critical Temperature (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 125,
+        "raw_field": "c0125",
+        "source_header": "P-core 0 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 126,
+        "raw_field": "c0126",
+        "source_header": "P-core 1 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 127,
+        "raw_field": "c0127",
+        "source_header": "P-core 2 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 128,
+        "raw_field": "c0128",
+        "source_header": "P-core 3 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 129,
+        "raw_field": "c0129",
+        "source_header": "P-core 4 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 130,
+        "raw_field": "c0130",
+        "source_header": "P-core 5 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 131,
+        "raw_field": "c0131",
+        "source_header": "P-core 6 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 132,
+        "raw_field": "c0132",
+        "source_header": "P-core 7 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 133,
+        "raw_field": "c0133",
+        "source_header": "E-core 8 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 134,
+        "raw_field": "c0134",
+        "source_header": "E-core 9 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 135,
+        "raw_field": "c0135",
+        "source_header": "E-core 10 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 136,
+        "raw_field": "c0136",
+        "source_header": "E-core 11 Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 137,
+        "raw_field": "c0137",
+        "source_header": "Core Power Limit Exceeded (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 138,
+        "raw_field": "c0138",
+        "source_header": "P-core 0 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 139,
+        "raw_field": "c0139",
+        "source_header": "P-core 1 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 140,
+        "raw_field": "c0140",
+        "source_header": "P-core 2 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 141,
+        "raw_field": "c0141",
+        "source_header": "P-core 3 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 142,
+        "raw_field": "c0142",
+        "source_header": "P-core 4 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 143,
+        "raw_field": "c0143",
+        "source_header": "P-core 5 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 144,
+        "raw_field": "c0144",
+        "source_header": "P-core 6 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 145,
+        "raw_field": "c0145",
+        "source_header": "P-core 7 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 146,
+        "raw_field": "c0146",
+        "source_header": "E-core 8 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 147,
+        "raw_field": "c0147",
+        "source_header": "E-core 9 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 148,
+        "raw_field": "c0148",
+        "source_header": "E-core 10 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 149,
+        "raw_field": "c0149",
+        "source_header": "E-core 11 Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 150,
+        "raw_field": "c0150",
+        "source_header": "Package/Ring Thermal Throttling [Yes/No]"
+      },
+      {
+        "position_zero_based": 151,
+        "raw_field": "c0151",
+        "source_header": "Package/Ring Critical Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 152,
+        "raw_field": "c0152",
+        "source_header": "Package/Ring Power Limit Exceeded [Yes/No]"
+      },
+      {
+        "position_zero_based": 153,
+        "raw_field": "c0153",
+        "source_header": "CPU Package [°C]"
+      },
+      {
+        "position_zero_based": 154,
+        "raw_field": "c0154",
+        "source_header": "CPU IA Cores [°C]"
+      },
+      {
+        "position_zero_based": 155,
+        "raw_field": "c0155",
+        "source_header": "CPU GT Cores (Graphics) [°C]"
+      },
+      {
+        "position_zero_based": 156,
+        "raw_field": "c0156",
+        "source_header": "VR VCC Temperature (SVID) [°C]"
+      },
+      {
+        "position_zero_based": 157,
+        "raw_field": "c0157",
+        "source_header": "iGPU VID [V]"
+      },
+      {
+        "position_zero_based": 158,
+        "raw_field": "c0158",
+        "source_header": "Voltage Offsets (avg) [V]"
+      },
+      {
+        "position_zero_based": 159,
+        "raw_field": "c0159",
+        "source_header": "IA Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 160,
+        "raw_field": "c0160",
+        "source_header": "GT Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 161,
+        "raw_field": "c0161",
+        "source_header": "CLR (CBo/LLC/Ring) Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 162,
+        "raw_field": "c0162",
+        "source_header": "GT Media Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 163,
+        "raw_field": "c0163",
+        "source_header": "SA Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 164,
+        "raw_field": "c0164",
+        "source_header": "L2 E-core Voltage Offset [V]"
+      },
+      {
+        "position_zero_based": 165,
+        "raw_field": "c0165",
+        "source_header": "VDDQ TX Voltage [V]"
+      },
+      {
+        "position_zero_based": 166,
+        "raw_field": "c0166",
+        "source_header": "VR VCC Current (SVID IOUT) [A]"
+      },
+      {
+        "position_zero_based": 167,
+        "raw_field": "c0167",
+        "source_header": "CPU Package Power [W]"
+      },
+      {
+        "position_zero_based": 168,
+        "raw_field": "c0168",
+        "source_header": "IA Cores Power [W]"
+      },
+      {
+        "position_zero_based": 169,
+        "raw_field": "c0169",
+        "source_header": "GT Cores Power [W]"
+      },
+      {
+        "position_zero_based": 170,
+        "raw_field": "c0170",
+        "source_header": "System Agent Power [W]"
+      },
+      {
+        "position_zero_based": 171,
+        "raw_field": "c0171",
+        "source_header": "Rest-of-Chip Power [W]"
+      },
+      {
+        "position_zero_based": 172,
+        "raw_field": "c0172",
+        "source_header": "PL1 Power Limit (Static) [W]"
+      },
+      {
+        "position_zero_based": 173,
+        "raw_field": "c0173",
+        "source_header": "PL1 Power Limit (Dynamic) [W]"
+      },
+      {
+        "position_zero_based": 174,
+        "raw_field": "c0174",
+        "source_header": "PL2 Power Limit (Static) [W]"
+      },
+      {
+        "position_zero_based": 175,
+        "raw_field": "c0175",
+        "source_header": "PL2 Power Limit (Dynamic) [W]"
+      },
+      {
+        "position_zero_based": 176,
+        "raw_field": "c0176",
+        "source_header": "VR VCC Power (SVID POUT) [W]"
+      },
+      {
+        "position_zero_based": 177,
+        "raw_field": "c0177",
+        "source_header": "GPU D3D Usage [%]"
+      },
+      {
+        "position_zero_based": 178,
+        "raw_field": "c0178",
+        "source_header": "GPU D3D Utilizations (avg) [%]"
+      },
+      {
+        "position_zero_based": 179,
+        "raw_field": "c0179",
+        "source_header": "GPU Video Decode 0 Usage [%]"
+      },
+      {
+        "position_zero_based": 180,
+        "raw_field": "c0180",
+        "source_header": "GPU Video Decode 1 Usage [%]"
+      },
+      {
+        "position_zero_based": 181,
+        "raw_field": "c0181",
+        "source_header": "GPU Video Processing 0 Usage [%]"
+      },
+      {
+        "position_zero_based": 182,
+        "raw_field": "c0182",
+        "source_header": "GPU D3D Memory Dynamic [MB]"
+      },
+      {
+        "position_zero_based": 183,
+        "raw_field": "c0183",
+        "source_header": "Package C2 Residency [%]"
+      },
+      {
+        "position_zero_based": 184,
+        "raw_field": "c0184",
+        "source_header": "Package C3 Residency [%]"
+      },
+      {
+        "position_zero_based": 185,
+        "raw_field": "c0185",
+        "source_header": "Package C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 186,
+        "raw_field": "c0186",
+        "source_header": "Package C8 Residency [%]"
+      },
+      {
+        "position_zero_based": 187,
+        "raw_field": "c0187",
+        "source_header": "Core C0 Residency (avg) [%]"
+      },
+      {
+        "position_zero_based": 188,
+        "raw_field": "c0188",
+        "source_header": "P-core 0 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 189,
+        "raw_field": "c0189",
+        "source_header": "P-core 0 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 190,
+        "raw_field": "c0190",
+        "source_header": "P-core 1 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 191,
+        "raw_field": "c0191",
+        "source_header": "P-core 1 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 192,
+        "raw_field": "c0192",
+        "source_header": "P-core 2 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 193,
+        "raw_field": "c0193",
+        "source_header": "P-core 2 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 194,
+        "raw_field": "c0194",
+        "source_header": "P-core 3 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 195,
+        "raw_field": "c0195",
+        "source_header": "P-core 3 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 196,
+        "raw_field": "c0196",
+        "source_header": "P-core 4 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 197,
+        "raw_field": "c0197",
+        "source_header": "P-core 4 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 198,
+        "raw_field": "c0198",
+        "source_header": "P-core 5 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 199,
+        "raw_field": "c0199",
+        "source_header": "P-core 5 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 200,
+        "raw_field": "c0200",
+        "source_header": "P-core 6 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 201,
+        "raw_field": "c0201",
+        "source_header": "P-core 6 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 202,
+        "raw_field": "c0202",
+        "source_header": "P-core 7 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 203,
+        "raw_field": "c0203",
+        "source_header": "P-core 7 T1 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 204,
+        "raw_field": "c0204",
+        "source_header": "E-core 8 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 205,
+        "raw_field": "c0205",
+        "source_header": "E-core 9 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 206,
+        "raw_field": "c0206",
+        "source_header": "E-core 10 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 207,
+        "raw_field": "c0207",
+        "source_header": "E-core 11 T0 C0 Residency [%]"
+      },
+      {
+        "position_zero_based": 208,
+        "raw_field": "c0208",
+        "source_header": "Core C1 Residency (avg) [%]"
+      },
+      {
+        "position_zero_based": 209,
+        "raw_field": "c0209",
+        "source_header": "P-core 0 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 210,
+        "raw_field": "c0210",
+        "source_header": "P-core 1 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 211,
+        "raw_field": "c0211",
+        "source_header": "P-core 2 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 212,
+        "raw_field": "c0212",
+        "source_header": "P-core 3 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 213,
+        "raw_field": "c0213",
+        "source_header": "P-core 4 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 214,
+        "raw_field": "c0214",
+        "source_header": "P-core 5 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 215,
+        "raw_field": "c0215",
+        "source_header": "P-core 6 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 216,
+        "raw_field": "c0216",
+        "source_header": "P-core 7 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 217,
+        "raw_field": "c0217",
+        "source_header": "E-core 8 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 218,
+        "raw_field": "c0218",
+        "source_header": "E-core 9 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 219,
+        "raw_field": "c0219",
+        "source_header": "E-core 10 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 220,
+        "raw_field": "c0220",
+        "source_header": "E-core 11 C1 Residency [%]"
+      },
+      {
+        "position_zero_based": 221,
+        "raw_field": "c0221",
+        "source_header": "Core C6 Residency (avg) [%]"
+      },
+      {
+        "position_zero_based": 222,
+        "raw_field": "c0222",
+        "source_header": "P-core 0 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 223,
+        "raw_field": "c0223",
+        "source_header": "P-core 1 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 224,
+        "raw_field": "c0224",
+        "source_header": "P-core 2 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 225,
+        "raw_field": "c0225",
+        "source_header": "P-core 3 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 226,
+        "raw_field": "c0226",
+        "source_header": "P-core 4 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 227,
+        "raw_field": "c0227",
+        "source_header": "P-core 5 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 228,
+        "raw_field": "c0228",
+        "source_header": "P-core 6 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 229,
+        "raw_field": "c0229",
+        "source_header": "P-core 7 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 230,
+        "raw_field": "c0230",
+        "source_header": "E-core 8 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 231,
+        "raw_field": "c0231",
+        "source_header": "E-core 9 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 232,
+        "raw_field": "c0232",
+        "source_header": "E-core 10 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 233,
+        "raw_field": "c0233",
+        "source_header": "E-core 11 C6 Residency [%]"
+      },
+      {
+        "position_zero_based": 234,
+        "raw_field": "c0234",
+        "source_header": "Core C7 Residency (avg) [%]"
+      },
+      {
+        "position_zero_based": 235,
+        "raw_field": "c0235",
+        "source_header": "P-core 0 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 236,
+        "raw_field": "c0236",
+        "source_header": "P-core 1 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 237,
+        "raw_field": "c0237",
+        "source_header": "P-core 2 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 238,
+        "raw_field": "c0238",
+        "source_header": "P-core 3 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 239,
+        "raw_field": "c0239",
+        "source_header": "P-core 4 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 240,
+        "raw_field": "c0240",
+        "source_header": "P-core 5 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 241,
+        "raw_field": "c0241",
+        "source_header": "P-core 6 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 242,
+        "raw_field": "c0242",
+        "source_header": "P-core 7 C7 Residency [%]"
+      },
+      {
+        "position_zero_based": 243,
+        "raw_field": "c0243",
+        "source_header": "Memory Clock Ratio [x]"
+      },
+      {
+        "position_zero_based": 244,
+        "raw_field": "c0244",
+        "source_header": "Tcas [T]"
+      },
+      {
+        "position_zero_based": 245,
+        "raw_field": "c0245",
+        "source_header": "Trcd [T]"
+      },
+      {
+        "position_zero_based": 246,
+        "raw_field": "c0246",
+        "source_header": "Trp [T]"
+      },
+      {
+        "position_zero_based": 247,
+        "raw_field": "c0247",
+        "source_header": "Tras [T]"
+      },
+      {
+        "position_zero_based": 248,
+        "raw_field": "c0248",
+        "source_header": "Trc [T]"
+      },
+      {
+        "position_zero_based": 249,
+        "raw_field": "c0249",
+        "source_header": "Trfc [T]"
+      },
+      {
+        "position_zero_based": 250,
+        "raw_field": "c0250",
+        "source_header": "Command Rate [T]"
+      },
+      {
+        "position_zero_based": 251,
+        "raw_field": "c0251",
+        "source_header": "Gear Mode []"
+      },
+      {
+        "position_zero_based": 252,
+        "raw_field": "c0252",
+        "source_header": "IA Limit Reasons (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 253,
+        "raw_field": "c0253",
+        "source_header": "IA: PROCHOT [Yes/No]"
+      },
+      {
+        "position_zero_based": 254,
+        "raw_field": "c0254",
+        "source_header": "IA: Thermal Event [Yes/No]"
+      },
+      {
+        "position_zero_based": 255,
+        "raw_field": "c0255",
+        "source_header": "IA: Residency State Regulation [Yes/No]"
+      },
+      {
+        "position_zero_based": 256,
+        "raw_field": "c0256",
+        "source_header": "IA: Running Average Thermal Limit [Yes/No]"
+      },
+      {
+        "position_zero_based": 257,
+        "raw_field": "c0257",
+        "source_header": "IA: VR Thermal Alert [Yes/No]"
+      },
+      {
+        "position_zero_based": 258,
+        "raw_field": "c0258",
+        "source_header": "IA: VR TDC [Yes/No]"
+      },
+      {
+        "position_zero_based": 259,
+        "raw_field": "c0259",
+        "source_header": "IA: Electrical Design Point/Other (ICCmax,PL4,SVID,DDR RAPL) [Yes/No]"
+      },
+      {
+        "position_zero_based": 260,
+        "raw_field": "c0260",
+        "source_header": "IA: Package-Level RAPL/PBM PL1 [Yes/No]"
+      },
+      {
+        "position_zero_based": 261,
+        "raw_field": "c0261",
+        "source_header": "IA: Package-Level RAPL/PBM PL2,PL3 [Yes/No]"
+      },
+      {
+        "position_zero_based": 262,
+        "raw_field": "c0262",
+        "source_header": "IA: Max Turbo Limit [Yes/No]"
+      },
+      {
+        "position_zero_based": 263,
+        "raw_field": "c0263",
+        "source_header": "IA: Turbo Attenuation (MCT) [Yes/No]"
+      },
+      {
+        "position_zero_based": 264,
+        "raw_field": "c0264",
+        "source_header": "IA: Thermal Velocity Boost [Yes/No]"
+      },
+      {
+        "position_zero_based": 265,
+        "raw_field": "c0265",
+        "source_header": "GT Limit Reasons (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 266,
+        "raw_field": "c0266",
+        "source_header": "GT: PROCHOT [Yes/No]"
+      },
+      {
+        "position_zero_based": 267,
+        "raw_field": "c0267",
+        "source_header": "GT: Thermal Event [Yes/No]"
+      },
+      {
+        "position_zero_based": 268,
+        "raw_field": "c0268",
+        "source_header": "GT: DDR RAPL [Yes/No]"
+      },
+      {
+        "position_zero_based": 269,
+        "raw_field": "c0269",
+        "source_header": "GT: Residency State Regulation [Yes/No]"
+      },
+      {
+        "position_zero_based": 270,
+        "raw_field": "c0270",
+        "source_header": "GT: Running Average Thermal Limit [Yes/No]"
+      },
+      {
+        "position_zero_based": 271,
+        "raw_field": "c0271",
+        "source_header": "GT: VR Thermal Alert [Yes/No]"
+      },
+      {
+        "position_zero_based": 272,
+        "raw_field": "c0272",
+        "source_header": "GT: VR TDC [Yes/No]"
+      },
+      {
+        "position_zero_based": 273,
+        "raw_field": "c0273",
+        "source_header": "GT: Max VR Voltage, ICCmax, PL4 [Yes/No]"
+      },
+      {
+        "position_zero_based": 274,
+        "raw_field": "c0274",
+        "source_header": "GT: Domain-Level PBM PLGT [Yes/No]"
+      },
+      {
+        "position_zero_based": 275,
+        "raw_field": "c0275",
+        "source_header": "GT: Package-Level RAPL/PBM PL1 [Yes/No]"
+      },
+      {
+        "position_zero_based": 276,
+        "raw_field": "c0276",
+        "source_header": "GT: Package-Level RAPL/PBM PL2,PL3 [Yes/No]"
+      },
+      {
+        "position_zero_based": 277,
+        "raw_field": "c0277",
+        "source_header": "GT: Inefficient Operation [Yes/No]"
+      },
+      {
+        "position_zero_based": 278,
+        "raw_field": "c0278",
+        "source_header": "GT: Fuses limit [Yes/No]"
+      },
+      {
+        "position_zero_based": 279,
+        "raw_field": "c0279",
+        "source_header": "Ring Limit Reasons (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 280,
+        "raw_field": "c0280",
+        "source_header": "RING: PROCHOT [Yes/No]"
+      },
+      {
+        "position_zero_based": 281,
+        "raw_field": "c0281",
+        "source_header": "RING: Thermal Event [Yes/No]"
+      },
+      {
+        "position_zero_based": 282,
+        "raw_field": "c0282",
+        "source_header": "RING: DDR RAPL [Yes/No]"
+      },
+      {
+        "position_zero_based": 283,
+        "raw_field": "c0283",
+        "source_header": "RING: Residency State Regulation [Yes/No]"
+      },
+      {
+        "position_zero_based": 284,
+        "raw_field": "c0284",
+        "source_header": "RING: Running Average Thermal Limit [Yes/No]"
+      },
+      {
+        "position_zero_based": 285,
+        "raw_field": "c0285",
+        "source_header": "RING: VR Thermal Alert [Yes/No]"
+      },
+      {
+        "position_zero_based": 286,
+        "raw_field": "c0286",
+        "source_header": "RING: VR TDC [Yes/No]"
+      },
+      {
+        "position_zero_based": 287,
+        "raw_field": "c0287",
+        "source_header": "RING: Max VR Voltage, ICCmax, PL4 [Yes/No]"
+      },
+      {
+        "position_zero_based": 288,
+        "raw_field": "c0288",
+        "source_header": "RING: Package-Level RAPL/PBM PL1 [Yes/No]"
+      },
+      {
+        "position_zero_based": 289,
+        "raw_field": "c0289",
+        "source_header": "RING: Package-Level RAPL/PBM PL2,PL3 [Yes/No]"
+      },
+      {
+        "position_zero_based": 290,
+        "raw_field": "c0290",
+        "source_header": "PCH Temperature [°C]"
+      },
+      {
+        "position_zero_based": 291,
+        "raw_field": "c0291",
+        "source_header": "SPD Hub Temperature [°C]"
+      },
+      {
+        "position_zero_based": 292,
+        "raw_field": "c0292",
+        "source_header": "VDD (SWA) Voltage [V]"
+      },
+      {
+        "position_zero_based": 293,
+        "raw_field": "c0293",
+        "source_header": "VDDQ (SWB) Voltage [V]"
+      },
+      {
+        "position_zero_based": 294,
+        "raw_field": "c0294",
+        "source_header": "VPP (SWC) Voltage [V]"
+      },
+      {
+        "position_zero_based": 295,
+        "raw_field": "c0295",
+        "source_header": "1.8V VOUT Voltage [V]"
+      },
+      {
+        "position_zero_based": 296,
+        "raw_field": "c0296",
+        "source_header": "1.0V VOUT Voltage [V]"
+      },
+      {
+        "position_zero_based": 297,
+        "raw_field": "c0297",
+        "source_header": "VIN Voltage [V]"
+      },
+      {
+        "position_zero_based": 298,
+        "raw_field": "c0298",
+        "source_header": "PMIC High Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 299,
+        "raw_field": "c0299",
+        "source_header": "PMIC Over Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 300,
+        "raw_field": "c0300",
+        "source_header": "PMIC Under Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 301,
+        "raw_field": "c0301",
+        "source_header": "SPD Hub Temperature [°C]"
+      },
+      {
+        "position_zero_based": 302,
+        "raw_field": "c0302",
+        "source_header": "VDD (SWA) Voltage [V]"
+      },
+      {
+        "position_zero_based": 303,
+        "raw_field": "c0303",
+        "source_header": "VDDQ (SWB) Voltage [V]"
+      },
+      {
+        "position_zero_based": 304,
+        "raw_field": "c0304",
+        "source_header": "VPP (SWC) Voltage [V]"
+      },
+      {
+        "position_zero_based": 305,
+        "raw_field": "c0305",
+        "source_header": "1.8V VOUT Voltage [V]"
+      },
+      {
+        "position_zero_based": 306,
+        "raw_field": "c0306",
+        "source_header": "1.0V VOUT Voltage [V]"
+      },
+      {
+        "position_zero_based": 307,
+        "raw_field": "c0307",
+        "source_header": "VIN Voltage [V]"
+      },
+      {
+        "position_zero_based": 308,
+        "raw_field": "c0308",
+        "source_header": "PMIC High Temperature [Yes/No]"
+      },
+      {
+        "position_zero_based": 309,
+        "raw_field": "c0309",
+        "source_header": "PMIC Over Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 310,
+        "raw_field": "c0310",
+        "source_header": "PMIC Under Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 311,
+        "raw_field": "c0311",
+        "source_header": "Drive Temperature [°C]"
+      },
+      {
+        "position_zero_based": 312,
+        "raw_field": "c0312",
+        "source_header": "Drive Temperature 2 [°C]"
+      },
+      {
+        "position_zero_based": 313,
+        "raw_field": "c0313",
+        "source_header": "Drive Remaining Life [%]"
+      },
+      {
+        "position_zero_based": 314,
+        "raw_field": "c0314",
+        "source_header": "Drive Available Spare [%]"
+      },
+      {
+        "position_zero_based": 315,
+        "raw_field": "c0315",
+        "source_header": "Drive Failure [Yes/No]"
+      },
+      {
+        "position_zero_based": 316,
+        "raw_field": "c0316",
+        "source_header": "Drive Warning [Yes/No]"
+      },
+      {
+        "position_zero_based": 317,
+        "raw_field": "c0317",
+        "source_header": "Total Host Writes [GB]"
+      },
+      {
+        "position_zero_based": 318,
+        "raw_field": "c0318",
+        "source_header": "Total Host Reads [GB]"
+      },
+      {
+        "position_zero_based": 319,
+        "raw_field": "c0319",
+        "source_header": "Read Activity [%]"
+      },
+      {
+        "position_zero_based": 320,
+        "raw_field": "c0320",
+        "source_header": "Write Activity [%]"
+      },
+      {
+        "position_zero_based": 321,
+        "raw_field": "c0321",
+        "source_header": "Total Activity [%]"
+      },
+      {
+        "position_zero_based": 322,
+        "raw_field": "c0322",
+        "source_header": "Read Rate [MB/s]"
+      },
+      {
+        "position_zero_based": 323,
+        "raw_field": "c0323",
+        "source_header": "Write Rate [MB/s]"
+      },
+      {
+        "position_zero_based": 324,
+        "raw_field": "c0324",
+        "source_header": "Read Total [MB]"
+      },
+      {
+        "position_zero_based": 325,
+        "raw_field": "c0325",
+        "source_header": "Write Total [MB]"
+      },
+      {
+        "position_zero_based": 326,
+        "raw_field": "c0326",
+        "source_header": "GPU Temperature [°C]"
+      },
+      {
+        "position_zero_based": 327,
+        "raw_field": "c0327",
+        "source_header": "GPU Hot Spot Temperature [°C]"
+      },
+      {
+        "position_zero_based": 328,
+        "raw_field": "c0328",
+        "source_header": "GPU Thermal Limit [°C]"
+      },
+      {
+        "position_zero_based": 329,
+        "raw_field": "c0329",
+        "source_header": "GPU Core Voltage [V]"
+      },
+      {
+        "position_zero_based": 330,
+        "raw_field": "c0330",
+        "source_header": "GPU Rail Voltages (avg) [V]"
+      },
+      {
+        "position_zero_based": 331,
+        "raw_field": "c0331",
+        "source_header": "GPU PCIe +12V Input Voltage [V]"
+      },
+      {
+        "position_zero_based": 332,
+        "raw_field": "c0332",
+        "source_header": "GPU 8-pin #1 Input Voltage [V]"
+      },
+      {
+        "position_zero_based": 333,
+        "raw_field": "c0333",
+        "source_header": "GPU Misc0 Input Voltage [V]"
+      },
+      {
+        "position_zero_based": 334,
+        "raw_field": "c0334",
+        "source_header": "GPU Fan1 [RPM]"
+      },
+      {
+        "position_zero_based": 335,
+        "raw_field": "c0335",
+        "source_header": "GPU Fan2 [RPM]"
+      },
+      {
+        "position_zero_based": 336,
+        "raw_field": "c0336",
+        "source_header": "GPU Power [W]"
+      },
+      {
+        "position_zero_based": 337,
+        "raw_field": "c0337",
+        "source_header": "GPU Rail Powers (avg) [W]"
+      },
+      {
+        "position_zero_based": 338,
+        "raw_field": "c0338",
+        "source_header": "GPU Core (NVVDD) Input Power (sum) [W]"
+      },
+      {
+        "position_zero_based": 339,
+        "raw_field": "c0339",
+        "source_header": "GPU PCIe +12V Input Power [W]"
+      },
+      {
+        "position_zero_based": 340,
+        "raw_field": "c0340",
+        "source_header": "GPU 8-pin #1 Input Power [W]"
+      },
+      {
+        "position_zero_based": 341,
+        "raw_field": "c0341",
+        "source_header": "GPU Misc0 Input Power [W]"
+      },
+      {
+        "position_zero_based": 342,
+        "raw_field": "c0342",
+        "source_header": "GPU Core (NVVDD2) Input Power (sum) [W]"
+      },
+      {
+        "position_zero_based": 343,
+        "raw_field": "c0343",
+        "source_header": "GPU Input PP Source Power (sum) [W]"
+      },
+      {
+        "position_zero_based": 344,
+        "raw_field": "c0344",
+        "source_header": "GPU Core (NVVDD) Output Power [W]"
+      },
+      {
+        "position_zero_based": 345,
+        "raw_field": "c0345",
+        "source_header": "GPU Core (NVVDD) Output Power [W]"
+      },
+      {
+        "position_zero_based": 346,
+        "raw_field": "c0346",
+        "source_header": "GPU Core Load [%]"
+      },
+      {
+        "position_zero_based": 347,
+        "raw_field": "c0347",
+        "source_header": "GPU Memory Controller Load [%]"
+      },
+      {
+        "position_zero_based": 348,
+        "raw_field": "c0348",
+        "source_header": "GPU Video Engine Load [%]"
+      },
+      {
+        "position_zero_based": 349,
+        "raw_field": "c0349",
+        "source_header": "GPU Bus Load [%]"
+      },
+      {
+        "position_zero_based": 350,
+        "raw_field": "c0350",
+        "source_header": "GPU Memory Usage [%]"
+      },
+      {
+        "position_zero_based": 351,
+        "raw_field": "c0351",
+        "source_header": "GPU D3D Usages (avg) [%]"
+      },
+      {
+        "position_zero_based": 352,
+        "raw_field": "c0352",
+        "source_header": "GPU D3D Usage [%]"
+      },
+      {
+        "position_zero_based": 353,
+        "raw_field": "c0353",
+        "source_header": "GPU Video Decode 0 Usage [%]"
+      },
+      {
+        "position_zero_based": 354,
+        "raw_field": "c0354",
+        "source_header": "GPU Video Encode 0 Usage [%]"
+      },
+      {
+        "position_zero_based": 355,
+        "raw_field": "c0355",
+        "source_header": "GPU Video Encode 1 Usage [%]"
+      },
+      {
+        "position_zero_based": 356,
+        "raw_field": "c0356",
+        "source_header": "GPU Computing (Compute_0) Usage [%]"
+      },
+      {
+        "position_zero_based": 357,
+        "raw_field": "c0357",
+        "source_header": "GPU Computing (Cuda) Usage [%]"
+      },
+      {
+        "position_zero_based": 358,
+        "raw_field": "c0358",
+        "source_header": "GPU Computing (Compute_1) Usage [%]"
+      },
+      {
+        "position_zero_based": 359,
+        "raw_field": "c0359",
+        "source_header": "GPU VR Usage [%]"
+      },
+      {
+        "position_zero_based": 360,
+        "raw_field": "c0360",
+        "source_header": "GPU Graphics Usage [%]"
+      },
+      {
+        "position_zero_based": 361,
+        "raw_field": "c0361",
+        "source_header": "GPU Fan1 [%]"
+      },
+      {
+        "position_zero_based": 362,
+        "raw_field": "c0362",
+        "source_header": "GPU Fan2 [%]"
+      },
+      {
+        "position_zero_based": 363,
+        "raw_field": "c0363",
+        "source_header": "GPU Performance Limiters (avg) [Yes/No]"
+      },
+      {
+        "position_zero_based": 364,
+        "raw_field": "c0364",
+        "source_header": "Performance Limit - Power [Yes/No]"
+      },
+      {
+        "position_zero_based": 365,
+        "raw_field": "c0365",
+        "source_header": "Performance Limit - Thermal [Yes/No]"
+      },
+      {
+        "position_zero_based": 366,
+        "raw_field": "c0366",
+        "source_header": "Performance Limit - Reliability Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 367,
+        "raw_field": "c0367",
+        "source_header": "Performance Limit - Max Operating Voltage [Yes/No]"
+      },
+      {
+        "position_zero_based": 368,
+        "raw_field": "c0368",
+        "source_header": "Performance Limit - Utilization [Yes/No]"
+      },
+      {
+        "position_zero_based": 369,
+        "raw_field": "c0369",
+        "source_header": "Performance Limit - SLI GPUBoost Sync [Yes/No]"
+      },
+      {
+        "position_zero_based": 370,
+        "raw_field": "c0370",
+        "source_header": "Total GPU Power [% of TDP] [%]"
+      },
+      {
+        "position_zero_based": 371,
+        "raw_field": "c0371",
+        "source_header": "Total GPU Power (normalized) [% of TDP] [%]"
+      },
+      {
+        "position_zero_based": 372,
+        "raw_field": "c0372",
+        "source_header": "GPU Memory Available [MB]"
+      },
+      {
+        "position_zero_based": 373,
+        "raw_field": "c0373",
+        "source_header": "GPU Memory Allocated [MB]"
+      },
+      {
+        "position_zero_based": 374,
+        "raw_field": "c0374",
+        "source_header": "GPU D3D Memory Dedicated [MB]"
+      },
+      {
+        "position_zero_based": 375,
+        "raw_field": "c0375",
+        "source_header": "GPU D3D Memory Dynamic [MB]"
+      },
+      {
+        "position_zero_based": 376,
+        "raw_field": "c0376",
+        "source_header": "PCIe Link Speed [GT/s]"
+      },
+      {
+        "position_zero_based": 377,
+        "raw_field": "c0377",
+        "source_header": "Framerate Presented (avg) [FPS]"
+      },
+      {
+        "position_zero_based": 378,
+        "raw_field": "c0378",
+        "source_header": "Framerate Presented (99%) [FPS]"
+      },
+      {
+        "position_zero_based": 379,
+        "raw_field": "c0379",
+        "source_header": "Framerate Presented (1%) [FPS]"
+      },
+      {
+        "position_zero_based": 380,
+        "raw_field": "c0380",
+        "source_header": "Framerate Displayed (avg) [FPS]"
+      },
+      {
+        "position_zero_based": 381,
+        "raw_field": "c0381",
+        "source_header": "Frame Time Presented (avg) [ms]"
+      },
+      {
+        "position_zero_based": 382,
+        "raw_field": "c0382",
+        "source_header": "Frame Time Presented (99%) [ms]"
+      },
+      {
+        "position_zero_based": 383,
+        "raw_field": "c0383",
+        "source_header": "Frame Time Presented (1%) [ms]"
+      },
+      {
+        "position_zero_based": 384,
+        "raw_field": "c0384",
+        "source_header": "GPU Busy (avg) [ms]"
+      },
+      {
+        "position_zero_based": 385,
+        "raw_field": "c0385",
+        "source_header": "GPU Wait (avg) [ms]"
+      },
+      {
+        "position_zero_based": 386,
+        "raw_field": "c0386",
+        "source_header": "CPU Busy (avg) [ms]"
+      },
+      {
+        "position_zero_based": 387,
+        "raw_field": "c0387",
+        "source_header": "CPU Wait (avg) [ms]"
+      },
+      {
+        "position_zero_based": 388,
+        "raw_field": "c0388",
+        "source_header": "Total DL [MB]"
+      },
+      {
+        "position_zero_based": 389,
+        "raw_field": "c0389",
+        "source_header": "Total UP [MB]"
+      },
+      {
+        "position_zero_based": 390,
+        "raw_field": "c0390",
+        "source_header": "Current DL rate [KB/s]"
+      },
+      {
+        "position_zero_based": 391,
+        "raw_field": "c0391",
+        "source_header": "Current UP rate [KB/s]"
+      },
+      {
+        "position_zero_based": 392,
+        "raw_field": "c0392",
+        "source_header": "Total Errors []"
+      }
+    ]
+  }
+}

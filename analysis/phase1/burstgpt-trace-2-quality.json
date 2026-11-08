@@ -1,0 +1,292 @@
+{
+  "trace_id": "burstgpt_2",
+  "source_file": "BurstGPT_2.csv",
+  "source_url": "https://github.com/HPMLL/BurstGPT/releases/tag/v2.0",
+  "original_rows": 3858436,
+  "harmonised_rows": 3858436,
+  "raw_missing": {
+    "Timestamp": 0,
+    "Session ID": 3858436,
+    "Elapsed time": 3858436,
+    "Model": 0,
+    "Request tokens": 0,
+    "Response tokens": 0,
+    "Total tokens": 0,
+    "Log Type": 0
+  },
+  "zero_response_rows": 74223,
+  "negative_numeric_rows": 0,
+  "token_total_mismatch_rows": 0,
+  "descending_timestamps": 0,
+  "raw_zero_elapsed_rows": 0,
+  "elapsed_missing_rows": 3858436,
+  "models": {
+    "ChatGPT": 3760159,
+    "GPT-4": 98277
+  },
+  "log_types": {
+    "API log": 3777376,
+    "Conversation log": 81060
+  },
+  "readback_equal_every_shard": true,
+  "original_schema": [
+    "Timestamp",
+    "Model",
+    "Request tokens",
+    "Response tokens",
+    "Total tokens",
+    "Log Type"
+  ],
+  "relative_timestamp_min_s": 5270414.0,
+  "relative_timestamp_max_s": 10454395.0,
+  "duplicates": {
+    "extra_identical_raw_rows": 150150,
+    "repeated_raw_tuple_groups": 86426,
+    "method": "Exact external merge sort of canonical raw JSON tuples within each trace; all rows retained."
+  },
+  "zero_response_percent": 1.9236550768238738,
+  "stats": {
+    "input": {
+      "n": 3858436,
+      "min": 0,
+      "max": 31407,
+      "mean": 256.7989148971241,
+      "p50": 215,
+      "p90": 408,
+      "p95": 558,
+      "p99": 1038
+    },
+    "output": {
+      "n": 3858436,
+      "min": 0,
+      "max": 12472,
+      "mean": 35.09965462690064,
+      "p50": 7,
+      "p90": 65,
+      "p95": 160,
+      "p99": 478
+    },
+    "total": {
+      "n": 3858436,
+      "min": 0,
+      "max": 31924,
+      "mean": 291.89856952402477,
+      "p50": 225,
+      "p90": 450,
+      "p95": 717,
+      "p99": 1418
+    },
+    "elapsed": {
+      "n": 0,
+      "min": null,
+      "max": null,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "p99": null
+    }
+  },
+  "timestamp_span_days": 59.999780092592594,
+  "minute_rates": {
+    "minutes_including_partial_edges": 86400,
+    "complete_minutes": 86398,
+    "zero_request_complete_minutes": 32884,
+    "median_requests_per_complete_minute": 2.0,
+    "p95_requests_per_complete_minute": 220.0,
+    "p99_requests_per_complete_minute": 356.02999999999884,
+    "peak_requests_per_minute": 1104,
+    "spike_definition": "Complete minute with request count > 5 times median complete-minute count; descriptive threshold.",
+    "spike_threshold_requests_per_minute": 10.0,
+    "spike_complete_minutes": 30026
+  },
+  "hourly_pattern": {
+    "complete_hour_bins": 1438,
+    "lag_pearson_correlations": {
+      "lag_1_hours": 0.6895341207340264,
+      "lag_24_hours": 0.44695103674080794,
+      "lag_168_hours": 0.46324323746926543
+    },
+    "hour_mod_24_profile": [
+      {
+        "source_relative_hour_mod_24": 0,
+        "n_complete_hour_bins": 59,
+        "median_requests_per_hour": 54.0,
+        "p10_requests_per_hour": 1.6000000000000014,
+        "p90_requests_per_hour": 6376.0
+      },
+      {
+        "source_relative_hour_mod_24": 1,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 38.0,
+        "p10_requests_per_hour": 1.0,
+        "p90_requests_per_hour": 5507.800000000001
+      },
+      {
+        "source_relative_hour_mod_24": 2,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 29.0,
+        "p10_requests_per_hour": 0.0,
+        "p90_requests_per_hour": 6949.0
+      },
+      {
+        "source_relative_hour_mod_24": 3,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 245.0,
+        "p10_requests_per_hour": 0.0,
+        "p90_requests_per_hour": 9453.400000000001
+      },
+      {
+        "source_relative_hour_mod_24": 4,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 798.5,
+        "p10_requests_per_hour": 0.0,
+        "p90_requests_per_hour": 6290.0
+      },
+      {
+        "source_relative_hour_mod_24": 5,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 13.0,
+        "p10_requests_per_hour": 0.0,
+        "p90_requests_per_hour": 4529.500000000002
+      },
+      {
+        "source_relative_hour_mod_24": 6,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 788.5,
+        "p10_requests_per_hour": 0.0,
+        "p90_requests_per_hour": 5346.7
+      },
+      {
+        "source_relative_hour_mod_24": 7,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 17.0,
+        "p10_requests_per_hour": 0.0,
+        "p90_requests_per_hour": 7333.5
+      },
+      {
+        "source_relative_hour_mod_24": 8,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 77.0,
+        "p10_requests_per_hour": 1.9000000000000004,
+        "p90_requests_per_hour": 5375.200000000001
+      },
+      {
+        "source_relative_hour_mod_24": 9,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 139.0,
+        "p10_requests_per_hour": 7.9,
+        "p90_requests_per_hour": 5696.0
+      },
+      {
+        "source_relative_hour_mod_24": 10,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 271.5,
+        "p10_requests_per_hour": 11.8,
+        "p90_requests_per_hour": 6125.1
+      },
+      {
+        "source_relative_hour_mod_24": 11,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 312.0,
+        "p10_requests_per_hour": 8.9,
+        "p90_requests_per_hour": 8557.700000000004
+      },
+      {
+        "source_relative_hour_mod_24": 12,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 418.0,
+        "p10_requests_per_hour": 6.9,
+        "p90_requests_per_hour": 9291.500000000002
+      },
+      {
+        "source_relative_hour_mod_24": 13,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 902.0,
+        "p10_requests_per_hour": 7.0,
+        "p90_requests_per_hour": 10378.4
+      },
+      {
+        "source_relative_hour_mod_24": 14,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 1026.0,
+        "p10_requests_per_hour": 11.0,
+        "p90_requests_per_hour": 8143.4000000000015
+      },
+      {
+        "source_relative_hour_mod_24": 15,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 1115.0,
+        "p10_requests_per_hour": 11.600000000000001,
+        "p90_requests_per_hour": 10470.0
+      },
+      {
+        "source_relative_hour_mod_24": 16,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 580.5,
+        "p10_requests_per_hour": 10.600000000000001,
+        "p90_requests_per_hour": 12732.0
+      },
+      {
+        "source_relative_hour_mod_24": 17,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 288.0,
+        "p10_requests_per_hour": 16.1,
+        "p90_requests_per_hour": 11995.700000000003
+      },
+      {
+        "source_relative_hour_mod_24": 18,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 260.0,
+        "p10_requests_per_hour": 5.800000000000001,
+        "p90_requests_per_hour": 11447.0
+      },
+      {
+        "source_relative_hour_mod_24": 19,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 530.5,
+        "p10_requests_per_hour": 3.9000000000000004,
+        "p90_requests_per_hour": 9504.100000000002
+      },
+      {
+        "source_relative_hour_mod_24": 20,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 1117.5,
+        "p10_requests_per_hour": 6.9,
+        "p90_requests_per_hour": 8493.100000000002
+      },
+      {
+        "source_relative_hour_mod_24": 21,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 1174.5,
+        "p10_requests_per_hour": 7.800000000000001,
+        "p90_requests_per_hour": 12332.300000000001
+      },
+      {
+        "source_relative_hour_mod_24": 22,
+        "n_complete_hour_bins": 60,
+        "median_requests_per_hour": 980.0,
+        "p10_requests_per_hour": 8.0,
+        "p90_requests_per_hour": 8150.7000000000035
+      },
+      {
+        "source_relative_hour_mod_24": 23,
+        "n_complete_hour_bins": 59,
+        "median_requests_per_hour": 420.0,
+        "p10_requests_per_hour": 4.0,
+        "p90_requests_per_hour": 9674.0
+      }
+    ],
+    "interpretation": "Descriptive autocorrelation, not forecast validation; trends and changing request mix can contribute. Relative hour is not a UTC or calendar weekday claim."
+  },
+  "size_latency_by_model": {},
+  "filtered_variant": {
+    "source_file": "BurstGPT_without_fails_2.csv",
+    "rows": 3784213,
+    "zero_response_rows": 0,
+    "canonical_sha256": "344eca3811889543c6d02e95004c60c7a4c44f16d8ad04f53866ea80e34af772",
+    "exact_ordered_success_subset": true,
+    "harmonisation": "Not emitted again: exact success-only subset of the canonical full trace."
+  },
+  "parquet_shards": 20
+}

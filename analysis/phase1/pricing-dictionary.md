@@ -9,7 +9,7 @@
 unknown/generic labels are null. `gpu_family` is a broad family only, not evidence of compatibility.
 `price_per_plan` has the stated `currency` and `billing_unit`. `price_per_gpu` divides only by a positive
 stated GPU count. No currency conversion or month-to-hour conversion is applied. History prices are
-per-plan statistics, with the original observation count. Dates are date strings; no intraday time is invented.
+per-plan statistics, with the original observation count. Dates use Parquet date32; no intraday time is invented.
 `raw_record_json` preserves the entire source record. Source file, source series and 1-based row identify provenance.
 `captured_date` records the source snapshot date, not the download time. `locations` preserves listed regions.
 Provider/plan alone is not unique: Latitude repeats one plan across four regions with different prices.

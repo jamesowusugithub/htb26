@@ -46,6 +46,11 @@ def hardware_id(value):
 
 def write(name, rows):
     df = pd.DataFrame(rows)
+    for date_field in ('captured_date','date'):
+        if date_field in df:
+            df[date_field]=pd.to_datetime(df[date_field],format='%Y-%m-%d',errors='raise').dt.date
+    if 'gpu_count' in df:
+        df['gpu_count']=df['gpu_count'].astype('Int64')
     path = OUT / f'{name}.parquet'
     df.to_parquet(path, index=False, compression='zstd')
     check = pq.read_table(path)
@@ -125,17 +130,30 @@ def main():
     ax.grid(axis='x',alpha=.25)
     save(fig,'hourly_prices',f'n={len(hourly)} identified hourly plans; generic or missing models excluded. Bundled CPU/RAM and GPU variants differ.')
     selected=['H100','A100','L40S','B200']
-    fig,ax=plt.subplots(figsize=(10,5))
+    fig,axes=plt.subplots(3,1,figsize=(10,10),sharex=True)
     plotted=0
-    for model in selected:
-        group=hist[(hist.gpu_model_raw==model)&(hist.price_field=='price_hourly_usd')].sort_values('date')
-        valid=group.dropna(subset=['median_price_per_plan'])
-        ax.plot(pd.to_datetime(valid.date),valid.median_price_per_plan,label=f'{model} (n={len(valid)} days)')
-        plotted+=len(valid)
-    ax.set_ylabel('Median listed plan price (USD/hour)');ax.set_xlabel('UTC date')
-    ax.set_title('Daily price index for selected exact source model labels')
-    ax.legend();ax.grid(alpha=.2)
-    save(fig,'history',f'n={plotted} daily model medians. These are plan-level aggregates, not per-GPU prices; plan mix can change.')
+    for ax,(field,label) in zip(axes,[('price_hourly_usd','USD/hour'),('price_monthly_usd','USD/month'),('price_monthly_eur','EUR/month')]):
+        missing=[]
+        for model in selected:
+            group=hist[(hist.gpu_model_raw==model)&(hist.price_field==field)].sort_values('date')
+            valid=group.dropna(subset=['median_price_per_plan'])
+            if valid.empty:
+                missing.append(model)
+                continue
+            ax.plot(pd.to_datetime(valid.date),valid.median_price_per_plan,label=f'{model} (n={len(valid)} days)')
+            plotted+=len(valid)
+        ax.set_ylabel('Median plan price ('+label+')')
+        ax.set_title(label+'; no observations: '+(', '.join(missing) or 'none'),fontsize=10)
+        if ax.lines:
+            ax.legend(fontsize=8)
+        else:
+            ax.set_axis_off()
+            ax.text(.5,.5,'No recorded values for the selected models and this billing unit',
+                    ha='center',va='center',transform=ax.transAxes)
+        ax.grid(alpha=.2)
+    axes[-1].set_xlabel('UTC date')
+    fig.suptitle('Daily price index for selected exact source model labels')
+    save(fig,'history',f'n={plotted} daily model/unit medians. Units stay separate; these are plan-level aggregates, not per-GPU prices. Plan mix can change.')
     fig,ax=plt.subplots(figsize=(9,5))
     coverage=offers.assign(available=offers.price_per_plan.notna()).groupby(['provider','price_field']).available.sum().unstack(fill_value=0)
     coverage.plot.barh(ax=ax);ax.set_xlabel('Plans with a recorded price');ax.set_ylabel('Provider')
@@ -152,7 +170,7 @@ def main():
         hourly_identified_plans=len(hourly),hourly_per_gpu_quantiles=hourly.price_per_gpu.quantile([0,.5,.9,.95,.99,1]).to_dict(),
         price_observations_by_field=present.groupby('price_field').size().to_dict(),
         source_hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in SOURCE.iterdir() if p.suffix in ['.json','.csv']})
-    (REPORT/'pricing-quality.json').write_text(json.dumps(summary,indent=2)+'\n')
+    (REPORT/'pricing-quality.json').write_text(json.dumps(summary,indent=2)+'\n',encoding='utf-8')
     dictionary='''# Pricing data dictionary
 
 `plans`: one row per current JSON plan. `plan_record_id` is a local key, not a cross-source job key.
@@ -164,13 +182,13 @@ def main():
 unknown/generic labels are null. `gpu_family` is a broad family only, not evidence of compatibility.
 `price_per_plan` has the stated `currency` and `billing_unit`. `price_per_gpu` divides only by a positive
 stated GPU count. No currency conversion or month-to-hour conversion is applied. History prices are
-per-plan statistics, with the original observation count. Dates are date strings; no intraday time is invented.
+per-plan statistics, with the original observation count. Dates use Parquet date32; no intraday time is invented.
 `raw_record_json` preserves the entire source record. Source file, source series and 1-based row identify provenance.
 `captured_date` records the source snapshot date, not the download time. `locations` preserves listed regions.
 Provider/plan alone is not unique: Latitude repeats one plan across four regions with different prices.
 No price identifies GPU performance, availability, interruption probability or negotiated rates.
 '''
-    (REPORT/'pricing-dictionary.md').write_text(dictionary)
+    (REPORT/'pricing-dictionary.md').write_text(dictionary,encoding='utf-8')
     report=f'''# Pricing findings
 
 Verified: {len(plans)} plans from {plans.provider.nunique()} providers. JSON and CSV plan keys agree.
@@ -183,7 +201,8 @@ Hourly prices for {len(hourly)} identified plans can be divided by their stated 
 median is USD {hourly.price_per_gpu.median():.3f}/GPU-hour. This mixes distinct hardware and is not a value ranking.
 
 Figures: `pricing_hourly_prices` compares identified current plans; `pricing_history` shows four exact
-model labels over time; `pricing_coverage` exposes missing billing/currency coverage. All contain source captions.
+model labels over time with separate hourly USD, monthly USD and monthly EUR panels;
+`pricing_coverage` exposes missing billing/currency coverage. All contain source captions.
 Missing GPU counts or prices remain null. No month/hour or EUR/USD conversion is assumed.
 CPU, RAM, region, interconnect and model variants must be checked before declaring options compatible.
 Historical medians reflect changing plan/provider composition and are not per-plan spot-price histories.
@@ -192,7 +211,7 @@ This supports scenario cost accounting, not workload placement without performan
 Licence: CC-BY-4.0. Attribution: GPU Cloud Price Index, https://gpucloudcompare.com/data/.
 All records retain raw JSON, original source identifiers and source-file hashes in the quality manifest.
 '''
-    (REPORT/'pricing-report.md').write_text(report)
+    (REPORT/'pricing-report.md').write_text(report,encoding='utf-8')
     print(json.dumps(summary,indent=2))
 
 

@@ -1,0 +1,122 @@
+[
+  {
+    "name": "source_dataset",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "source_file",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "source_row_id",
+    "arrow_type": "int64",
+    "nullable": true
+  },
+  {
+    "name": "trace_id",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "relative_timestamp_s",
+    "arrow_type": "double",
+    "nullable": true
+  },
+  {
+    "name": "trace_local_timestamp_s",
+    "arrow_type": "double",
+    "nullable": true
+  },
+  {
+    "name": "calendar_timestamp_utc",
+    "arrow_type": "timestamp[us, tz=UTC]",
+    "nullable": true
+  },
+  {
+    "name": "input_tokens",
+    "arrow_type": "int64",
+    "nullable": true
+  },
+  {
+    "name": "output_tokens",
+    "arrow_type": "int64",
+    "nullable": true
+  },
+  {
+    "name": "total_tokens",
+    "arrow_type": "int64",
+    "nullable": true
+  },
+  {
+    "name": "elapsed_time_s",
+    "arrow_type": "double",
+    "nullable": true
+  },
+  {
+    "name": "llm_model",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "log_type",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "session_id",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "gpu_model",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "zero_response_tokens",
+    "arrow_type": "bool",
+    "nullable": true
+  },
+  {
+    "name": "raw_timestamp",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "raw_session_id",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "raw_elapsed_time",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "raw_model",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "raw_request_tokens",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "raw_response_tokens",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "raw_total_tokens",
+    "arrow_type": "string",
+    "nullable": true
+  },
+  {
+    "name": "raw_log_type",
+    "arrow_type": "string",
+    "nullable": true
+  }
+]
