@@ -9,7 +9,7 @@ const glb=readFileSync(path.join(root,'assets/gpu/gpu-board.glb'));
 if(glb.toString('utf8',0,4)!=='glTF'||glb.readUInt32LE(4)!==2||glb.readUInt32LE(8)!==glb.length)throw new Error('Invalid Blender GPU GLB');
 mkdirSync(output,{recursive:true});
 await build({entryPoints:[path.join(root,'ui/overlay.jsx')],outfile:path.join(root,'ui-dist/overlay.js'),bundle:true,format:'esm',platform:'browser',target:'es2022',jsx:'automatic',minify:true,legalComments:'eof',define:{'process.env.NODE_ENV':'"production"'}});
-for(const entry of ['index.html','global.css','gpu-room.css','integration.css','gpu-room.js','gpu-simulation.js','backend-client.js','replay-engine.js','scenario-ops.js','gpu-favicon.svg','assets','iconfont','packages','ui-dist']){
+for(const entry of ['index.html','global.css','gpu-room.css','integration.css','gpu-room.js','gpu-simulation.js','backend-client.js','replay-engine.js','rack-fabric.js','rack-test-data.js','scenario-ops.js','gpu-favicon.svg','assets','iconfont','packages','ui-dist']){
   cpSync(path.join(root,entry),path.join(output,entry),{recursive:true});
 }
 writeFileSync(path.join(output,'build-info.json'),JSON.stringify({foundation:'thingraph/server-room',upstreamCommit:'57966a9cac9e15d0d557a35707c9234fc062dbc7',gpuAsset:'Blender MCP generated GLB',gpuAssetBytes:glb.length,evidence:'backend scheduling replay (proxy thermal); synthetic demo only as labelled fallback (?mode=synthetic)'},null,2));

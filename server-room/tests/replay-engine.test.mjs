@@ -138,7 +138,8 @@ test('scenario ops only edit scenario parameters, strictly after the playhead, a
   assert.ok(r.failures[0].repair_after_h > 4.0 - a.failures[0].at_h - 1e-9);
   assert.equal(ops.boardIsFailed(a, 3.0, 5), true); assert.equal(ops.boardIsFailed(r, 5.0, 5), false);
   const b = ops.addBurst(sc, 1.0); assert.ok(b.burst.start_h > 1.0 && b.burst.mult > 1);
-  const j = ops.addInjectedJob(sc, 1.0, { pool: 'a10' }); assert.equal(j.injected_jobs[0].pool, 'a10'); assert.ok(j.injected_jobs[0].at_h > 1.0);
+  const j = ops.addInjectedJob(sc, 1.0, { pool: 'a10', gpus: 4, priority: 'spot', duration_s: 2700 });
+  assert.deepEqual({...j.injected_jobs[0],at_h:0},{at_h:0,pool:'a10',gpus:4,priority:'spot',duration_s:2700}); assert.ok(j.injected_jobs[0].at_h > 1.0);
   const c = ops.startCoolingFault(sc, 1.0), c2 = ops.stopCoolingFault(c, 3.0);
   assert.equal(ops.coolingFaultActive(c, 2.0), true); assert.equal(ops.coolingFaultActive(c2, 4.0), false);
 });

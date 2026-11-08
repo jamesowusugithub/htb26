@@ -3,20 +3,22 @@ import { GPUSimulation } from './gpu-simulation.js';
 import { mountOverlay } from './ui-dist/overlay.js';
 import { BackendClient } from './backend-client.js';
 import { ReplayEngine } from './replay-engine.js';
+import { mockRackState } from './rack-test-data.js';
 
-const COLORS={idle:0x20be92,reserved:0x62c9f1,running:0xf1b14a,cooling:0x64b8b4,failed:0xe94f64};
+const COLORS={idle:0x20be92,reserved:0x62c9f1,running:0xf1b14a,cooling:0x64b8b4,failed:0xe94f64,busy:0xf1b14a,overloaded:0xf06a3e,unavailable:0xe94f64};
 
 export async function mountGPULab({viewer,room}) {
   const ui=document.createElement('div');ui.className='gpu-ui';document.body.append(ui);
   const params=new URLSearchParams(location.search);
   const requestedMode=params.get('mode')||'auto';            // auto: backend if reachable, else labelled synthetic demo
+  const rackTestMode=requestedMode==='rack-test';
   const apiBase=params.get('api')||'http://127.0.0.1:8000';
   let overlay=null,latestEvent='Ready to dispatch jobs.',cameraView='hall',inspectRequest=0;
   const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let paused=reducedMotion,speed=1,selected=0,lastTime,uiTime=0,assetReady=false;
+  let paused=reducedMotion,speed=1,selected=0,selectedRackPool=null,lastTime,uiTime=0,assetReady=false;
   const lab=new THREE.Group();lab.name='GPU scheduling laboratory';room.add(lab);
   const pods=[[-14.5,5],[-8.5,5],[-14.5,10],[-8.5,10]];
-  const slots=[],rings=[],assetGroups=[],particlePool=[],podLabels=[];
+  const slots=[],rings=[],assetGroups=[],particlePool=[],podLabels=[],rackVisuals=[],rackTargets=new Map();
   const boxGeom=new THREE.BoxGeometry(1,1,1);
   const mat=(color,metalness=.25,roughness=.5)=>new THREE.MeshStandardMaterial({color,metalness,roughness});
   const dark=mat(0x243d3b,.65,.32),edge=mat(0xb7c8c4,.6,.38),plinth=mat(0xe3ebe6,.25,.55);
@@ -46,7 +48,7 @@ export async function mountGPULab({viewer,room}) {
   const onEngineEvent=event=>{latestEvent=event.text||`${eventNames[event.type]||event.type}${event.jobId?' · '+event.jobId:''}`;overlay?.update({latestEvent});};
   // Engine: the scheduling backend when reachable. The synthetic demo is only a labelled fallback; it is never mixed with backend data.
   let engine=null,mode='synthetic',presets=[],policies=null,backendNote=null,backendClient=null;
-  if(requestedMode!=='synthetic'){
+  if(!['synthetic','rack-test'].includes(requestedMode)){
     try{
       backendClient=new BackendClient(apiBase,{forcePolling:params.get('transport')==='polling'});
       const [m,pr]=await Promise.all([backendClient.meta(),backendClient.presets()]);
@@ -62,22 +64,30 @@ export async function mountGPULab({viewer,room}) {
   if(!engine){
     engine=new GPUSimulation({gpuCount:24,initialJobs:12,onEvent:onEngineEvent});
     engine.setPolicy('priority');
+    if(rackTestMode){
+      mode='rack-test';
+      const testState=mockRackState(params.get('rackState')||'stress'),baseSnapshot=engine.snapshot.bind(engine);
+      engine.snapshot=()=>{const base=baseSnapshot(),queued=Object.values(testState.pools).reduce((n,p)=>n+p.queue_hp+p.queue_spot,0);return {...base,evidence:'clearly_labelled_mock_test_data',rackPools:testState.rackPools,pools:testState.pools,queue:[],stats:{...base.stats,queued},run:{...base.run,pools:testState.meta},testMode:{label:'Local mock rack test',phase:testState.phase}};};
+      latestEvent=`Local rack test data · ${testState.phase} state`;
+    }
     if(backendNote)latestEvent=`${backendNote} Showing the labelled synthetic demo instead.`;
   }
   const backendMode=mode==='backend';
+  const facilityMode=backendMode||rackTestMode;
   const queueChips=[];
   if(backendMode){   // queue positions as chips above the gateway: the backend's queue head for the selected pool, in backend order
     for(let i=0;i<12;i++){const c=new THREE.Mesh(boxGeom,new THREE.MeshStandardMaterial({color:COLORS.reserved,emissive:COLORS.reserved,emissiveIntensity:.35}));c.scale.set(.34,.14,.34);c.position.set(portal.x,2.7+i*.2,portal.z);c.visible=false;c.name='Queue position chip';lab.add(c);queueChips.push(c);}
   }
-  function choose(index){selected=index;engine.setFocusBoard?.(index);inspectRequest++;updateUI(engine.snapshot());}
+  function choose(index){selected=index;selectedRackPool=null;engine.setFocusPool?.(null);engine.setFocusBoard?.(index);inspectRequest++;updateUI(engine.snapshot());}
+  function chooseRack(poolId){selectedRackPool=poolId;engine.setFocusPool?.(poolId);inspectRequest++;updateUI(engine.snapshot());}
   function view(name){cameraView=name;
     const look=name==='gpu'?slots[selected].position.clone():name==='hall'?new THREE.Vector3(-11.5,1,7.5):new THREE.Vector3(-1,0,1);
     const eye=name==='gpu'?look.clone().add(new THREE.Vector3(.95,1.35,1.25)):name==='hall'?new THREE.Vector3(-19,14,18):new THREE.Vector3(44,43,47);
     viewer.cameraManager.flyTo(eye,look,!reducedMotion);viewer.enableRender();updateUI(engine.snapshot());
   }
-  function updateUI(state){overlay?.update({snapshot:state,selected,paused,speed,cameraView,assetReady,latestEvent,inspectRequest,backend:backendMode,policies,presets,presetName:engine.scenario?.name,busy:state.status==='computing',fallbackNote:backendMode?null:backendNote});
+  function updateUI(state){overlay?.update({snapshot:state,selected,selectedRackPool,paused,speed,cameraView,assetReady,latestEvent,inspectRequest,backend:backendMode,policies,presets,presetName:engine.scenario?.name,busy:state.status==='computing',fallbackNote:backendMode?null:backendNote});
     ui.dataset.ready='true';ui.dataset.assetLoaded=String(assetReady);ui.dataset.running=String(state.stats.running);ui.dataset.failed=String(state.stats.failed);ui.dataset.completed=String(state.stats.completed);ui.dataset.paused=String(paused);ui.dataset.gpuCount=String(state.gpus.length);ui.dataset.selectedGpu=state.gpus[selected].id;
-    ui.dataset.mode=mode;ui.dataset.queued=String(state.stats.queued??state.queue.length);
+    ui.dataset.mode=mode;ui.dataset.queued=String(state.stats.queued??state.queue.length);ui.dataset.selectedRackPool=selectedRackPool||'';
     if(backendMode){ui.dataset.connection=`${state.connection.mode}:${state.connection.status}`;ui.dataset.status=state.status;ui.dataset.simTime=String(Math.round(state.time));ui.dataset.alerts=String(state.stats.alerts);ui.dataset.policy=state.policy;ui.dataset.scenarioId=state.run.scenarioId||'';ui.dataset.error=state.error||'';}
   }
   const syntheticActions={onView:view,onSelectGPU:choose,
@@ -94,6 +104,7 @@ export async function mountGPULab({viewer,room}) {
   const backendActions={onView:view,onSelectGPU:choose,
     onTogglePaused(){paused=!paused;engine.setPaused(paused);updateUI(engine.snapshot());},
     onAddJob(){return engine.addJob(engine.snapshot().gpus[selected].pool,{gpus:1,priority:'hp',duration_s:900});},
+    onSubmitJob(job){return engine.addJob(job.pool,{gpus:job.gpus,priority:job.priority,duration_s:job.duration_s});},
     onBurst(){return engine.burst({duration_h:.5,mult:4});},
     onFailGPU(){return engine.failBoard(selected);},
     onRepairGPU(){return engine.repairBoard(selected);},
@@ -108,6 +119,21 @@ export async function mountGPULab({viewer,room}) {
   const actions=backendMode?backendActions:syntheticActions;
   overlay=mountOverlay(ui,actions,{snapshot:engine.snapshot(),selected,paused,speed,cameraView,assetReady,latestEvent,inspectRequest,backend:backendMode,policies,presets,presetName:engine.scenario?.name,busy:false,fallbackNote:backendMode?null:backendNote});
   const firstLoad=backendMode&&backendClient&&!engine.error?engine.load(engine.scenario,engine.policy,0):Promise.resolve();
+  if(facilityMode){
+    const rackIndices=[0,40,80,120,160,240];
+    rackIndices.forEach((start,poolIndex)=>{
+      const zone=new THREE.Group();zone.name=`Functional rack zone ${poolIndex+1}`;lab.add(zone);
+      for(let offset=0;offset<20;offset++){
+        const rack=room.getObjectByName(`Rack ${start+offset+1}`);if(!rack)continue;
+        const bounds=new THREE.Box3().setFromObject(rack),center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());
+        const beacon=new THREE.Mesh(new THREE.BoxGeometry(Math.max(.16,size.x*.72),.055,Math.max(.16,size.z*.72)),new THREE.MeshStandardMaterial({color:COLORS.idle,emissive:COLORS.idle,emissiveIntensity:.75,transparent:true,opacity:.92}));
+        beacon.position.set(center.x,bounds.max.y+.05,center.z);beacon.name='Backend pool rack beacon';beacon.userData.poolIndex=poolIndex;zone.add(beacon);
+        const hitbox=new THREE.Mesh(new THREE.BoxGeometry(Math.max(.5,size.x),Math.max(2,size.y),Math.max(.5,size.z)),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));
+        hitbox.position.copy(center);hitbox.name='Backend pool rack hitbox';hitbox.userData.poolIndex=poolIndex;zone.add(hitbox);rackVisuals.push({beacon,hitbox,poolIndex});
+      }
+      if(zone.children.length){const b=new THREE.Box3().setFromObject(zone),c=b.getCenter(new THREE.Vector3());rackTargets.set(poolIndex,c);label(`POOL ${poolIndex+1} · AGGREGATE`,[c.x,b.max.y+.35,c.z],2.1);}
+    });
+  }
   function ancestorFan(object){for(let p=object;p;p=p.parent)if(/^FAN_[01]$/.test(p.name))return p;return null;}
   // Instance repeated GLB mesh primitives across all 24 boards: reuse Blender geometry.
   try{
@@ -127,29 +153,31 @@ export async function mountGPULab({viewer,room}) {
   // The upstream viewer places an overlay canvas above its renderer canvas.
   // Listen on their common container so pointer events from either reach picking.
   document.addEventListener('pointerdown',e=>{if(e.target.closest?.('.gpu-ui, [data-ui-overlay]')){down=null;return;}down=[e.clientX,e.clientY];},true);
-  document.addEventListener('pointerup',e=>{if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)return;ui.dataset.lastPointer=`${e.clientX},${e.clientY}`;const r=canvas.getBoundingClientRect();raycaster.setFromCamera(new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1),viewer.camera);const hit=raycaster.intersectObjects([...assetGroups.map(x=>x.mesh),...rings],false)[0];ui.dataset.lastPick=hit?hit.object.name:'none';if(hit){const index=hit.object.userData.gpuIndex??hit.object.userData.instanceGPU?.[hit.instanceId];if(index!==undefined)choose(index);}},true);
+  document.addEventListener('pointerup',e=>{if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)return;ui.dataset.lastPointer=`${e.clientX},${e.clientY}`;const r=canvas.getBoundingClientRect();raycaster.setFromCamera(new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1),viewer.camera);const hit=raycaster.intersectObjects([...assetGroups.map(x=>x.mesh),...rings,...rackVisuals.map(x=>x.hitbox)],false)[0];ui.dataset.lastPick=hit?hit.object.name:'none';if(hit){const poolIndex=hit.object.userData.poolIndex;if(poolIndex!==undefined){const state=engine.snapshot(),pool=state.rackPools?.[poolIndex];if(pool)chooseRack(pool.id);return;}const index=hit.object.userData.gpuIndex??hit.object.userData.instanceGPU?.[hit.instanceId];if(index!==undefined)choose(index);}},true);
   for(let i=0;i<48;i++){const orb=new THREE.Mesh(new THREE.IcosahedronGeometry(.10,1),new THREE.MeshBasicMaterial({color:0x64dcbd}));orb.visible=false;lab.add(orb);particlePool.push(orb);}
   const spinMatrix=new THREE.Matrix4(),color=new THREE.Color();let visualTime=0,podLabelsSet=false;
   viewer.addEventListener(ViewerEvent.OnAnimate,({timeStamp})=>{
     const now=timeStamp/1000;const dt=lastTime===undefined?0:Math.min(Math.max(now-lastTime,0),.25);lastTime=now;
     if(!paused){engine.tick(dt*speed,dt);visualTime+=dt*speed;}
     const state=engine.snapshot();
+    rackVisuals.forEach(v=>{const pool=state.rackPools?.[v.poolIndex];if(!pool)return;const c=COLORS[pool.status]||COLORS.idle;v.beacon.material.color.set(c);v.beacon.material.emissive.set(c);v.beacon.material.emissiveIntensity=pool.status==='overloaded'?.95:.65;});
     state.gpus.forEach((gpu,i)=>{const temp=backendMode?((gpu.temperature??40)-40)/45:((gpu.temperature??30)-30)/60;let c=gpu.status==='running'?color.set(COLORS.running).lerp(new THREE.Color(0xf05b3e),Math.max(0,Math.min(1,temp))):color.set(COLORS[gpu.status]||COLORS.idle);if(gpu.alert)c=color.set(0xff2d2d).lerp(new THREE.Color(0xffb199),.5+.5*Math.sin(visualTime*8));rings[i].material.color.copy(c);rings[i].material.emissive.copy(c);rings[i].material.emissiveIntensity=gpu.alert?.95:gpu.status==='running'?.55+.25*Math.sin(visualTime*6):.25;});
     for(const group of assetGroups){let animated=false;for(const record of group.records){const gpu=state.gpus[record.gpuIndex];if(group.status){color.set(gpu.alert?0xff2d2d:(COLORS[gpu.status]||COLORS.idle));group.mesh.setColorAt(record.index,color);}if(record.part.pivot){const angle=gpu.status==='failed'?0:visualTime*(gpu.status==='running'?30:5);spinMatrix.makeRotationY(angle);const m=record.base.clone().multiply(record.part.pivot).multiply(spinMatrix).multiply(record.part.local);group.mesh.setMatrixAt(record.index,m);animated=true;}}if(group.status&&group.mesh.instanceColor)group.mesh.instanceColor.needsUpdate=true;if(animated)group.mesh.instanceMatrix.needsUpdate=true;}
     particlePool.forEach(p=>p.visible=false);let particleIndex=0;
-    for(const job of state.inFlight){for(const id of job.assignedGpuIds||[]){const gpu=state.gpus.find(g=>g.id===id);if(!gpu||particleIndex>=particlePool.length)continue;const p=particlePool[particleIndex++],target=slots[gpu.index].position;let t=1-Math.min(1,Math.max(0,job.transitRemaining/1.2));if(job.reverse)t=1-t;const start=portal.clone(),control=new THREE.Vector3((portal.x+target.x)/2,3.0,7.1);const curve=new THREE.QuadraticBezierCurve3(start,control,target);p.visible=true;p.position.copy(curve.getPoint(t));p.material.color.set(job.kind==='evict'?COLORS.failed:job.priority==='high'?COLORS.running:COLORS.reserved);p.scale.setScalar(1+.2*Math.sin(visualTime*16));}}
+    for(const job of state.inFlight){let targets=(job.assignedGpuIds||[]).map(id=>state.gpus.find(g=>g.id===id)).filter(Boolean).map(g=>slots[g.index].position);if(!targets.length&&job.pool){const pi=state.rackPools?.findIndex(p=>p.id===job.pool),target=rackTargets.get(pi);if(target)targets=[target];}for(const target of targets){if(particleIndex>=particlePool.length)continue;const p=particlePool[particleIndex++];let t=1-Math.min(1,Math.max(0,job.transitRemaining/1.2));if(job.reverse)t=1-t;const start=portal.clone(),control=new THREE.Vector3((portal.x+target.x)/2,3.0,7.1);const curve=new THREE.QuadraticBezierCurve3(start,control,target);p.visible=true;p.position.copy(curve.getPoint(t));p.material.color.set(job.kind==='evict'?COLORS.failed:job.priority==='high'?COLORS.running:COLORS.reserved);p.scale.setScalar(1+.2*Math.sin(visualTime*16));}}
     if(backendMode){
       if(state.run.display&&!podLabelsSet){state.run.display.pods.forEach((p,k)=>relabel(podLabels[k],`POD ${k+1} · ${p.label.replace('NVIDIA ','').replace(' (unidentified)','*')}`.slice(0,34)));podLabelsSet=true;}
       state.queue.slice(0,queueChips.length).forEach((q,k)=>{const c=queueChips[k];c.visible=true;const col=q.priority==='high'?COLORS.running:COLORS.reserved;c.material.color.set(col);c.material.emissive.set(col);});
       for(let k=state.queue.length;k<queueChips.length;k++)queueChips[k].visible=false;
     }
     selector.position.copy(slots[selected].position);selector.position.y+=.05;selector.scale.setScalar(1+.035*Math.sin(visualTime*3));
+    if(rackTestMode){const rect=canvas.getBoundingClientRect(),seen=new Set();ui.dataset.rackTargets=JSON.stringify(rackVisuals.filter(v=>!seen.has(v.poolIndex)&&seen.add(v.poolIndex)).map(v=>{const p=v.hitbox.getWorldPosition(v.hitbox.position.clone()).project(viewer.camera);return {poolIndex:v.poolIndex,x:rect.left+(p.x+1)*rect.width/2,y:rect.top+(1-p.y)*rect.height/2};}));}
     uiTime+=dt;if(uiTime>.15){updateUI(state);uiTime=0;}
     room.updateWorldMatrix(false,true);viewer.enableRender();
   });
   await firstLoad;
   updateUI(engine.snapshot());
   viewer.setHomeView({eye:new THREE.Vector3(44,43,47),look:new THREE.Vector3(-1,0,1)});view('hall');
-  ui.dataset.gpuAssetMeshes=String(assetGroups.length);ui.dataset.sourceFoundation='thingraph/server-room';
+  ui.dataset.gpuAssetMeshes=String(assetGroups.length);ui.dataset.sourceFoundation='thingraph/server-room';ui.dataset.rackTestMode=String(rackTestMode);
   return {engine,lab,selectGPU:choose,view,assetReady,mode,actions,presets,policies,backendNote};
 }

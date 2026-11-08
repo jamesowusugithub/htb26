@@ -8,6 +8,7 @@
 //     and purely visual timing (route-particle flight time).
 // Temperature/power are a backend *proxy* (H100 profile); the engine carries the backend's label through unchanged.
 import * as ops from './scenario-ops.js';
+import { buildRackPools } from './rack-fabric.js';
 
 export const SPEED_BASE = 600;        // trace seconds per real second at "1x" (10 simulated minutes per second)
 const ROUTE_SECONDS = 1.2;            // visual flight time of a routing particle only
@@ -27,6 +28,7 @@ export class ReplayEngine {
     this.onEvent = onEvent;
     this.onChange = onChange;
     this.focusBoard = 0;
+    this.focusPool = null;
     this.status = 'idle';               // idle | computing | ready | ended | error
     this.error = null;
     this.connection = { mode: 'offline', status: 'idle' };
@@ -140,7 +142,7 @@ export class ReplayEngine {
       case 'start': {
         this.running.set(it.job, { board: it.board, pool: it.pool, gpus: it.gpus, priority: it.priority, startT: it.t, service: it.service_s, attempt: it.attempt });
         if (it.warm) return null;
-        if (it.board != null) this.addRoute({ job: it.job, board: it.board, priority: it.priority, reverse: false });
+        this.addRoute({ job: it.job, board: it.board, pool: it.pool, priority: it.priority, reverse: false });
         return `Scheduler routed ${it.job} to ${it.board != null ? `board ${it.board + 1}` : this.poolLabel(it.pool)}${it.attempt > 1 ? ` (restart ${it.attempt})` : ''}`;
       }
       case 'finish':
@@ -206,14 +208,15 @@ export class ReplayEngine {
         capacityGpus: bm?.capacity_gpus ?? 0, runningJobs: b?.running_jobs ?? 0, forecast: b?.forecast ?? null,
       });
     }
-    const focusPool = disp?.boards?.[this.focusBoard]?.pool;
+    const focusPool = this.focusPool || disp?.boards?.[this.focusBoard]?.pool;
     const heads = (snap && focusPool && snap.pools[focusPool]?.queue_head) || [];
     const pools = snap?.pools ?? {};
     const sum = k => Object.values(pools).reduce((a, p) => a + (p[k] || 0), 0);
     const count = s => gpus.filter(g => g.status === s).length;
     const inFlight = this.routes.map((r, k) => ({
       id: `${r.job}#${k}`, priority: r.priority === 'hp' ? 'high' : r.priority, assignedGpuIds: [gpuId(r.board)],
-      transitRemaining: Math.max(0, ROUTE_SECONDS - r.age), reverse: r.reverse, kind: r.priority === 'evict' ? 'evict' : 'route' }));
+      pool: r.pool, transitRemaining: Math.max(0, ROUTE_SECONDS - r.age), reverse: r.reverse, kind: r.priority === 'evict' ? 'evict' : 'route' }));
+    const rackPools = buildRackPools(this.meta?.pools, pools, snap?.boards, disp);
     const sc = this.scenario, nowH = this.time / 3600;
     return {
       time: this.time, policy: this.policy, evidence: 'backend_simulation', mode: 'backend',
@@ -223,7 +226,7 @@ export class ReplayEngine {
                queuedHp: sum('queue_hp'), queuedSpot: sum('queue_spot'), failed: count('failed'), idle: count('idle'), cooling: count('cooling'), reserved: 0,
                alerts: gpus.filter(g => g.alert).length, arrivalsPerMin: this.arrivalsPerMin, routesDropped: this.counters.routesDropped,
                failureEvictions: this.meta?.failure_evictions ?? 0 },
-      pools, events: this.events,
+      pools, rackPools, events: this.events,
       run: { runId: this.runId, scenarioId: this.meta?.scenario_id, scenario: sc, thermal: this.meta?.thermal ?? null, forecast: this.meta?.forecast ?? null,
              display: disp ?? null, pools: this.meta?.pools ?? null, window: this.meta?.window ?? null, policyInfo: this.meta?.policy ?? null, metrics: this.metrics, comparison: this.comparison },
       effects: { burstActive: ops.burstActive(sc, nowH), coolingFaultActive: ops.coolingFaultActive(sc, nowH),
@@ -238,6 +241,7 @@ export class ReplayEngine {
   setPaused(p) { this.paused = p; this.stream?.send({ cmd: p ? 'pause' : 'resume' }); this.emitChange(); }
   setSpeed(mult) { this.speed = mult; this.stream?.send({ cmd: 'speed', value: mult * SPEED_BASE }); this.emitChange(); }
   setFocusBoard(i) { this.focusBoard = i; this.version++; }
+  setFocusPool(id) { this.focusPool = id || null; this.version++; }
   async seek(t) {
     if (!this.runId) return;
     const st = await this.client.state(this.runId, t);
