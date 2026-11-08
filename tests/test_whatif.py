@@ -89,3 +89,14 @@ def test_scenario_id_stable_and_roundtrip():
     assert a.scenario_id == Scenario.from_dict(a.to_dict()).scenario_id
     assert a.scenario_id != Scenario(arrival_mult=1.3, seed=5).scenario_id
     assert len({p.scenario_id for p in PRESETS.values()}) == len(PRESETS)
+
+
+def test_realistic_hint_policy_never_sees_true_durations(env):
+    """Regression: sjf_hint must use predicted durations. If it silently used true ones it would equal sjf_oracle."""
+    from scheduler.whatif import run_scenario
+    jobs, cl = env
+    sc = Scenario(start_day=130, days=1.0)
+    r = run_scenario(sc, jobs, cl, ["sjf_hint", "sjf_oracle", "priority_fifo"])
+    hint, oracle, base = (r["policies"][k]["metrics"]["hp"]["wait_mean_s"] for k in ("sjf_hint", "sjf_oracle", "priority_fifo"))
+    assert hint != oracle
+    assert oracle < hint <= base * 1.05          # the oracle is the ceiling; a weak hint sits between it and the baseline

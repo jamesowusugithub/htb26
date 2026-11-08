@@ -102,7 +102,8 @@ export async function mountGPULab({viewer,room}) {
     onReset(){return engine.reset();},
     onScenario(name){const sc=presets.find(p=>p.name===name);return sc?engine.selectScenario(sc):null;},
     onCooling(on){return engine.coolingFault(on);},
-    onRetry(){return engine.load(engine.scenario,engine.policy,0);}
+    onRetry(){return engine.load(engine.scenario,engine.policy,0);},
+    onCompare(){return engine.compare();}
   };
   const actions=backendMode?backendActions:syntheticActions;
   overlay=mountOverlay(ui,actions,{snapshot:engine.snapshot(),selected,paused,speed,cameraView,assetReady,latestEvent,inspectRequest,backend:backendMode,policies,presets,presetName:engine.scenario?.name,busy:false,fallbackNote:backendMode?null:backendNote});

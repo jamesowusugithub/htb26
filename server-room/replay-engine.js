@@ -34,7 +34,8 @@ export class ReplayEngine {
     this.time = 0;
     this.version = 0;
     this.loadToken = 0; this.streamId = 0; this.stream = null;
-    this.counters = { batches: 0, eventsApplied: 0, routesDropped: 0, loads: 0 };
+    this.counters = { batches: 0, eventsApplied: 0, routesDropped: 0, loads: 0, lastBatchAt: null };
+    this.scoreboard = null; this.scoreboardStatus = 'idle';
     this.listeners = new Set(onEvent ? [onEvent] : []);
     this.resetState();
   }
@@ -109,6 +110,7 @@ export class ReplayEngine {
     if (m.type === 'meta') { this.meta = m; this.version++; }
     else if (m.type === 'batch') {
       this.counters.batches++;
+      this.counters.lastBatchAt = Date.now();      // wall clock, display only ("last data n s ago")
       let top = null;
       for (const it of m.items) {
         const text = this.applyItem(it);
@@ -223,9 +225,11 @@ export class ReplayEngine {
                failureEvictions: this.meta?.failure_evictions ?? 0 },
       pools, events: this.events,
       run: { runId: this.runId, scenarioId: this.meta?.scenario_id, scenario: sc, thermal: this.meta?.thermal ?? null, forecast: this.meta?.forecast ?? null,
-             display: disp ?? null, window: this.meta?.window ?? null, policyInfo: this.meta?.policy ?? null, metrics: this.metrics, comparison: this.comparison },
+             display: disp ?? null, pools: this.meta?.pools ?? null, window: this.meta?.window ?? null, policyInfo: this.meta?.policy ?? null, metrics: this.metrics, comparison: this.comparison },
       effects: { burstActive: ops.burstActive(sc, nowH), coolingFaultActive: ops.coolingFaultActive(sc, nowH),
                  coolingDeltaC: snap?.cooling_fault_delta_c ?? 0, burst: sc.burst ?? null },
+      link: { base: this.client?.base ?? null, runId: this.runId, batches: this.counters.batches, events: this.counters.eventsApplied, loads: this.counters.loads, lastBatchAt: this.counters.lastBatchAt },
+      scoreboard: this.scoreboard, scoreboardStatus: this.scoreboardStatus,
       connection: this.connection, status: this.status, error: this.error,
     };
   }
@@ -256,6 +260,17 @@ export class ReplayEngine {
   coolingFault(on, delta = 35) { return this.applyScenario(on ? ops.startCoolingFault(this.scenario, this.nowH(), delta) : ops.stopCoolingFault(this.scenario, this.nowH())); }
   selectScenario(sc) { this.baseScenario = JSON.parse(JSON.stringify(sc)); return this.load(sc, this.policy, 0); }
   reset() { return this.load(this.baseScenario, this.policy, 0); }
+
+  /** Run the current scenario under several policies in the backend and keep the backend's own comparison table. */
+  async compare(policies = ['fifo', 'priority_fifo', 'backfill_median', 'sjf_hint', 'rl_ppo', 'sjf_oracle']) {
+    this.scoreboardStatus = 'computing'; this.emitChange();
+    try {
+      const res = await this.client.whatIf({ scenario: this.scenario, policies, snapshot_s: 600 });
+      this.scoreboard = { scenarioId: res.scenario_id, rows: res.comparison, workload: res.workload, computeSeconds: res.compute_seconds };
+      this.scoreboardStatus = 'ready';
+    } catch (e) { this.scoreboardStatus = 'error'; this.error = String(e.message || e); }
+    this.emitChange();
+  }
 
   subscribe(fn) { this.listeners.add(fn); return () => this.listeners.delete(fn); }
   emitChange() { this.onChange?.(this); }

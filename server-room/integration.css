@@ -21,3 +21,9 @@
 /* the scenario bar becomes the first child of .playback, so re-point the existing nth-child width rule from Policy to Speed */
 .playback:has(.scenario-bar)>label:nth-child(2) select{width:auto;min-width:132px}
 .playback:has(.scenario-bar)>label:nth-child(3) select{width:67px}
+.link-section,.score-section{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.link-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin:10px 0 0;font-variant-numeric:tabular-nums}.link-grid dt{font-size:10px;color:var(--muted)}.link-grid dd{font-size:12px;font-weight:600;word-break:break-all}
+.link-dot{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px}.link-dot.live{background:#e7f5ee;color:#096a50}.link-dot.stale{background:#eef2f6;color:#5b6f7e}
+.score-btn{color:#173b78;font-size:10px;padding:4px 8px;min-height:26px;border:1px solid #cbd5de;border-radius:6px;background:#fff;cursor:pointer;font-weight:600}.score-btn:disabled{opacity:.55;cursor:wait}
+.score-table td:nth-child(n+2),.score-table th:nth-child(n+2){text-align:right}.score-table tr.ceiling td{color:#7b8c98}.score-table tr.selected td{background:#e9f4ee;color:#075d43}
+.score-table td{white-space:nowrap}.score-table td:first-child{white-space:normal;max-width:96px}

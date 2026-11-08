@@ -1,0 +1,214 @@
+{
+ "api": "http://127.0.0.1:8010",
+ "requests": [
+  {
+   "method": "GET",
+   "url": "/presets",
+   "t": 484199.510907,
+   "status": 200
+  },
+  {
+   "method": "GET",
+   "url": "/meta",
+   "t": 484199.51082,
+   "status": 200
+  },
+  {
+   "method": "OPTIONS",
+   "url": "/whatif",
+   "t": 484201.391307,
+   "status": 200
+  },
+  {
+   "method": "POST",
+   "url": "/whatif",
+   "t": 484201.38864,
+   "status": 200
+  },
+  {
+   "method": "GET",
+   "url": "/runs/12fc9b35f8-rl_ppo",
+   "t": 484202.080184,
+   "status": 200
+  },
+  {
+   "method": "GET",
+   "url": "/runs/12fc9b35f8-rl_ppo/state?t=0",
+   "t": 484202.080268,
+   "status": 200
+  },
+  {
+   "method": "POST",
+   "url": "/whatif",
+   "t": 484219.433372,
+   "status": 200
+  }
+ ],
+ "websockets": [
+  {
+   "url": "/runs/12fc9b35f8-rl_ppo/stream?start=0&speed=600&paused=false"
+  }
+ ],
+ "frames": {
+  "total": 203,
+  "bytes": 3304829,
+  "byType": {
+   "meta": 1,
+   "batch": 202
+  },
+  "itemsByType": {
+   "arrive": 5783,
+   "start": 5599,
+   "preempt": 37,
+   "finish": 99,
+   "snapshot": 201
+  }
+ },
+ "sampleFrames": [
+  {
+   "type": "batch",
+   "t_from": 0,
+   "t_to": 60,
+   "items": [
+    {
+     "type": "start",
+     "t": 0,
+     "pool": "a10",
+     "job": "101234",
+     "node": 0,
+     "board": 6,
+     "gpu_slots": [
+      0
+     ],
+     "attempt": 1,
+     "service_s": 4665599,
+     "gpus": 1,
+     "priority": "hp",
+     "warm": true
+    },
+    {
+     "type": "start",
+     "t": 0,
+     "pool": "a10",
+     "job": "101388",
+     "node": 1,
+     "board": 7,
+     "gpu_slots": [
+      0
+     ],
+     "attempt": 1,
+     "service_s": 4665599,
+     "gpus": 1,
+     "priority": "hp",
+     "warm": true
+    },
+    {
+     "type": "start",
+     "t": 0,
+     "pool": "a10",
+     "job": "107229",
+     "node": 2,
+     "board": 8,
+     "gpu_slots": [
+      0
+     ],
+     "attempt": 1,
+     "service_s": 4665599,
+     "gpus": 1,
+     "priority": "hp",
+     "warm": true
+    }
+   ]
+  },
+  {
+   "type": "batch",
+   "t_from": 60,
+   "t_to": 120,
+   "items": [
+    {
+     "type": "finish",
+     "t": 64,
+     "pool": "a100",
+     "job": "283187",
+     "node": 239,
+     "board": 5,
+     "wait_s": 0
+    },
+    {
+     "type": "start",
+     "t": 64,
+     "pool": "a100",
+     "job": "293288",
+     "node": 239,
+     "board": 5,
+     "gpu_slots": [
+      7
+     ],
+     "attempt": 1,
+     "service_s": 61435,
+     "gpus": 1,
+     "priority": "hp",
+     "warm": false
+    },
+    {
+     "type": "finish",
+     "t": 82,
+     "pool": "series1",
+     "job": "13817",
+     "node": 676,
+     "board": 22,
+     "wait_s": 0
+    }
+   ]
+  },
+  {
+   "type": "batch",
+   "t_from": 120,
+   "t_to": 180,
+   "items": [
+    {
+     "type": "finish",
+     "t": 128,
+     "pool": "a100",
+     "job": "29747",
+     "node": 234,
+     "board": 0,
+     "wait_s": 0
+    },
+    {
+     "type": "start",
+     "t": 128,
+     "pool": "a100",
+     "job": "382474",
+     "node": 234,
+     "board": 0,
+     "gpu_slots": [
+      0
+     ],
+     "attempt": 1,
+     "service_s": 64323,
+     "gpus": 1,
+     "priority": "hp",
+     "warm": false
+    },
+    {
+     "type": "start",
+     "t": 128,
+     "pool": "a100",
+     "job": "397853",
+     "node": 234,
+     "board": 0,
+     "gpu_slots": [
+      1
+     ],
+     "attempt": 1,
+     "service_s": 36913,
+     "gpus": 1,
+     "priority": "hp",
+     "warm": false
+    }
+   ]
+  }
+ ],
+ "requestCount": 7
+}

@@ -1,0 +1,142 @@
+{
+ "url": "http://127.0.0.1:8081/index.html?api=http%3A%2F%2F127.0.0.1%3A8010&preset=heldout_demo&policy=rl_ppo",
+ "st1": {
+  "policy": "rl_ppo",
+  "mode": "websocket",
+  "status": "connected",
+  "runId": "12fc9b35f8-rl_ppo",
+  "simTime": 8100,
+  "link": {
+   "base": "http://127.0.0.1:8010",
+   "runId": "12fc9b35f8-rl_ppo",
+   "batches": 135,
+   "events": 11432,
+   "loads": 1,
+   "lastBatchAt": 1794117668266
+  },
+  "running": 24,
+  "queued": 154,
+  "completed": 64,
+  "policyLabel": "Learned (RL)"
+ },
+ "pick": {
+  "board": 7,
+  "job": "311226",
+  "startT": 7809,
+  "service": 915,
+  "pool": "a10",
+  "priority": "hp",
+  "gpus": 1
+ },
+ "shown": {
+  "jobIdInInspector": "311796",
+  "gpu": "GPU-08",
+  "subtitle": "Board 8 · NVIDIA A10 · slice 2 of 6 · 648 nodes (648 GPUs)"
+ },
+ "scoreboard": {
+  "scenarioId": "12fc9b35f8",
+  "rows": [
+   {
+    "policy": "fifo",
+    "realistic": true,
+    "util": 0.8759,
+    "hp_wait_mean_h": 10.4831,
+    "hp_wait_p95_h": 21.9785,
+    "spot_wait_mean_h": 14.0399,
+    "hp_bsld": 60.8136,
+    "preemptions": 0,
+    "wasted_gpu_h": 0
+   },
+   {
+    "policy": "priority_fifo",
+    "realistic": true,
+    "util": 0.8767,
+    "hp_wait_mean_h": 7.0797,
+    "hp_wait_p95_h": 16.5878,
+    "spot_wait_mean_h": 30.7154,
+    "hp_bsld": 43.7601,
+    "preemptions": 39,
+    "wasted_gpu_h": 0
+   },
+   {
+    "policy": "backfill_median",
+    "realistic": true,
+    "util": 0.8805,
+    "hp_wait_mean_h": 4.1462,
+    "hp_wait_p95_h": 15.2559,
+    "spot_wait_mean_h": 22.2177,
+    "hp_bsld": 24.4271,
+    "preemptions": 86,
+    "wasted_gpu_h": 40.9608
+   },
+   {
+    "policy": "sjf_hint",
+    "realistic": true,
+    "util": 0.8785,
+    "hp_wait_mean_h": 4.1574,
+    "hp_wait_p95_h": 28.5211,
+    "spot_wait_mean_h": 21.1023,
+    "hp_bsld": 17.82,
+    "preemptions": 281,
+    "wasted_gpu_h": 109.5328
+   },
+   {
+    "policy": "sjf_oracle",
+    "realistic": false,
+    "util": 0.8791,
+    "hp_wait_mean_h": 1.1735,
+    "hp_wait_p95_h": 7.6682,
+    "spot_wait_mean_h": 11.9511,
+    "hp_bsld": 1.732,
+    "preemptions": 351,
+    "wasted_gpu_h": 174.5658
+   },
+   {
+    "policy": "rl_ppo",
+    "realistic": true,
+    "util": 0.8801,
+    "hp_wait_mean_h": 4.7804,
+    "hp_wait_p95_h": 21.0707,
+    "spot_wait_mean_h": 11.9009,
+    "hp_bsld": 26.9273,
+    "preemptions": 94,
+    "wasted_gpu_h": 122.1619
+   }
+  ],
+  "workload": {
+   "jobs_total": 7425,
+   "jobs_arriving": 1910,
+   "carryover_jobs": 5515,
+   "spot_share": 0.30523560209424083,
+   "gpu_hours_arriving": 134189.16275,
+   "nodes_per_pool": {
+    "a10": 3889,
+    "a100": 290,
+    "a800": 11,
+    "h800": 14,
+    "series1": 861,
+    "series2": 28
+   },
+   "gpus_per_pool": {
+    "a10": 3889,
+    "a100": 2320,
+    "a800": 88,
+    "h800": 112,
+    "series1": 1357,
+    "series2": 224
+   }
+  },
+  "computeSeconds": 2.51
+ },
+ "after": {
+  "link": {
+   "base": "http://127.0.0.1:8010",
+   "runId": "12fc9b35f8-rl_ppo",
+   "batches": 202,
+   "events": 11719,
+   "loads": 1,
+   "lastBatchAt": 1794117675131
+  },
+  "simTime": 12120
+ }
+}

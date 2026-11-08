@@ -63,6 +63,7 @@ PRESETS: dict[str, Scenario] = {s.name: s for s in [
     Scenario("lose_a10_capacity", capacity={"a10": 0.8}, note="A10 pool loses 20% of its nodes"),
     Scenario("capacity_plus_20", capacity=1.2, note="All pools gain 20% nodes"),
     Scenario("live_demo", start_day=90.0, days=1.0, note="Busy day: one-day window used by the 3D room"),
+    Scenario("heldout_demo", start_day=130.0, days=1.0, note="Busy day from the held-out period (never used to train or select the RL policy)"),
     Scenario("node_failure", start_day=90.0, days=1.0, failures=[{"board": 7, "at_h": 6.0, "repair_after_h": 4.0}],
              note="Board 8 (A10 pod) loses its nodes at hour 6 and recovers at hour 10"),
     Scenario("cooling_fault", start_day=90.0, days=1.0, cooling_fault={"at_h": 6.0, "delta_c": 35.0, "duration_h": 6.0},
@@ -233,9 +234,16 @@ def run_scenario(sc: Scenario, jobs: pd.DataFrame, calibrated: data.Cluster, pol
     cluster = build_cluster(calibrated, sc)
     out = {"scenario": sc.to_dict(), "scenario_id": sc.scenario_id, "workload": workload_stats(w, cluster),
            "policies": {}, "_states": {}, "_workload": w, "_cluster": cluster}
+    hint = None
     for name in names:
         spec = POLICIES[name]
-        S = run_policy(cluster, w, spec, resume=sc.resume_preempted, log_events=log_events,
+        est = None
+        if spec.est_mode == "hint":        # realistic policies may only see the hint model's PREDICTED durations, never the true ones
+            from .duration_model import load_or_fit
+            hint = hint or load_or_fit(jobs, 40)
+            est = hint.predict_seconds(w.job_id)
+            est = np.where(np.isfinite(est), est, np.nanmedian(est))
+        S = run_policy(cluster, w, spec, resume=sc.resume_preempted, log_events=log_events, est=est,
                        failures=failure_events(sc, cluster), **sim_kw)
         m = summarize(S, w, cluster, util_hi=sc.days * 86400)
         out["policies"][name] = {"realistic": spec.realistic, "metrics": m}

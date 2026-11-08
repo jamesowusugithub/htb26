@@ -22,7 +22,7 @@ export function BackendMetrics({gpu}){
 
 export function PoolPanel({snap,selectedPool}){
   const run=snap.run, pools=snap.pools||{};
-  const labels=Object.fromEntries((run?.display?.pods||[]).map(p=>[p.pool,p.label]));
+  const labels=Object.fromEntries((run?.pools||[]).map(p=>[p.id,p.label]));
   const ids=Object.keys(pools);
   if(!ids.length)return null;
   return <section className="pool-section" aria-label="Pool totals">
@@ -32,6 +32,27 @@ export function PoolPanel({snap,selectedPool}){
         <td>{labels[id]||id}</td><td>{Math.round(p.busy_gpus)}<small>/{Math.round(p.capacity_gpus)}</small></td><td>{p.queue_hp} / {p.queue_spot}</td></tr>;})}
     </tbody></table>
     <p className="proxy-note">All six pools are simulated; only four are drawn as pods.</p>
+  </section>;
+}
+
+const POLICY_LABEL={fifo:'First come, first served',priority_fifo:'Priority first',backfill_median:'Backfill',sjf_hint:'Shortest predicted job',rl_ppo:'Learned (RL)',sjf_oracle:'Shortest job (oracle)',backfill_oracle:'Backfill (oracle)'};
+export function LinkPanel({snap}){
+  const l=snap.link,[,force]=React.useReducer(x=>x+1,0);
+  React.useEffect(()=>{const t=setInterval(force,500);return()=>clearInterval(t);},[]);
+  const age=l.lastBatchAt?((Date.now()-l.lastBatchAt)/1000):null;
+  return <section className="link-section" aria-label="Backend link"><div className="section-heading"><h2>Backend link</h2><span className={`link-dot ${age!=null&&age<3?'live':'stale'}`}>{age!=null&&age<3?'receiving':'idle'}</span></div>
+    <dl className="link-grid"><div><dt>Server</dt><dd>{(l.base||'').replace('http://','')}</dd></div><div><dt>Transport</dt><dd>{snap.connection.mode}</dd></div><div><dt>Run</dt><dd>{(l.runId||'').slice(0,18)}</dd></div>
+      <div><dt>Batches</dt><dd>{l.batches.toLocaleString('en-GB')}</dd></div><div><dt>Events applied</dt><dd>{l.events.toLocaleString('en-GB')}</dd></div><div><dt>Last data</dt><dd>{age==null?'—':`${age.toFixed(1)} s ago`}</dd></div></dl></section>;
+}
+
+export function Scoreboard({snap,actions}){
+  const sb=snap.scoreboard,busy=snap.scoreboardStatus==='computing';
+  return <section className="score-section" aria-label="Policy scoreboard"><div className="section-heading"><h2>Policy scoreboard</h2>
+    <button className="ui-button score-btn" disabled={busy||snap.status==='computing'} onClick={actions.onCompare}>{busy?'Running 6 policies…':sb?'Re-run':'Compare policies'}</button></div>
+    {sb?<><table className="pool-table score-table"><thead><tr><th>Policy</th><th>HP wait</th><th>HP p95</th><th>Spot wait</th></tr></thead><tbody>
+      {sb.rows.map(r=><tr key={r.policy} className={`${r.policy==='rl_ppo'?'selected':''} ${r.realistic?'':'ceiling'}`}><td>{POLICY_LABEL[r.policy]||r.policy}{r.realistic?'':' *'}</td><td>{r.hp_wait_mean_h.toFixed(1)} h</td><td>{r.hp_wait_p95_h.toFixed(1)} h</td><td>{r.spot_wait_mean_h==null?'n/a':`${r.spot_wait_mean_h.toFixed(1)} h`}</td></tr>)}</tbody></table>
+      <p className="proxy-note">Same workload, same cluster, scenario {sb.scenarioId}. * uses true durations: an unattainable ceiling. Waits are simulated. Computed by the backend in {sb.computeSeconds}s.</p></>
+     :<p className="proxy-note">Runs this scenario under every policy in the backend, including the trained RL scheduler.</p>}
   </section>;
 }
 
