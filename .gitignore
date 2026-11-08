@@ -6,3 +6,6 @@ runs/
 .numba_cache/
 models/*/tb/
 models/*.joblib
+restaurant/node_modules/
+restaurant/dist/
+restaurant/*.tsbuildinfo

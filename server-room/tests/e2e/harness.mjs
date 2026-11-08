@@ -12,8 +12,8 @@ const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/jav
   '.glb': 'model/gltf-binary', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.ttf': 'font/ttf', '.woff2': 'font/woff2',
   '.woff': 'font/woff', '.ndjson': 'application/x-ndjson' };
 
-export function serveDist(port = 0) {
-  const dist = path.join(root, 'dist');
+export function serveDist(port = 0, dir = 'dist') {
+  const dist = path.isAbsolute(dir) ? dir : path.join(root, dir);
   const server = http.createServer(async (req, res) => {
     try {
       let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
