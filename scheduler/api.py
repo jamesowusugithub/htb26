@@ -30,10 +30,11 @@ from .eval_rl import run_agent
 from .duration_model import load_or_fit
 
 import os
+import json
 _MODELS = Path(__file__).resolve().parents[1] / "models"
-# newest verified policy first; override with HTB_RL_MODEL
+# u6 = trained with randomly permuted candidate slots (slot position carries no information); s12 had the best validation score. Override with HTB_RL_MODEL
 RL_MODEL = Path(os.environ["HTB_RL_MODEL"]) if os.environ.get("HTB_RL_MODEL") else next(
-    (p for p in (_MODELS / "ppo_u4_hpfirst_s11/best.zip", _MODELS / "ppo_combined/best.zip", _MODELS / "ppo_k16/best.zip", _MODELS / "ppo_bc/best.zip") if p.exists()), _MODELS / "ppo_bc/best.zip")
+    (p for p in (_MODELS / "ppo_u6_shuf_s12/best.zip", _MODELS / "ppo_u6_shuf_s13/best.zip", _MODELS / "ppo_u6_shuf_s11/best.zip", _MODELS / "ppo_u4_hpfirst_s11/best.zip") if p.exists()), _MODELS / "ppo_u6_shuf_s12/best.zip")
 RL_NAME = "rl_ppo"
 _rl: dict = {}
 _thermal: dict = {}
@@ -132,6 +133,10 @@ def rl_policy():
         _rl["model"] = MaskablePPO.load(RL_MODEL, device="cpu")
         dim = int(_rl["model"].observation_space.shape[0])
         _rl["K"] = (dim - 12) // 8                      # obs = 6 pool one-hot + 6 globals + 8 features per candidate slot
+        try:                                            # models trained with shuffled candidate slots must be served with shuffled slots
+            _rl["shuffle"] = bool(json.loads((RL_MODEL.parent / "history.json").read_text())["args"].get("shuffle", False))
+        except (OSError, ValueError, KeyError):
+            _rl["shuffle"] = False
     return _rl["model"]
 
 
@@ -222,7 +227,7 @@ def whatif(req: WhatIfRequest):
             raise HTTPException(422, f"invalid scenario: {ex}")
         if RL_NAME in req.policies:
             model = rl_policy()
-            renv = SchedulingEnv(e["jobs"], e["cluster"], load_or_fit(e["jobs"], 40), K=_rl["K"], log_events=True, snapshot_dt=req.snapshot_s)
+            renv = SchedulingEnv(e["jobs"], e["cluster"], load_or_fit(e["jobs"], 40), K=_rl["K"], shuffle_slots=_rl["shuffle"], log_events=True, snapshot_dt=req.snapshot_s)
             m, _, _ = run_agent(renv, lambda o, mk: model.predict(o, action_masks=mk, deterministic=True)[0], sc)
             res["policies"][RL_NAME] = {"realistic": True, "metrics": m}
             res["_states"][RL_NAME] = renv.S

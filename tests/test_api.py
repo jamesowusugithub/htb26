@@ -88,7 +88,8 @@ def test_nan_metrics_are_sent_as_null(client):
 
 def test_rl_policy_selectable_and_exports_valid_events(client):
     from pathlib import Path
-    if not (Path(__file__).parents[1] / "models/ppo_bc/best.zip").exists():
+    from scheduler.api import RL_MODEL
+    if not RL_MODEL.exists():
         pytest.skip("trained model not present")
     r = client.post("/whatif", json={"scenario": {"start_day": 130, "days": 1}, "policies": ["priority_fifo", "rl_ppo"],
                                      "snapshot_s": 1800})

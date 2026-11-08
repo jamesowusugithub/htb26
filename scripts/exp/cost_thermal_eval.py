@@ -9,13 +9,13 @@ from scheduler.run_baselines import setup, run_policy
 from scheduler.duration_model import load_or_fit
 from scheduler.policies import POLICIES
 from scheduler.whatif import Scenario, build_workload, build_cluster
-from scheduler.env import SchedulingEnv
+from scheduler.env import SchedulingEnv, model_uses_shuffle
 from scheduler.sim import FC_QINT
 from scheduler.outcomes import cost_outcomes, thermal_outcomes
 from scheduler.thermal import ThermalProxy
 model_path, K, out = sys.argv[1], int(sys.argv[2]), sys.argv[3]
 pools, jobs, base, cl = setup(0.85); hint = load_or_fit(jobs, 40); ids = [p["id"] for p in pools]; th = ThermalProxy.load()
-model = MaskablePPO.load(model_path, device="cpu"); env = SchedulingEnv(jobs, cl, hint, K=K, log_events=True, snapshot_dt=None)
+model = MaskablePPO.load(model_path, device="cpu"); env = SchedulingEnv(jobs, cl, hint, K=K, log_events=True, snapshot_dt=None, shuffle_slots=model_uses_shuffle(model_path))
 FAULT = {"at_h": 12.0, "delta_c": 35.0, "duration_h": 24.0}
 rows = []
 for d in (130.0, 133.0, 145.0, 151.0, 157.0, 169.0):

@@ -41,13 +41,15 @@ NaN metrics (e.g. spot wait with no spot jobs) are sent as `null`. Windows are c
 `data.py` loaders, workloads, cluster scaling · `sim.py` numba core · `policies.py` baselines ·
 `metrics.py` · `export.py` + `schema/events.schema.json` frontend feed · `samples/` example runs.
 
-## Learned scheduler (phase 4; results and caveats in `analysis/rl/README.md`)
-`duration_model.py` runtime hint · `env.py` Gymnasium env (masked actions) · `rl_core.py` numba decision interface ·
-`train_rl.py` behaviour cloning + masked PPO · `run_eval.py` held-out comparison. `rl_ppo` is selectable in `POST /whatif`.
-It beats priority-FIFO and backfill on held-out windows but **not** the `sjf_hint` rule (see results).
+## Learned scheduler (results and caveats in `analysis/rl/README.md`; model status in `models/README.md`)
+`duration_model.py` runtime hint (v3) · `env.py` Gymnasium env (masked actions; `shuffle_slots` permutes the candidate slots so the policy cannot rely on slot position) ·
+`rl_core.py` numba decision interface · `train_rl.py` behaviour cloning + masked PPO (`--shuffle`) · `run_eval.py` held-out comparison ·
+`demand_forecast.py` GPU-demand forecaster with a calibrated P10-P90 band (shipped in the feed as `meta.demand_forecast`) · `cloud.py` SIMULATED cloud overflow and price tiers.
+`rl_ppo` is selectable in `POST /whatif` (default model `ppo_u6_shuf_s12`). It beats priority-FIFO and backfill on held-out windows and **ties** the `sjf_hint` rule
+(with lower spot waits and fewer preemptions); `state_forecast.py` is an experiment that did not beat persistence and is not used.
 
 ## Feed for the 3D room (schema 0.2.0)
 `export.py` rebuilds per-board utilisation/status, a labelled thermal proxy (`thermal.py`, measured H100 profiles), thermal alerts, queue heads and a 30-minute
-forecast (`forecast.py`; persistence is displayed because it beat the survival projection) from the simulator's event log. Scenarios add `failures` (node-slice
+utilisation forecast (persistence is displayed: a survival projection and a learned state model were both measured and did not beat it) from the simulator's event log. Scenarios add `failures` (node-slice
 failure/repair), `cooling_fault` and `injected_jobs`. `GET /runs/{id}/state?t=` gives instant catch-up; the WebSocket accepts `pause|resume|speed|seek`.
 Details and the frontend wiring: `server-room/INTEGRATION.md`.

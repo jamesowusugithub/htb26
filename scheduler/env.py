@@ -19,12 +19,22 @@ from .whatif import Scenario, build_workload, build_cluster, sim_kwargs
 from .run_baselines import run_policy
 
 
+def model_uses_shuffle(model_path) -> bool:
+    """True if the policy next to `model_path` (best.zip / final.zip) was trained with shuffled candidate slots (history.json args.shuffle)."""
+    import json
+    from pathlib import Path
+    try:
+        return bool(json.loads((Path(str(model_path)).parent / "history.json").read_text())["args"].get("shuffle", False))
+    except (OSError, ValueError, KeyError):
+        return False
+
+
 class SchedulingEnv(gym.Env):
     metadata = {"render_modes": []}
 
     def __init__(self, jobs, cluster, hint, *, train_days=(45.0, 125.0), days=3.0, arrival_mult=(0.8, 1.4),
                  capacity_jitter=(0.9, 1.1), K=8, D=512, seed=0, max_steps=400_000, q_ref=1e5, allow_hold=False, fixed=None, log_events=False, snapshot_dt=None,
-                 burst_prob=0.0, offload=False, cloud_prob=0.0, cost_weight=0.0, offload_min_wait_s=1800.0):
+                 burst_prob=0.0, offload=False, cloud_prob=0.0, cost_weight=0.0, offload_min_wait_s=1800.0, shuffle_slots=False):
         super().__init__()
         self.jobs, self.base_cluster, self.hint = jobs, cluster, hint
         self.train_days, self.days, self.arrival_mult, self.capacity_jitter = train_days, days, arrival_mult, capacity_jitter
@@ -38,6 +48,23 @@ class SchedulingEnv(gym.Env):
         self.observation_space = spaces.Box(-1.0, 10.0, shape=(P + 6 + K * 8 + (2 if offload else 0),), dtype=np.float32)
         self.action_space = spaces.Discrete(K + (2 if offload else 1))   # K candidate slots + "advance" (+ "send head to the simulated cloud")
         self.S = None
+        # shuffle_slots: randomly permute the K candidate slots (obs blocks, mask, action) at every decision so the slot INDEX carries no information.
+        # Without it the candidates arrive pre-sorted by (priority, runtime hint), so "pick slot 2" IS the rule and even a random network scores the same.
+        self.shuffle_slots = shuffle_slots
+        self._prng = np.random.default_rng(seed + 12345)
+        self._perm = np.arange(K)
+        self._P = cluster.n_pools
+
+    def _new_perm(self):
+        self._perm = self._prng.permutation(self.K) if self.shuffle_slots else np.arange(self.K)
+
+    def _obs(self):
+        o = self.S.obs.copy()
+        if self.shuffle_slots and not self.done:
+            b = self._P + 6
+            blocks = o[b:b + 8 * self.K].reshape(self.K, 8)
+            o[b:b + 8 * self.K] = blocks[self._perm].reshape(-1)
+        return o
 
     # ------------------------------------------------------------------ helpers
     def _scenario(self, options):
@@ -90,7 +117,8 @@ class SchedulingEnv(gym.Env):
         self.last_q = 0.0                       # queue time accrued before the first decision counts toward step 1
         self.last_c = 0.0
         self.done = run_until_decision(self.S, self.D) == 1
-        return self.S.obs.copy(), {"scenario_id": self.sc.scenario_id}
+        self._new_perm()
+        return self._obs(), {"scenario_id": self.sc.scenario_id}
 
     def action_masks(self) -> np.ndarray:
         if self.done:
@@ -98,10 +126,15 @@ class SchedulingEnv(gym.Env):
         m = self.S.amask.astype(bool)
         if not self.allow_hold and (m[: self.K].any() or (self.offload and m[self.K + 1])):
             m[self.K] = False
+        if self.shuffle_slots:
+            m[: self.K] = m[: self.K][self._perm]
         return m
 
     def step(self, action):
         S = self.S
+        action = int(action)
+        if self.shuffle_slots and action < self.K:
+            action = int(self._perm[action])          # permuted slot -> real candidate slot
         bad = apply_action(S, int(action)) if not self.done else 0
         self.steps += 1
         self.done = self.done or run_until_decision(S, self.D) == 1
@@ -118,7 +151,8 @@ class SchedulingEnv(gym.Env):
             info["metrics"] = self.final_metrics()
             info["qint_ratio_vs_priority_fifo"] = q / self.base_qint
             info["cloud_cost_usd"] = cst
-        return S.obs.copy(), reward, bool(self.done), bool(truncated), info
+        self._new_perm()
+        return self._obs(), reward, bool(self.done), bool(truncated), info
 
     def final_metrics(self):
         return summarize(self.S, self.w, self.cluster, util_hi=self.sc.days * 86400)

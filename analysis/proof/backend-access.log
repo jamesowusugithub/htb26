@@ -1,0 +1,16 @@
+INFO:     Started server process [25710]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+INFO:     127.0.0.1:49219 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49239 - "GET /presets HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49238 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49238 - "OPTIONS /whatif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49239 - "POST /whatif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49239 - "GET /runs/eac66cec0e-rl_ppo HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49275 - "GET /runs/eac66cec0e-rl_ppo/state?t=0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49276 - "WebSocket /runs/eac66cec0e-rl_ppo/stream?start=0&speed=600&paused=false" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:49281 - "POST /whatif HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49288 - "GET /runs/eac66cec0e-rl_ppo/events HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49289 - "GET /meta HTTP/1.1" 200 OK

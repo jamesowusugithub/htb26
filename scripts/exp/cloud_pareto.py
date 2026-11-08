@@ -10,13 +10,13 @@ from scheduler.run_baselines import setup, run_policy
 from scheduler.duration_model import load_or_fit
 from scheduler.policies import POLICIES
 from scheduler.whatif import Scenario, build_workload, build_cluster, sim_kwargs
-from scheduler.env import SchedulingEnv
+from scheduler.env import SchedulingEnv, model_uses_shuffle
 from scheduler.sim import FC_QINT
 from scheduler.metrics import summarize
 from scheduler.outcomes import cost_outcomes
 model_path = sys.argv[1]; K = int(sys.argv[2]); out = sys.argv[3]
 pools, jobs, base, cl = setup(0.85); hint = load_or_fit(jobs, 40); ids = [p["id"] for p in pools]
-model = MaskablePPO.load(model_path, device="cpu"); env = SchedulingEnv(jobs, cl, hint, K=K)
+model = MaskablePPO.load(model_path, device="cpu"); env = SchedulingEnv(jobs, cl, hint, K=K, shuffle_slots=model_uses_shuffle(model_path))
 DAYS = [130.0, 133.0, 145.0, 151.0, 157.0, 169.0]
 rows = []
 for d in DAYS:

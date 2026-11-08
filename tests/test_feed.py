@@ -190,7 +190,8 @@ def test_invalid_scenarios_are_rejected(client):
 
 
 def test_rl_policy_handles_failures_and_feed_is_valid(client):
-    if not (Path(__file__).parents[1] / "models/ppo_bc/best.zip").exists():
+    from scheduler.api import RL_MODEL
+    if not RL_MODEL.exists():
         pytest.skip("trained model not present")
     body, o = run(client, {"failures": [{"board": 3, "at_h": 2.0, "repair_after_h": 3.0}]}, policies=("rl_ppo",))
     ev = o["rl_ppo"]["ev"]

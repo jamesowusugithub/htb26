@@ -1,0 +1,11 @@
+window 130.0
+window 133.0
+window 145.0
+window 151.0
+window 157.0
+window 169.0
+                                         q_ratio  hp_wait_h  hp_p95_h  cloud_jobs   cloud_usd  cloud_usd_per_day
+policy                                                                                                          
+RL + 2h overflow rule                      0.177      1.431    10.742     282.667  101666.867            33889.0
+RL, agent decides offload                  0.227      2.050    16.144     192.667   92840.356            30947.0
+rule + offload rule (same action space)    0.287      2.363    16.979     138.333   72705.371            24235.0

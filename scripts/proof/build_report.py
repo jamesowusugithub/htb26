@@ -27,7 +27,7 @@ Everything below was produced by running the real system; numbers come from `ana
 - Automated: 22/22 browser checks on WebSocket and on polling (`server-room/tests/e2e/live-flow.mjs`), including: the engine snapshot equals the backend `/state` at the same time, and every temperature shown over 3 s is a value the backend sent for that board.
 
 ## 2. The RL model is trained (and what that did and did not buy)
-- `{m['file']}`: {m['bytes']:,} bytes, sha256 `{m['sha256']}…`, **{m['policy_parameters']:,} parameters**. Trained {m['training']['steps']:,} PPO steps on {m['training']['envs']} parallel environments in {m['training_seconds']} s, after behaviour-cloning the hint rule on {m['training']['bc_episodes']} windows; {m['validation_checks']} validation checks (days 118-124). Training windows were days 45-115 only.
+- `{m['file']}`: {m['bytes']:,} bytes, sha256 `{m['sha256']}…`, **{m['policy_parameters']:,} parameters**. Trained {m['training']['steps']:,} PPO steps on {m['training']['envs']} parallel environments in {m['training_seconds']} s, after behaviour-cloning the hint rule on {m['training']['bc_episodes']} windows. **Candidate slots are randomly permuted at every decision, so slot position carries no information and the network has to read the job features.** {m['validation_checks']} validation checks (days 118-124); training windows were days 45-115 only. Three seeds were trained (validation 0.348 / 0.357 / 0.362); the served one had the best validation score, chosen before any test number was seen.
 - **Held-out test (days 130-172, six 3-day windows, never used for training or checkpoint choice), queue time relative to priority-FIFO (lower is better):**
 
 | Policy | HP wait (h) | HP p95 (h) | Spot wait (h) | Queue-time ratio |
@@ -36,9 +36,9 @@ Everything below was produced by running the real system; numbers come from `ana
                 for k, n in (("priority_fifo", "priority FIFO"), ("backfill_median", "backfill"), ("rl_untrained", "**RL, untrained (same network, random weights)**"),
                              ("rl_trained", "**RL, trained**"), ("sjf_hint", "shortest predicted job (rule)"), ("sjf_oracle", "oracle with true durations (unattainable)"))) + f"""
 
-- **Control:** the untrained network with identical architecture scores {tab['rl_untrained']['q_ratio']:.2f}; training takes it to {tab['rl_trained']['q_ratio']:.2f}. So training matters, **but a large part of the gain comes from the candidate list being ranked by the runtime-hint model**: even random weights beat priority-FIFO.
-- **What the trained agent does** (day-130 window, {d['trained']['real_choices']:,} real choices between startable jobs): it skips the queue head in **{d['trained']['pct_choices_where_rl_skips_the_queue_head']}%** of them, picks a shorter-predicted job in **{d['trained']['pct_skips_that_pick_a_shorter_predicted_job']}%** of those skips, and agrees with the hand-written hint rule **{d['trained']['pct_choices_identical_to_hint_rule']}%** of the time (untrained: {d['untrained']['pct_choices_identical_to_hint_rule']}%).
-- **Honest verdict:** RL beats FIFO, priority-FIFO and backfill and has the lowest spot waits of the realistic policies, but it **ties, and does not beat, the simple "shortest predicted job" rule** on the headline metric. PPO fine-tuning barely moved the cloned policy (chart, left).
+- **Control (this is the test that matters):** with slot order hidden, the same network with random weights scores {tab['rl_untrained']['q_ratio']:.2f} here and the trained one {tab['rl_trained']['q_ratio']:.2f}. On all 17 held-out windows (`analysis/rl/rl_shuffle_eval.json`): random valid choice 0.602, random-weights network 0.574, trained seeds 0.509-0.513, hint rule 0.509. So training matters and reaches rule-level quality. An earlier version with candidates pre-sorted by the hint hid this: even random weights scored the same as the trained network (0.452 vs 0.455), which would have made the RL meaningless.
+- **What the trained agent does** (day-130 window, {d['trained']['real_choices']:,} real choices between startable jobs): it skips the queue head in **{d['trained']['pct_choices_where_rl_skips_the_queue_head']}%** of them and, when it skips, picks a shorter-predicted job in **{d['trained']['pct_skips_that_pick_a_shorter_predicted_job']}%** (untrained network: {d['untrained']['pct_skips_that_pick_a_shorter_predicted_job']}%).
+- **Honest verdict:** RL beats FIFO, priority-FIFO and backfill and **ties the simple "shortest predicted job" rule** on queue time (about 0.51-0.52 vs 0.51 over 17 held-out windows; slightly ahead on what-if windows, 0.422 vs 0.444, and on held-out BurstGPT shapes, 0.583 vs 0.596). It keeps the lowest spot waits and does about 30% fewer preemptions than the rule; HP tail waits are slightly worse. It does not beat the rule decisively. Full tables and caveats: `analysis/rl/README.md`.
 - Chart: `rl-training-proof.png`. Live: in the room, press **Compare policies** (Policy scoreboard) to have the backend run every policy, including the trained one, on the current scenario:
 
 | Live scoreboard, held-out day 130 | HP wait (h) | HP p95 (h) | Spot wait (h) |
@@ -61,17 +61,17 @@ Checks: raw submit {float(raw['submit_time'])/86400:.3f} days = window start day
 
 | Source | Used? | How |
 |---|---|---|
-| Alibaba jobs (466,867) | **Yes** | every job in the replay window; trains the runtime-hint model (finished jobs before day 40); survival curves for the forecast; RL training windows |
+| Alibaba jobs (466,867) | **Yes** | every job in the replay window; trains the runtime-hint model (finished jobs before day 40) and the demand forecaster (days before 100); RL training windows |
 | Alibaba nodes (4,278) | **Yes** | the cluster, 6 GPU-model pools, scaled to ~85% offered load ({', '.join(f"{p['id']} {p['nodes']}" for p in meta['pools'])} simulated nodes) |
 | Thermal archive (11.9M readings -> 45 profiles) | **Yes, as a proxy** | measured H100 profiles -> board temperature and power; labelled as proxy, never claimed for Alibaba hardware |
-| GPU pricing | **No** | not connected to the live system yet |
-| BurstGPT (10.6M requests) | **No** | not connected yet |
+| GPU pricing | **Yes, for the simulated cloud overflow** | price tiers anchored to the offers data (premium = cheapest H100-80GB offer, standard = cheapest L40S); no Alibaba GPU has an exact price match, so the tiers are labelled assumptions and cloud assignments are simulated, never observed |
+| BurstGPT (10.6M requests) | **Yes** | hourly arrival-shape profiles for what-ifs and RL training (traces 1-2); trace 3 is held out and used only for testing |
 
 ## 4. What this does NOT prove (read before presenting)
 - Waits, placements, evictions and failures are **simulated** under stated assumptions; the trace itself has no ground truth for them.
 - Temperatures/power are an **H100-based proxy**; the 80 C alert threshold and the +35 C cooling-fault size are **assumptions**.
-- The displayed 30-minute forecast is **persistence**: a survival-based projection was measured to be worse.
-- RL is **not better than the best simple rule**; one training seed; 3-day windows.
+- The displayed 30-minute **utilisation** forecast is **persistence**: a survival projection and a learned state forecaster were both measured and neither beat it (`analysis/rl/state_forecast_*.json`). The **demand forecast** (GPUs requested in the next 30 min, with a P10-P90 band) is learned: 18% lower error than rate-persistence on held-out days, ~82% band coverage, little skill on the A10 pool, and sudden spikes are not anticipated.
+- RL **ties** the best simple rule (it does not beat it decisively); three seeds, 3-day windows. Cloud spend is a simulated rental cost, charged for the full predicted job at start.
 - Bug found and fixed while producing this pack: the API's `sjf_hint` policy had been using true durations (it equalled the oracle); the regression test `test_realistic_hint_policy_never_sees_true_durations` now guards it. Earlier research tables used a different code path and were not affected.
 
 ## Reproduce

@@ -11,7 +11,7 @@ from scheduler.env import SchedulingEnv
 from scheduler.heuristics import hp_then_min_hint
 from scheduler.sim import FC_QINT
 pools, jobs, base, cl = setup(0.85); h = load_or_fit(jobs, 40); env = SchedulingEnv(jobs, cl, h, K=16)
-M = {n: MaskablePPO.load(f"models/{n}/best", device="cpu") for n in ("ppo_u4_hpfirst_s11", "ppo_u4_hpfirst_s12")}
+M = {n: MaskablePPO.load(f"models/{n}/best", device="cpu") for n in ("ppo_u4_hpfirst_s11", "ppo_u4_hpfirst_s12", "ppo_u4_hpfirst_s13")}
 def play(sc, ch):
     obs,_ = env.reset(options={"scenario": sc}); done=False
     while not done:

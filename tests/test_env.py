@@ -112,3 +112,35 @@ def test_no_eviction_livelock_when_agent_prefers_spot_jobs(parts):
         steps += 1
     assert term and not trunc and steps < 60000
     assert (env.S.start_first >= 0).all()
+
+
+def test_shuffled_slots_are_an_exact_permutation_of_the_real_candidates(parts):
+    """shuffle_slots: slot k of the observation/mask is real candidate perm[k], and an action on slot k starts that real candidate."""
+    jobs, cl, hint = parts
+    K = 16
+    env = SchedulingEnv(jobs, cl, hint, K=K, shuffle_slots=True, fixed=dict(start_day=133.0, days=1.0, arrival_mult=1.0, capacity=1.0, seed=0))
+    base = cl.n_pools + 6
+    obs, _ = env.reset()
+    checked = 0
+    rng = np.random.default_rng(0)
+    done = False
+    while not done and checked < 60:
+        S, perm = env.S, env._perm.copy()
+        m = env.action_masks()
+        for k in range(K):
+            assert m[k] == bool(S.amask[perm[k]])
+            assert np.array_equal(obs[base + 8 * k: base + 8 * k + 8], S.obs[base + 8 * perm[k]: base + 8 * perm[k] + 8])
+        valid = np.flatnonzero(m[:K])
+        if len(valid) == 0:
+            a = K
+        else:
+            a = int(rng.choice(valid))
+            job = int(S.cand_job[perm[a]])                       # the real job behind the chosen shuffled slot
+            running_before = int(S.sc[__import__("scheduler.sim", fromlist=["SC_NRUN"]).SC_NRUN])
+        obs, r, te, tr, info = env.step(a)
+        done = te or tr
+        if len(valid):
+            assert S.start_first[job] >= 0                       # that exact job was started
+        checked += 1
+    assert checked > 20
+    assert set(np.unique(env._perm)) == set(range(K))

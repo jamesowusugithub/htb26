@@ -1,0 +1,8 @@
+capacity x   RL    rule   RL-rule   (queue-time ratio vs priority FIFO at that capacity; lower is better)
+     0.3  0.743  0.745  -0.002
+     0.5  0.676  0.677  -0.001
+     0.7  0.585  0.596  -0.011
+     1.0  0.525  0.532  -0.007
+     1.4  0.655  0.672  -0.017
+     2.0  0.141  0.144  -0.003
+     3.0  0.000  0.000  +0.000

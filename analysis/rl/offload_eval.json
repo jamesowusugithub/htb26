@@ -1,0 +1,29 @@
+[
+ {
+  "policy":"RL + 2h overflow rule",
+  "q_ratio":0.177,
+  "hp_wait_h":1.431,
+  "hp_p95_h":10.742,
+  "cloud_jobs":282.667,
+  "cloud_usd":101666.867,
+  "cloud_usd_per_day":33889.0
+ },
+ {
+  "policy":"RL, agent decides offload",
+  "q_ratio":0.227,
+  "hp_wait_h":2.05,
+  "hp_p95_h":16.144,
+  "cloud_jobs":192.667,
+  "cloud_usd":92840.356,
+  "cloud_usd_per_day":30947.0
+ },
+ {
+  "policy":"rule + offload rule (same action space)",
+  "q_ratio":0.287,
+  "hp_wait_h":2.363,
+  "hp_p95_h":16.979,
+  "cloud_jobs":138.333,
+  "cloud_usd":72705.371,
+  "cloud_usd_per_day":24235.0
+ }
+]

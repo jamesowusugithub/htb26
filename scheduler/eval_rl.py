@@ -30,9 +30,9 @@ def run_agent(env: SchedulingEnv, predict, scenario: Scenario):
     return info["metrics"], info["qint_ratio_vs_priority_fifo"], n
 
 
-def evaluate(jobs, cluster, hint, scenarios: list[Scenario], agents: dict, baselines=BASELINES, K=8) -> pd.DataFrame:
+def evaluate(jobs, cluster, hint, scenarios: list[Scenario], agents: dict, baselines=BASELINES, K=8, shuffle=False) -> pd.DataFrame:
     """agents: {name: predict(obs, mask)}. One row per (scenario, policy)."""
-    env = SchedulingEnv(jobs, cluster, hint, K=K)
+    env = SchedulingEnv(jobs, cluster, hint, K=K, shuffle_slots=shuffle)
     rows = []
     for sc in scenarios:
         w = build_workload(jobs, sc)
