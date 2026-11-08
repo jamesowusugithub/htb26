@@ -161,7 +161,7 @@ def forecast_series(f: DemandForecaster, jobs: pd.DataFrame, w, pool_ids: list[s
     P = len(pool_ids)
     g, c, o = combined_bins(jobs, w, P, t0_s, length_s + 2 * f.horizon_s + 2 * BIN_S)
     b0 = int(round(t0_s / BIN_S))
-    ts_rel = np.arange(step_s, length_s + 1e-9, step_s)                              # forecast issued at t (seconds since window start)
+    ts_rel = np.arange(step_s, length_s - f.horizon_s + 1e-9, step_s)                # forecast issued at t; only those whose whole horizon lies inside the window (else 'realised' would be truncated)
     tb = b0 + (ts_rel / BIN_S).astype(int) - 1                                       # last fully observed bin
     ok = tb >= 2 * DAY_BINS
     tb = tb[ok]; ts_rel = ts_rel[ok]

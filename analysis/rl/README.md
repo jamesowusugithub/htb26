@@ -3,6 +3,7 @@
 Every number here comes from a script in this repo run on **held-out data** (trace days >= 130; BurstGPT trace 3). Waits, queues, evictions,
 temperatures and cloud spend are **simulated** (the trace has no queue, start, wait or eviction data); see `scheduler/assumptions.yaml`.
 Older results built on a flawed candidate list are in `superseded/` and must not be quoted.
+Charts of everything below (data used, policies, RL controls, forecast, cloud, runtime prediction): `analysis/graphs/index.html` (regenerate: `python scripts/graphs/make_graphs.py`).
 
 ## 1. The scheduler (masked PPO)
 **Served model:** `models/ppo_u6_shuf_s12` (seed 12 had the best validation score of three seeds; chosen before any test number was seen).
