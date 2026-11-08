@@ -1,0 +1,452 @@
+{
+  "source_counts": {
+    "alibaba": 466867,
+    "burstgpt": 10632194
+  },
+  "total_workload_rows": 11099061,
+  "output_files": [
+    {
+      "path": "integrated/workloads/alibaba_jobs/jobs.parquet",
+      "source_path": "harmonized/alibaba/jobs.parquet",
+      "rows": 466867,
+      "source": "alibaba",
+      "series": "alibaba_jobs"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_1/part-0000.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_1/part-0000.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_1"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_1/part-0001.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_1/part-0001.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_1"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_1/part-0002.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_1/part-0002.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_1"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_1/part-0003.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_1/part-0003.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_1"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_1/part-0004.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_1/part-0004.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_1"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_1/part-0005.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_1/part-0005.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_1"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_1/part-0006.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_1/part-0006.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_1"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_1/part-0007.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_1/part-0007.parquet",
+      "rows": 29737,
+      "source": "burstgpt",
+      "series": "burstgpt_1"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0000.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0000.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0001.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0001.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0002.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0002.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0003.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0003.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0004.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0004.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0005.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0005.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0006.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0006.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0007.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0007.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0008.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0008.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0009.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0009.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0010.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0010.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0011.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0011.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0012.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0012.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0013.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0013.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0014.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0014.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0015.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0015.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0016.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0016.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0017.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0017.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0018.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0018.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_2/part-0019.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_2/part-0019.parquet",
+      "rows": 58436,
+      "source": "burstgpt",
+      "series": "burstgpt_2"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0000.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0000.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0001.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0001.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0002.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0002.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0003.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0003.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0004.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0004.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0005.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0005.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0006.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0006.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0007.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0007.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0008.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0008.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0009.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0009.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0010.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0010.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0011.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0011.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0012.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0012.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0013.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0013.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0014.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0014.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0015.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0015.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0016.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0016.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0017.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0017.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0018.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0018.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0019.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0019.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0020.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0020.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0021.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0021.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0022.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0022.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0023.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0023.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0024.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0024.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0025.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0025.parquet",
+      "rows": 200000,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    },
+    {
+      "path": "integrated/workloads/burstgpt_3/part-0026.parquet",
+      "source_path": "harmonized/burstgpt/burstgpt_3/part-0026.parquet",
+      "rows": 144021,
+      "source": "burstgpt",
+      "series": "burstgpt_3"
+    }
+  ],
+  "parquet_files": 56,
+  "hourly_rows": 9962,
+  "hourly_arrivals": 11099061,
+  "null_counts": {
+    "workload_id": 0,
+    "source_dataset": 0,
+    "workload_type": 0,
+    "source_series_id": 0,
+    "source_harmonized_path": 0,
+    "source_file": 0,
+    "source_row_id": 0,
+    "source_original_record_id": 10632194,
+    "time_origin_id": 0,
+    "arrival_relative_s": 0,
+    "calendar_arrival_utc": 11099061,
+    "job_duration_s": 10632194,
+    "request_end_to_end_latency_s": 5755040,
+    "gpu_model_identifier": 10632194,
+    "gpu_request_recorded_count": 10632194,
+    "worker_count": 10632194,
+    "gpu_request_scope": 10632194,
+    "priority_class": 10632194,
+    "cpu_request_vcpus": 10632194,
+    "organisation_id": 10632194,
+    "input_tokens": 466867,
+    "output_tokens": 466867,
+    "total_tokens": 466867,
+    "llm_model": 466867,
+    "log_type": 466867,
+    "conversation_session_id": 10865444,
+    "zero_response_tokens": 466867,
+    "alibaba_original": 10632194,
+    "burstgpt_original": 466867
+  },
+  "checks": [
+    "Every output read back exactly equal to constructed Arrow table including schema",
+    "All source row counts reconciled",
+    "Identical schema across workload partitions",
+    "Inapplicable fields remain null",
+    "No calendar timestamp fabricated",
+    "Hourly totals reconcile; all within-span zero hours retained"
+  ],
+  "original_harmonized_tables_modified": false,
+  "capacity_proxy_table": {
+    "path": "integrated/alibaba_daily_demand_capacity.parquet",
+    "rows": 1110,
+    "arrival_count": 466867,
+    "static_catalogue_gpus": 10412,
+    "static_catalogue_nodes": 4278,
+    "calculated_not_observed_capacity": true
+  }
+}

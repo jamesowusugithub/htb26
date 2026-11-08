@@ -7,6 +7,9 @@ relevance. It does not train models or build a simulator. Kestrel is excluded.
 - [Data dictionary and relationships](analysis/data-dictionary.md)
 - [Output validation catalogue](analysis/phase1/validation.json)
 - [Harmonised table guide](harmonized/README.md)
+- [Unified analytical layer and integrated graphs](analysis/integrated/report.md)
+- [Unified interface dictionary and relationship rules](analysis/integrated/data-dictionary.md)
+- [Integrated layer reproduction](integrated/README.md)
 
 ## Reproduce
 

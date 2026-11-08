@@ -1,0 +1,35 @@
+{
+  "evidence_class": "calculated_static_scenario",
+  "gpu_counts": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "rental_hours": [
+    1.0,
+    24.0
+  ],
+  "formula": "ceil(required_gpu_count / offer_gpu_count) * offer_price_usd_per_hour * rental_hours",
+  "billing_assumption": "Linear hourly billing for the stated rental window, without unknown minimum periods or rounding.",
+  "allocation_assumption": "Whole listed plans rented exclusively; no fractional rental or sharing credit.",
+  "hardware_assumption": "Each scenario requests the exact source model label of its offer; comparisons across labels do not assume equal work or speed.",
+  "not_modelled": [
+    "GPU execution time",
+    "LLM throughput",
+    "job-to-hardware speedup",
+    "network/interconnect requirements",
+    "CPU/RAM/disk feasibility",
+    "tax",
+    "egress",
+    "setup time",
+    "availability",
+    "discounts",
+    "interruptions"
+  ],
+  "price_snapshot": "2026-11-07",
+  "no_monthly_hourly_conversion": true,
+  "no_currency_conversion": true,
+  "no_actual_job_cost_estimate": true
+}

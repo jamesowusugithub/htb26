@@ -1,0 +1,28 @@
+{
+  "status": "complete",
+  "evidence_class": "calculated_static_scenario",
+  "observed_plan_rows": 131,
+  "source_offer_rows": 393,
+  "eligible_hourly_identified_offers": 18,
+  "rental_scenario_rows": 180,
+  "alibaba_coverage_rows": 6,
+  "alibaba_jobs_reconciled": 466867,
+  "alibaba_jobs_with_exact_identifier_hourly_price": 0,
+  "missing_or_other_billing_rows_not_priced": 375,
+  "formula_validated": true,
+  "parquet_readback_rows_validated": true,
+  "source_offers_sha256": "3938f1f88ba959a2cce5ef71da61eb7fcf66b8b8df086b32123dbf050ca961c7",
+  "observed_input_fields": [
+    "source_plan_record_id",
+    "provider",
+    "gpu_model_identifier",
+    "offer_gpu_count",
+    "observed_price_usd_per_plan_hour"
+  ],
+  "calculated_fields": [
+    "whole_plans_required",
+    "rented_gpu_capacity",
+    "unused_reserved_gpu_capacity",
+    "calculated_rental_cost_usd"
+  ]
+}

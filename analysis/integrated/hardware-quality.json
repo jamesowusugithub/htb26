@@ -1,0 +1,21 @@
+{
+  "complete": true,
+  "gpu_models": 26,
+  "pricing_links": 22,
+  "thermal_links": 104,
+  "thermal_input_readings": 11923254,
+  "thermal_profile_rows": 45,
+  "thermal_profile_readings": 11923254,
+  "missing_thermal_metrics": {
+    "utilisation_percent": 0,
+    "temperature_c": 0,
+    "power_w": 0
+  },
+  "out_of_range_utilisation": 0,
+  "pricing_link_status_counts": {
+    "exact_model_label": 13,
+    "unavailable": 6,
+    "family_candidate_only": 3
+  },
+  "relationship_checks": "All nonnull price foreign keys and all thermal session foreign keys resolve; every output readable with reconciled row count."
+}
