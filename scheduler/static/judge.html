@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Submit a workload</title>
+<style>
+:root{--bg:#f6f1e7;--card:#fffdf8;--ink:#17261f;--soft:#5d6b63;--line:#ddd2bb;--green:#1f6f5c;--blue:#2a78d6;--grey:#b9b3a3;--warn:#8a5a00}
+@media(prefers-color-scheme:dark){:root{--bg:#161a18;--card:#1f2522;--ink:#eef2ee;--soft:#a9b4ad;--line:#3a443f;--green:#4fb89c;--blue:#5b9be8;--grey:#6b726c;--warn:#e0b060}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:560px;margin:0 auto;padding:18px 16px 40px}h1{font-size:22px;margin:4px 0 2px}.sub{color:var(--soft);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+label.h{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);margin:12px 0 6px}label.h:first-child{margin-top:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:9px 14px;font:inherit;cursor:pointer;min-height:42px}
+.chip[aria-pressed=true]{background:var(--green);border-color:var(--green);color:#fff;font-weight:600}
+button.go{width:100%;margin-top:16px;padding:14px;border:0;border-radius:10px;background:var(--green);color:#fff;font:600 17px inherit;cursor:pointer}button.go:disabled{opacity:.6}
+.big{font-size:20px;font-weight:700;margin:0 0 4px}.row{display:grid;grid-template-columns:128px 1fr 64px;gap:8px;align-items:center;margin:7px 0;font-size:14px}
+.track{background:color-mix(in srgb,var(--line) 60%,transparent);height:14px;border-radius:7px;overflow:hidden}.bar{height:14px;background:var(--grey);border-radius:7px}.bar.rl{background:var(--blue)}.bar.best{outline:2px solid #e0b43a}
+.v{text-align:right;font-variant-numeric:tabular-nums}.rl-name{font-weight:700;color:var(--blue)}small,.note{color:var(--soft);font-size:12.5px}a{color:var(--green)}
+.err{color:#b3261e;margin:10px 0}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}.stat{background:color-mix(in srgb,var(--line) 35%,transparent);border-radius:10px;padding:10px}.stat b{display:block;font-size:22px}
+</style></head><body><main>
+<h1>Submit a workload</h1><p class="sub">Your job joins a busy GPU cluster replaying <b>real Alibaba jobs</b>. See how fast four different schedulers would complete it.</p>
+<div class="card" id="form">
+  <label class="h">GPU type</label><div class="chips" id="type"></div>
+  <label class="h">GPUs you need</label><div class="chips" id="gpus"></div>
+  <label class="h">Priority</label><div class="chips" id="prio"></div>
+  <label class="h">How long it runs</label><div class="chips" id="dur"></div>
+  <button class="go" id="go">Run my workload</button><div class="err" id="err" role="alert"></div>
+</div>
+<div id="out"></div>
+<p class="note">Simulated minutes on a small demo cluster; every scheduler faces the same real jobs and your job arrives at minute 45, when the cluster is busy. <a id="kit" href="#">Open the kitchen view</a> · <a id="room" href="#">3D server room</a></p>
+</main><script>
+const TYPES=[['a100','A100 80GB (busy pool)',8],['a800','A800 (quiet pool)',8]];let st={type:'a100',gpus:2,prio:'high',dur:30};
+const $=id=>document.getElementById(id);
+function chips(id,items,key,fmt){$(id).innerHTML='';items.forEach(v=>{const b=document.createElement('button');b.className='chip';b.type='button';b.textContent=fmt(v);b.setAttribute('aria-pressed',String(st[key]===(Array.isArray(v)?v[0]:v)));b.onclick=()=>{st[key]=Array.isArray(v)?v[0]:v;if(key==='type'&&st.gpus>maxG())st.gpus=maxG();draw()};$(id).appendChild(b)})}
+const maxG=()=>TYPES.find(t=>t[0]===st.type)[2];
+function draw(){chips('type',TYPES,'type',v=>v[1]);chips('gpus',[1,2,4,8].filter(g=>g<=maxG()),'gpus',g=>g+(g>1?' GPUs':' GPU'));chips('prio',['high','spot'],'prio',p=>p==='high'?'High priority':'Spot (can be evicted)');chips('dur',[15,30,60,120],'dur',d=>d+' min')}
+draw();const API=location.origin;$('kit').href=API+'/kitchen/?trace=rl_ppo&api='+encodeURIComponent(API);$('room').href=API+'/room/index.html?api='+encodeURIComponent(API)+'&preset=heldout_demo&policy=rl_ppo';
+$('go').onclick=async()=>{$('err').textContent='';$('go').disabled=true;$('go').textContent='Running four schedulers...';
+ try{const r=await fetch('/judge/submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({gpu_type:st.type,gpus:st.gpus,priority:st.prio,duration_min:st.dur})});
+  if(!r.ok){throw new Error((await r.json()).detail||('error '+r.status))}show(await r.json())}catch(e){$('err').textContent=String(e.message||e)}
+ $('go').disabled=false;$('go').textContent='Run my workload'};
+function show(d){const R=d.results,order=['fifo','priority_fifo','sjf_hint','rl_ppo'],ok=order.filter(k=>R[k].started),max=Math.max(...ok.map(k=>R[k].turnaround_min),1),best=Math.min(...ok.map(k=>R[k].turnaround_min));
+ const rl=R.rl_ppo,f=R.fifo;let head=rl.started?`With the trained RL scheduler your job started after <u>${rl.wait_min} min</u> and was done in <u>${rl.turnaround_min} min</u>.`:`Even the trained RL scheduler had not started your job within ${Math.round(d.window_min/60)} simulated hours: the cluster is that busy.`;
+ const faster=d.rl_vs_fifo_pct_faster;
+ $('out').innerHTML=`<div class="card"><p class="big">${head}</p>${faster!=null?`<small>${faster>0?`${faster}% faster than first-come-first-served (${f.turnaround_min} min).`:faster<0?`${Math.abs(faster)}% slower than first-come-first-served here: scheduling trades waits between jobs.`:'Same as first-come-first-served here.'}</small>`:(f.started?'':`<small>First-come-first-served had not started it within ${Math.round(d.window_min/60)} simulated hours.</small>`)}
+ <div class="stats"><div class="stat"><small>Waited in queue</small><b>${rl.started?rl.wait_min+' min':'-'}</b></div><div class="stat"><small>Ran on</small><b style="font-size:15px">${rl.ran_on||'-'}</b></div></div></div>
+ <div class="card"><div class="big" style="font-size:16px">Time until your job finished (minutes)</div><small>Lower is better. Wait + ${d.job.duration_min} min run time.</small>
+ ${order.map(k=>{const x=R[k];return x.started?`<div class="row"><span class="${k==='rl_ppo'?'rl-name':''}">${x.label}</span><span class="track"><span class="bar ${k==='rl_ppo'?'rl':''} ${x.turnaround_min===best?'best':''}" style="display:block;width:${Math.max(3,x.turnaround_min/max*100)}%"></span></span><span class="v">${x.turnaround_min}</span></div>`:`<div class="row"><span>${x.label}</span><span class="note">not started in ${Math.round(d.window_min/60)} h</span><span></span></div>`}).join('')}
+ <p class="note">Waits: ${order.filter(k=>R[k].started).map(k=>R[k].label.split(' ')[0]+' '+R[k].wait_min).join(' · ')} min. Cluster: ${d.kitchen}.</p></div>`;$('out').scrollIntoView({behavior:'smooth'})}
+</script></body></html>

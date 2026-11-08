@@ -10,7 +10,7 @@ from collections import OrderedDict
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
@@ -468,3 +468,49 @@ def restaurant_compare(req: RestaurantReq):
             meta = rec["trace_meta"]
             preds = [{"id": x["job"]["id"], "predicted_min": x["job"]["hint_min"], "actual_min": x["job"]["duration_s"]} for x in ev if x["type"] == "JOB_ARRIVED"]
     return {"policies": out, "predictions": preds, "kitchen": meta, "units": {"wait": "simulated minutes", "cost": "USD, simulated rental"}}
+
+
+# ------------------------------------------------------------------ judge mode + hosting (one service: API, judge page, 3D room, kitchen) -------------------------
+from fastapi.responses import FileResponse, HTMLResponse, Response, RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from . import judge as _judge
+
+_ROOT = Path(__file__).resolve().parents[1]
+
+
+@app.post("/judge/submit")
+def judge_submit(job: _judge.JudgeJob):
+    """One visitor workload through all four managers on the same busy kitchen; returns wait / turnaround per manager (simulated minutes)."""
+    try:
+        return _judge.run(job, _restaurant, RestaurantReq, OrderIn, KitchenIn)
+    except ValueError as ex:
+        raise HTTPException(422, str(ex))
+
+
+@app.get("/judge/board")
+def judge_board():
+    return _judge.board()
+
+
+@app.get("/judge")
+def judge_page():
+    return FileResponse(Path(__file__).with_name("static") / "judge.html")
+
+
+@app.get("/qr.svg")
+def qr_svg(request: "Request", url: str | None = None):
+    """QR code (SVG) of the judge page of THIS server, or of ?url=."""
+    import segno, io
+    target = url or str(request.base_url).rstrip("/") + "/judge"
+    buf = io.BytesIO(); segno.make(target, error="m").save(buf, kind="svg", scale=10, border=2, dark="#0b3d2e")
+    return Response(buf.getvalue(), media_type="image/svg+xml")
+
+
+@app.get("/")
+def home():
+    return FileResponse(Path(__file__).with_name("static") / "index.html")
+
+
+for _mount, _dir in (("/kitchen", _ROOT / "restaurant/dist"), ("/room", _ROOT / "server-room/dist"), ("/graphs", _ROOT / "analysis/graphs")):
+    if _dir.exists():
+        app.mount(_mount, StaticFiles(directory=str(_dir), html=True), name=_mount.strip("/"))

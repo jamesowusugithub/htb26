@@ -1,0 +1,9 @@
+# Render blueprint: New + > Blueprint, point at this repo. Needs a plan with >= 2 GB RAM (the backend loads 467k jobs + torch).
+services:
+  - type: web
+    name: gpu-scheduling-lens
+    runtime: docker
+    plan: standard
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: false

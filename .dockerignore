@@ -1,0 +1,15 @@
+.git
+**/node_modules
+**/__pycache__
+runs
+analysis/proof
+analysis/visualization
+data
+harmonized/thermal
+harmonized/burstgpt
+harmonized/catalogue
+models/ppo_a models/ppo_bc models/ppo_combined models/ppo_k16 models/ppo_u1_v3hint models/ppo_u4_hpfirst_* models/ppo_u7_offload_shuf
+restaurant/shots
+restaurant/dist
+server-room/dist
+server-room/ui-dist

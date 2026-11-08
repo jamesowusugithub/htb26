@@ -1,0 +1,14 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+websockets
+numpy
+pandas
+pyarrow
+numba
+scikit-learn
+joblib
+pyyaml
+gymnasium
+stable-baselines3
+sb3-contrib
+segno
