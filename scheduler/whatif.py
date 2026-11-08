@@ -36,6 +36,8 @@ class Scenario:
     cooling_fault: dict | None = None                     # {"at_h": 6.0, "delta_c": 35.0, "duration_h": 6.0 | None}
     injected_jobs: list = field(default_factory=list)     # [{"at_h": 3.0, "pool": "a10", "gpus": 1, "priority": "hp", "duration_s": 900}]
     display_pools: list = field(default_factory=lambda: list(DEFAULT_PODS))   # pods 1..4 in the room
+    arrival_profile: list | None = None          # per-hour arrival multipliers (mean 1), e.g. a BurstGPT shape
+    arrival_profile_source: str | None = None    # provenance of the profile, e.g. "burstgpt_3 hours 120-192"
     note: str = ""
 
     def to_dict(self) -> dict:
@@ -63,6 +65,7 @@ PRESETS: dict[str, Scenario] = {s.name: s for s in [
     Scenario("lose_a10_capacity", capacity={"a10": 0.8}, note="A10 pool loses 20% of its nodes"),
     Scenario("capacity_plus_20", capacity=1.2, note="All pools gain 20% nodes"),
     Scenario("live_demo", start_day=90.0, days=1.0, note="Busy day: one-day window used by the 3D room"),
+    Scenario("llm_traffic_spike", start_day=130.0, days=3.0, note="Arrivals follow the shape of a real BurstGPT LLM-traffic burst (held-out trace 3)"),
     Scenario("heldout_demo", start_day=130.0, days=1.0, note="Busy day from the held-out period (never used to train or select the RL policy)"),
     Scenario("node_failure", start_day=90.0, days=1.0, failures=[{"board": 7, "at_h": 6.0, "repair_after_h": 4.0}],
              note="Board 8 (A10 pod) loses its nodes at hour 6 and recovers at hour 10"),
@@ -72,6 +75,18 @@ PRESETS: dict[str, Scenario] = {s.name: s for s in [
              failures=[{"board": 1, "at_h": 7.0, "repair_after_h": None}],
              note="4x arrival spike from hour 6 and a permanent board failure at hour 7"),
 ]}
+
+
+def _llm_spike_preset() -> None:
+    """Fill the preset with the most bursty 72 h window of held-out BurstGPT trace 3 (real data from the combined layer)."""
+    from . import burst_profiles as bp
+    a, ratio = bp.burstiest("burstgpt_3", 72, 1)[0]
+    sc = PRESETS["llm_traffic_spike"]
+    sc.arrival_profile = bp.window_profile("burstgpt_3", a, 72)
+    sc.arrival_profile_source = f"burstgpt_3 hours {a}-{a + 72} (peak/mean {ratio:.1f}x)"
+
+
+_llm_spike_preset()
 
 
 def failure_events(sc: "Scenario", cluster: data.Cluster) -> list:
@@ -148,11 +163,13 @@ def build_workload(jobs: pd.DataFrame, sc: Scenario) -> Workload:
     ids, org = base.job_id[win].astype(object), base.org[win]
     n0 = len(win)
 
-    # arrival multiplier: thin or duplicate with jitter
-    m = float(sc.arrival_mult)
-    if m != 1.0:
-        copies = np.floor(m).astype(int) + (rng.random(n0) < (m - np.floor(m))).astype(int) if m >= 1 else \
-            (rng.random(n0) < m).astype(int)
+    # arrival multiplier (scalar) x optional per-hour arrival profile (e.g. a BurstGPT shape): thin or duplicate with jitter
+    m = np.full(n0, float(sc.arrival_mult))
+    if sc.arrival_profile:
+        prof = np.asarray(sc.arrival_profile, dtype=float)
+        m = m * prof[(sub // 3600).astype(int) % len(prof)]
+    if (m != 1.0).any():
+        copies = np.floor(m).astype(int) + (rng.random(n0) < (m - np.floor(m))).astype(int)
         keep = copies > 0
         extra_idx = np.repeat(np.arange(n0), np.maximum(copies - 1, 0))
         jitter = np.clip(sub[extra_idx] + rng.normal(0, 1800.0, len(extra_idx)), 0, T - 1)

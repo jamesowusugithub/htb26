@@ -25,7 +25,14 @@ def test_scenarios():
                    Scenario(name="burst_3x", start_day=d, days=3.0, burst={"start_h": 20, "duration_h": 8, "mult": 3.0}, seed=1),
                    Scenario(name="spot_heavy", start_day=d, days=3.0, spot_share=0.4, seed=1),
                    Scenario(name="lose_a10_20pct", start_day=d, days=3.0, capacity={"a10": 0.8}, seed=1)]
-    return plain, stress
+    # combined layer: arrival shapes of the most bursty windows of HELD-OUT BurstGPT trace 3 (never used in training)
+    from . import burst_profiles as bp
+    llm = []
+    for k, (a, ratio) in enumerate(bp.burstiest("burstgpt_3", 72, 4)):
+        for d in (130.0, 157.0):
+            llm.append(Scenario(name="llm_burst_heldout", start_day=d, days=3.0, seed=2, arrival_profile=bp.window_profile("burstgpt_3", a, 72),
+                                arrival_profile_source=f"burstgpt_3 hours {a}-{a + 72} (peak/mean {ratio:.1f}x)"))
+    return plain, stress, llm
 
 
 def paired(df: pd.DataFrame, a: str, b: str):
@@ -42,19 +49,22 @@ def main():
     ap.add_argument("--model", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--K", type=int, default=8)
+    ap.add_argument("--skip-stress", action="store_true", help="skip the 16 what-if stress scenarios (faster)")
     a = ap.parse_args()
     pools, jobs, base, cl = setup(0.85)
     hint = load_or_fit(jobs, 40)
     model = MaskablePPO.load(a.model, device="cpu")
     pred = lambda obs, mask: model.predict(obs, action_masks=mask, deterministic=True)[0]
-    plain, stress = test_scenarios()
-    df = evaluate(jobs, cl, hint, plain + stress, {"rl_ppo": pred}, K=a.K)
-    df["kind"] = np.where(df.scenario == "observed", "observed", "what-if")
+    plain, stress, llm = test_scenarios()
+    if a.skip_stress:
+        stress = []
+    df = evaluate(jobs, cl, hint, plain + stress + llm, {"rl_ppo": pred}, K=a.K)
+    df["kind"] = np.where(df.scenario == "observed", "observed", np.where(df.scenario == "llm_burst_heldout", "burstgpt-shape", "what-if"))
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     df.to_csv(out / "results.csv", index=False)
     pd.set_option("display.width", 220)
-    order = ["priority_fifo", "backfill_median", "sjf_hint", "rl_ppo", "sjf_oracle"]
+    order = ["fifo", "priority_fifo", "backfill_median", "sjf_hint", "rl_ppo", "sjf_oracle"]
     report = {}
     pf = df[df.policy == "priority_fifo"].set_index(["scenario", "start_day"])
     # queue-time of priority-FIFO per window (absolute) decides which windows are busy
@@ -63,7 +73,10 @@ def main():
     df["busy"] = [(s, d) in busy_keys for s, d in zip(df.scenario, df.start_day)]
     for label, sub in [("observed windows (all)", df[df.kind == "observed"]),
                        ("observed windows (busy only)", df[(df.kind == "observed") & df.busy]),
-                       ("what-if scenarios on busy windows", df[df.kind == "what-if"])]:
+                       ("what-if scenarios on busy windows", df[df.kind == "what-if"]),
+                       ("held-out BurstGPT (trace 3) arrival shapes", df[df.kind == "burstgpt-shape"])]:
+        if sub.empty:
+            continue
         t = sub.groupby("policy").agg(windows=("q_ratio", "size"), hp_wait_mean_h=("hp_wait_mean_h", "mean"),
                                       hp_wait_p95_h=("hp_wait_p95_h", "mean"), spot_wait_mean_h=("spot_wait_mean_h", "mean"),
                                       q_ratio=("q_ratio", "mean"), util=("util", "mean"), preemptions=("preemptions", "mean"),
@@ -71,8 +84,10 @@ def main():
         print(f"\n=== {label}: {t.windows.iloc[0]} windows ==="); print(t.drop(columns="windows").to_string())
         report[label] = {"table": t.reset_index().to_dict(orient="records"),
                          "rl_vs_sjf_hint": paired(sub, "rl_ppo", "sjf_hint"), "rl_vs_priority_fifo": paired(sub, "rl_ppo", "priority_fifo"),
-                         "rl_vs_backfill": paired(sub, "rl_ppo", "backfill_median")}
-        print(" RL vs sjf_hint:", {k: report[label]["rl_vs_sjf_hint"][k] for k in ("pairs", "a_better", "b_better")})
+                         "rl_vs_backfill": paired(sub, "rl_ppo", "backfill_median"), "rl_vs_fifo": paired(sub, "rl_ppo", "fifo")}
+        for other in ("fifo", "backfill", "sjf_hint"):
+            r = report[label]["rl_vs_" + other]
+            print(f"  RL vs {other:9s}: RL has less queue time in {r['a_better']} of {r['pairs']} paired windows (worse in {r['b_better']})")
     (out / "report.json").write_text(json.dumps(report, indent=1))
 
 

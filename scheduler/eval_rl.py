@@ -8,7 +8,7 @@ from .run_baselines import run_policy
 from .whatif import Scenario, build_workload, build_cluster
 from .metrics import summarize
 
-BASELINES = ["priority_fifo", "backfill_median", "sjf_hint", "sjf_oracle"]
+BASELINES = ["fifo", "priority_fifo", "backfill_median", "sjf_hint", "sjf_oracle"]
 
 
 def _row(name, m, extra=None):
@@ -40,7 +40,7 @@ def evaluate(jobs, cluster, hint, scenarios: list[Scenario], agents: dict, basel
         est = hint.predict_seconds(w.job_id)
         est = np.where(np.isfinite(est), est, np.nanmedian(est))
         qb = None
-        for b in baselines:
+        for b in sorted(baselines, key=lambda x: x != "priority_fifo"):   # priority_fifo first: it is the reference for q_ratio
             S = run_policy(c, w, POLICIES[b], est=est if b == "sjf_hint" else None, snapshot_dt=None)
             m = summarize(S, w, c, util_hi=sc.days * 86400)
             from .sim import FC_QINT

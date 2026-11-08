@@ -23,12 +23,14 @@ class SchedulingEnv(gym.Env):
     metadata = {"render_modes": []}
 
     def __init__(self, jobs, cluster, hint, *, train_days=(45.0, 125.0), days=3.0, arrival_mult=(0.8, 1.4),
-                 capacity_jitter=(0.9, 1.1), K=8, D=512, seed=0, max_steps=400_000, q_ref=1e5, allow_hold=False, fixed=None, log_events=False, snapshot_dt=None):
+                 capacity_jitter=(0.9, 1.1), K=8, D=512, seed=0, max_steps=400_000, q_ref=1e5, allow_hold=False, fixed=None, log_events=False, snapshot_dt=None,
+                 burst_prob=0.0):
         super().__init__()
         self.jobs, self.base_cluster, self.hint = jobs, cluster, hint
         self.train_days, self.days, self.arrival_mult, self.capacity_jitter = train_days, days, arrival_mult, capacity_jitter
         self.K, self.D, self.max_steps, self.q_ref, self.allow_hold = K, D, max_steps, q_ref, allow_hold
         self.log_events, self.snapshot_dt = log_events, snapshot_dt
+        self.burst_prob = burst_prob          # chance a training episode gets a BurstGPT (trace 1/2) arrival shape
         self.fixed = fixed                       # dict(start_day, days, arrival_mult, capacity, seed) for evaluation
         self.rng = np.random.default_rng(seed)
         P = cluster.n_pools
@@ -45,16 +47,24 @@ class SchedulingEnv(gym.Env):
         lo, hi = self.train_days
         start = float(self.rng.uniform(lo, hi - self.days))
         cap = float(self.rng.uniform(*self.capacity_jitter))
+        prof, src = (None, None)
+        if self.burst_prob > 0 and self.rng.random() < self.burst_prob:
+            from .burst_profiles import sample
+            prof, src = sample(self.rng, hours=int(np.ceil(self.days * 24)))
         return Scenario(start_day=start, days=self.days, arrival_mult=float(self.rng.uniform(*self.arrival_mult)),
-                        capacity=cap, seed=int(self.rng.integers(1 << 30)))
+                        capacity=cap, seed=int(self.rng.integers(1 << 30)), arrival_profile=prof, arrival_profile_source=src)
 
     def reset(self, *, seed=None, options=None):
         super().reset(seed=seed)
         if seed is not None:
             self.rng = np.random.default_rng(seed)
-        self.sc = self._scenario(options)
-        self.w = build_workload(self.jobs, self.sc)
-        self.cluster = build_cluster(self.base_cluster, self.sc)
+        if options and "workload" in options:       # caller-supplied workload + cluster (used by the restaurant demo kitchen)
+            self.sc = options.get("scenario") or Scenario(days=float(options.get("days", 1.0)))
+            self.w, self.cluster = options["workload"], options["cluster"]
+        else:
+            self.sc = self._scenario(options)
+            self.w = build_workload(self.jobs, self.sc)
+            self.cluster = build_cluster(self.base_cluster, self.sc)
         est = self.hint.predict_seconds(self.w.job_id)
         est = np.where(np.isfinite(est), est, np.nanmedian(est)).astype(np.float64)
         self.est = est
