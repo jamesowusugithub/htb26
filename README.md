@@ -10,6 +10,8 @@ relevance. It does not train models or build a simulator. Kestrel is excluded.
 - [Unified analytical layer and integrated graphs](analysis/integrated/report.md)
 - [Unified interface dictionary and relationship rules](analysis/integrated/data-dictionary.md)
 - [Integrated layer reproduction](integrated/README.md)
+- [Interactive 3D GPU server room](server-room/GPU-VISUALISATION.md)
+- [Actual browser screenshots and checks](analysis/visualization/browser-validation.md)
 
 ## Reproduce
 

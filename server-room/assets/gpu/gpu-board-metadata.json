@@ -1,0 +1,37 @@
+{
+  "created_through": "Blender MCP execute_code on existing localhost:9876 add-on",
+  "blender_version": "4.5.15 LTS",
+  "collection": "GPU_Visualization_Assets",
+  "root_object": "GPU_BOARD_ROOT",
+  "new_object_count": 288,
+  "mesh_count": 285,
+  "unique_mesh_count": 15,
+  "approximate_dimensions_m": [
+    0.305,
+    0.116,
+    0.046
+  ],
+  "materials": [
+    "GPU_PCB_GREEN",
+    "GPU_SHROUD_GRAPHITE",
+    "GPU_FAN_BLACK",
+    "GPU_HEATSINK_ALUMINIUM",
+    "GPU_HEATPIPE_COPPER",
+    "GPU_CONNECTOR_GOLD",
+    "GPU_VRAM_PACKAGE",
+    "GPU_DIE",
+    "STATUS_LED",
+    "GPU_SILKSCREEN"
+  ],
+  "fan_groups": [
+    "FAN_0",
+    "FAN_1"
+  ],
+  "fan_rotation_axis_in_gltf": "Y",
+  "status_material": "STATUS_LED",
+  "die_material": "GPU_DIE",
+  "illustrative_not_vendor_exact": true,
+  "original_objects_preserved": true,
+  "selection_restored": true,
+  "exported_file": "gpu-board.glb"
+}

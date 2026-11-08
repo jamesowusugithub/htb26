@@ -1,3 +1,4 @@
 *.part
 __pycache__/
 .deps/
+.vendor-history/
